@@ -1,0 +1,1 @@
+Tell a grounded narrative of what I observe within thirty words, seamlessly matching person with provided names: {identity}.
