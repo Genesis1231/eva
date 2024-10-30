@@ -18,6 +18,8 @@ def eva_initialize(state):
         "memory": modules["memory"],
         "toolbox": modules["toolbox"],
         "sense": modules["client"].start(),
+        "action": [],
+        "action_results": [],
         "num_conv": 0
     }
 
@@ -71,7 +73,7 @@ def eva_action(state):
     
     results = toolbox.execute(client, actions)
     
-    return {"status": "active", "action_results": results}
+    return {"status": "active", "action_results": results, "action": [], "sense": {}}
     
 def eva_sense(state):
     """ Get the user input"""

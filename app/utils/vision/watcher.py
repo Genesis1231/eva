@@ -1,5 +1,6 @@
 from config import logger
 import numpy as np
+from typing import Optional
 
 import cv2
 from utils.vision.describer import Describer
@@ -44,14 +45,14 @@ class Watcher:
         # only  return a description if there is significant change.
         return change_percentage > 0.5
     
-    def glance(self) -> str:
+    def glance(self) -> Optional[str]:
         frame = self.device.capture()
         
         if self._is_diff_frame(frame):
             timecontent = self.describer.describe("vision", frame)
             return timecontent
         
-        return "<|same|>"
+        return None
     
     def deactivate(self) -> None:
         # Deactivate the watching device.

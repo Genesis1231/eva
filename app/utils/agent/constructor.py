@@ -27,10 +27,10 @@ def format_history(history: Optional[List[Dict]]) -> str:
         
     return "\n".join(messages)
 
-def format_observation(observation: str) -> str:
-    return "" if observation == "<|same|>" or observation is None else f"I see {observation} "
+def format_observation(observation: Optional[str]) -> str:
+    return "" if not observation else f"I see {observation} "
 
-def format_message(user_message: str) -> str:
+def format_message(user_message: Optional[str]) -> str:
     return "" if not user_message else f"I hear {user_message} "
 
 def format_action_results(results: Optional[List[Dict]]) -> str:
@@ -49,6 +49,8 @@ def format_action_results(results: Optional[List[Dict]]) -> str:
             action_results.append("\n".join([f"{k}: {v}" for k, v in result.items() if "url" not in k]))
         else:
             action_results.append(result)
+            if additional_info:=result_item.get("additional"):
+                action_results.append(additional_info)
             
     action_results = "\n".join(action_results)
         
@@ -89,12 +91,13 @@ def build_prompt(timestamp : str, sense: Dict, history: List[Dict], action_resul
         - {observation} 
         - {user_message} 
         {action_results}
+        </context>
 
 
         ### <Instructions> ###
         Step 1: Analysis:
         - Analyze the conversation history and current context to form a cohesive understanding of my situation.
-        - Consider potential misspoken words or typos by users.
+        - Resolve potential misspoken words or typos by the user.
         
         Step 2: Planning:
         - Formulate the best response strategy. 
@@ -102,12 +105,12 @@ def build_prompt(timestamp : str, sense: Dict, history: List[Dict], action_resul
         - Predetermine information in only required scenarios, but do not tell the user. For example: (the final answer of guessing games). 
 
         Step 3: Action:
-        - Assess the need for using tools based on the analysis. 
-        - If tools are needed, carefully generate the tool input according to the provided schema.
-        - If I have enough information from the action results, use it in the response appropriately, avoid new actions.
+        - Assess the need for using tools based on the analysis carefully. Select the appropriate tools if needed.  
+        - If tool selected, generate the tool input according to the provided schema.
+        - If the information from action results is enough, form the response and avoid any new action.
         
         Step 4: Verbal Response: 
-        - Craft a cohesive verbal response. No emojis or reaction description.
+        - Craft a concise verbal response.
         - If action is planned, inform the user about the action and remove questions in the verbal response.
         
         ### Final Generation and formatting: ###

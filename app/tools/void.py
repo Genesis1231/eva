@@ -3,7 +3,7 @@ from config import logger
 import sqlite3
 from typing import Type, Dict
 
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 from langchain_community.tools import BaseTool
  
 

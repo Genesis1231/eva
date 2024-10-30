@@ -4,7 +4,7 @@ import importlib
 import inspect
 import json
 from typing_extensions import List, Dict, Any
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 
 from langchain_community.tools import DuckDuckGoSearchRun
 
@@ -93,7 +93,7 @@ class ToolManager:
             tool = self.tool_map.get(tool_name)
             
             result = tool.run(args)
-            if hasattr(tool, 'run_client'):
+            if hasattr(tool, 'run_client') and not result.get("error"): # run the client function if available and no error
                 client_results = tool.run_client(client, **result)
                 if client_results:
                     result["additional"] = client_results

@@ -13,7 +13,7 @@ def create_groq_model(model_name: str, temperature: float)-> BaseLanguageModel:
         raise Exception(f"Error: Failed to initialize Groq model: {str(e)}.")
     
 def create_ollama_model(base_url: str, model_name: str, temperature: float) -> BaseLanguageModel:
-    from langchain_community.chat_models import ChatOllama
+    from langchain_ollama import ChatOllama
     try:
         model = ChatOllama(
             base_url=base_url,
@@ -55,7 +55,7 @@ def create_google_model(temperature: float)-> BaseLanguageModel:
 def create_anthropic_model(temperature: float)-> BaseLanguageModel:
     from langchain_anthropic import ChatAnthropic
     try:
-        return ChatAnthropic(model_name="claude-3-5-sonnet-20240620", 
+        return ChatAnthropic(model_name="claude-3-5-sonnet-20241022", 
                                 temperature=temperature,
                                 max_tokens_to_sample=512
                                 )

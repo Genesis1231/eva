@@ -1,7 +1,7 @@
 from config import logger
 from typing import Type, Dict, List, Optional
 
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 from langchain_core.tools import BaseTool
 
 from utils.agent import SmallAgent
@@ -9,7 +9,7 @@ from utils.extension import DiscordMJ
 
 class PainterInput(BaseModel):
     """Input for painter tool."""
-    query: str = Field(description="Input for painter tool, should be the idea or subject of the picture.")
+    query: str = Field(description="Input for painter tool, should be the idea or subject of the painting.")
 
 class Painter(BaseTool):
     """
@@ -38,8 +38,9 @@ class Painter(BaseTool):
         prompt = self.generate_prompt(query)
         if not prompt:
             return {"error": "Failed to generate prompt, try again later."}
-      
-        if image_urls := self.generator.send_message(f"{prompt} --c 20 --ar 3:4 --s 300"):
+
+        midjourney_prompt = f"{prompt} --c 20 --ar 3:4 --s 300"
+        if image_urls := self.generator.send_message(midjourney_prompt):
             content = f"I have created images with the query: {query}"
             return {"action": content, "image_urls": image_urls}
         
@@ -66,6 +67,6 @@ class Painter(BaseTool):
             return None   
         
         
-    def run_client(self, client, **kwargs: Dict) -> Optional[Dict]:
+    def run_client(self, client, **kwargs) -> Optional[Dict]:
         return client.launch_gallery(image_urls=kwargs.get("image_urls"))
 

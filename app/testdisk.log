@@ -1,0 +1,461 @@
+
+
+Wed Oct 30 23:28:16 2024
+Command line: TestDisk
+
+TestDisk 7.1, Data Recovery Utility, July 2019
+Christophe GRENIER <grenier@cgsecurity.org>
+https://www.cgsecurity.org
+OS: Linux, kernel 5.15.153.1-microsoft-standard-WSL2 (#1 SMP Wed Jun 19 03:15:57 CST 2024) x86_64
+Compiler: GCC 11.2
+ext2fs lib: 1.46.5, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none, curses lib: ncurses 6.3
+Warning: can't get size for Disk /dev/mapper/control - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop0 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop1 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop2 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop3 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop4 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop5 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop6 - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop7 - 0 B - 0 sectors, sector size=512
+Hard disk list
+Disk /dev/sda - 407 MB / 388 MiB - CHS 49 255 63 (RO), sector size=512 - Msft Virtual Disk, FW:1.0
+Disk /dev/sdb - 8589 MB / 8192 MiB - CHS 1044 255 63, sector size=512 - Msft Virtual Disk, FW:1.0
+Disk /dev/sdc - 1099 GB / 1024 GiB - CHS 133674 255 63, sector size=512 - Msft Virtual Disk, FW:1.0
+
+Partition table type (auto): None
+Disk /dev/sdc - 1099 GB / 1024 GiB - Msft Virtual Disk
+Partition table type: None
+
+Interface Advanced
+
+recover_EXT2: s_block_group_nr=0/8192, s_mnt_count=192/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Last mount time:    Wed Oct 30 23:08:38 2024
+   P ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+search_superblock
+
+recover_EXT2: s_block_group_nr=0/8192, s_mnt_count=192/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Last mount time:    Wed Oct 30 23:08:38 2024
+Ext2 superblock found at sector 2 (block=0, blocksize=4096)
+
+block_group_nr 1
+
+recover_EXT2: "e2fsck -b 32768 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=1/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 262144 (block=32768, blocksize=4096)
+
+block_group_nr 3
+
+recover_EXT2: "e2fsck -b 98304 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=3/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 786432 (block=98304, blocksize=4096)
+
+block_group_nr 5
+
+recover_EXT2: "e2fsck -b 163840 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=5/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 1310720 (block=163840, blocksize=4096)
+
+block_group_nr 7
+
+recover_EXT2: "e2fsck -b 229376 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=7/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 1835008 (block=229376, blocksize=4096)
+
+block_group_nr 9
+
+recover_EXT2: "e2fsck -b 294912 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=9/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 2359296 (block=294912, blocksize=4096)
+
+block_group_nr 25
+
+recover_EXT2: "e2fsck -b 819200 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=25/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 6553600 (block=819200, blocksize=4096)
+
+block_group_nr 27
+
+recover_EXT2: "e2fsck -b 884736 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=27/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 7077888 (block=884736, blocksize=4096)
+
+block_group_nr 49
+
+recover_EXT2: "e2fsck -b 1605632 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=49/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 12845056 (block=1605632, blocksize=4096)
+
+block_group_nr 81
+
+recover_EXT2: "e2fsck -b 2654208 -B 4096 device" may be needed
+recover_EXT2: s_block_group_nr=81/8192, s_mnt_count=0/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Ext2 superblock found at sector 21233664 (block=2654208, blocksize=4096)
+  ext4                     0   0  1 133674 172  2 2147483648
+superblock 0, blocksize=4096 []
+superblock 32768, blocksize=4096 []
+superblock 98304, blocksize=4096 []
+superblock 163840, blocksize=4096 []
+superblock 229376, blocksize=4096 []
+superblock 294912, blocksize=4096 []
+superblock 819200, blocksize=4096 []
+superblock 884736, blocksize=4096 []
+superblock 1605632, blocksize=4096 []
+superblock 2654208, blocksize=4096 []
+
+To repair the filesystem using alternate superblock, run
+fsck.ext4 -p -b superblock -B blocksize device
+
+Analyse Disk /dev/sdc - 1099 GB / 1024 GiB - CHS 133674 255 63
+
+recover_EXT2: s_block_group_nr=0/8192, s_mnt_count=192/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Last mount time:    Wed Oct 30 23:08:38 2024
+Current partition structure:
+   P ext4                     0   0  1 133674 172  2 2147483648
+
+search_part()
+Disk /dev/sdc - 1099 GB / 1024 GiB - CHS 133674 255 63
+
+recover_EXT2: s_block_group_nr=0/8192, s_mnt_count=192/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 268435456
+recover_EXT2: part_size 2147483648
+Filesystem created: Sun Jun  9 01:29:05 2024
+Last mount time:    Wed Oct 30 23:08:38 2024
+     ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+
+Results
+   P ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+
+Hint for advanced users: dmsetup may be used if you prefer to avoid rewriting the partition table for the moment:
+echo "0 2147483648 linear /dev/sdc 0" | dmsetup create test0
+
+
+dir_partition inode=2
+   P ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+Directory /
+       2 drwxr-xr-x     0      0      4096 30-Oct-2024 23:08 .
+       2 drwxr-xr-x     0      0      4096 30-Oct-2024 23:08 ..
+      11 drwx------     0      0     16384  9-Jun-2024 01:29 lost+found
+      12 lrwxrwxrwx     0      0         7 23-Nov-2023 05:36 bin
+    8193 drwxr-xr-x     0      0      4096 19-Jun-2024 03:18 boot
+    8194 drwxr-xr-x     0      0      4096 23-Nov-2023 05:36 dev
+   16385 drwxr-xr-x     0      0      4096 30-Oct-2024 23:08 etc
+   16386 drwxr-xr-x     0      0      4096  9-Jun-2024 01:29 home
+    1188 lrwxrwxrwx     0      0         7 23-Nov-2023 05:36 lib
+    1189 lrwxrwxrwx     0      0         9 23-Nov-2023 05:36 lib32
+    1190 lrwxrwxrwx     0      0         9 23-Nov-2023 05:36 lib64
+    1191 lrwxrwxrwx     0      0        10 23-Nov-2023 05:36 libx32
+   24577 drwxr-xr-x     0      0      4096 23-Nov-2023 05:36 media
+   24578 drwxr-xr-x     0      0      4096 19-Jun-2024 03:19 mnt
+   32769 drwxr-xr-x     0      0      4096 28-Oct-2024 02:43 opt
+   32770 drwxr-xr-x     0      0      4096 18-Apr-2022 18:28 proc
+   40961 drwx------     0      0      4096 27-Jun-2024 21:01 root
+   40962 drwxr-xr-x     0      0      4096 23-Nov-2023 05:37 run
+    1219 lrwxrwxrwx     0      0         8 23-Nov-2023 05:36 sbin
+   49153 drwxr-xr-x     0      0      4096 27-Jul-2024 16:08 snap
+   49154 drwxr-xr-x     0      0      4096 23-Nov-2023 05:36 srv
+   57345 drwxr-xr-x     0      0      4096 18-Apr-2022 18:28 sys
+   57346 drwxrwxrwt     0      0     36864 30-Oct-2024 23:27 tmp
+   65537 drwxr-xr-x     0      0      4096 23-Nov-2023 05:36 usr
+   32771 drwxr-xr-x     0      0      4096 28-Oct-2024 02:41 var
+ 33554433 drwxr-xr-x     0      0      4096 23-Jun-2024 19:13 Docker
+ 33554435 drwx------     0      0      4096 20-Jul-2024 01:27 wslPifEmG
+ 33554436 drwx------     0      0      4096 20-Jul-2024 01:27 wslIdGcnG
+ 33554437 drwx------     0      0      4096 20-Jul-2024 01:27 wsllclloG
+ 33554438 drwx------     0      0      4096 20-Jul-2024 01:27 wslMDCpoG
+   29521 -rwxr-xr-x     0      0         0 30-Oct-2024 23:08 init
+ 33554439 drwx------     0      0      4096  7-Oct-2024 17:16 wsldEijmf
+ 33554440 drwx------     0      0      4096  7-Oct-2024 17:16 wslpmPBof
+ 33554441 drwx------     0      0      4096  7-Oct-2024 17:16 wslkjjJDg
+ 33554442 drwx------     0      0      4096  7-Oct-2024 17:16 wslCPdaDg
+
+dir_partition inode=16386
+   P ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+Directory /home
+   16386 drwxr-xr-x     0      0      4096  9-Jun-2024 01:29 .
+       2 drwxr-xr-x     0      0      4096 30-Oct-2024 23:08 ..
+     477 drwxr-x---  1000   1000      4096 30-Oct-2024 23:00 mantis
+
+dir_partition inode=477
+   P ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+Directory /home/mantis
+     477 drwxr-x---  1000   1000      4096 30-Oct-2024 23:00 .
+   16386 drwxr-xr-x     0      0      4096  9-Jun-2024 01:29 ..
+    1026 -rw-r--r--  1000   1000       807  9-Jun-2024 01:29 .profile
+   29540 -rw-r--r--  1000   1000       220  9-Jun-2024 01:29 .bash_logout
+   29543 -rw-r--r--  1000   1000      4379 28-Oct-2024 20:26 .bashrc
+    1089 drwx------  1000   1000      4096 29-Oct-2024 15:35 .cache
+   29615 -rw-r--r--  1000   1000         0 30-Oct-2024 13:04 .motd_shown
+   29617 -rw-r--r--  1000   1000         0  9-Jun-2024 01:29 .sudo_as_admin_successful
+     325 drwxr-xr-x  1000   1000      4096  9-Jun-2024 01:43 .vscode-server
+    9402 -rw-------  1000   1000     42020 30-Oct-2024 23:00 .bash_history
+   37537 drwxr-xr-x  1000   1000      4096  8-Aug-2024 19:27 .local
+   37540 -rw-r--r--  1000   1000       263 20-Jul-2024 02:10 .wget-hsts
+   37541 drwxr-xr-x  1000   1000      4096  9-Jun-2024 13:34 train
+   38203 -rw-------  1000   1000       336  7-Aug-2024 20:16 .sqlite_history
+   24452 drwxr-xr-x  1000   1000      4096 28-Oct-2024 00:11 docker
+    2146 drwxr-xr-x     0      0      4096 13-Aug-2024 21:54 suno
+   37579 drwxr-xr-x  1000   1000      4096  5-Jul-2024 20:49 nltk_data
+  313126 drwxr-xr-x  1000   1000      4096  5-Jul-2024 20:49 .streamlit
+    2147 -rw-r--r--  1000   1000       176 29-Jul-2024 16:12 .gitconfig
+    1475 drwxr-xr-x  1000   1000      4096 20-Jul-2024 02:01 dns
+   20262 drwx------  1000   1000      4096  9-Jun-2024 02:43 .nv
+  326310 drwxr-xr-x  1000   1000      4096  6-Jul-2024 04:10 .modelscope
+  209812 drwxr-xr-x  1000   1000      4096 21-Jul-2024 17:27 .pywebview
+   54987 drwx------  1000   1000      4096 27-Jul-2024 16:08 snap
+    2176 drwxr-xr-x  1000   1000      4096 25-Jul-2024 14:22 BACKUP-7.25
+     326 -rw-r--r--  1000   1000      4332 20-Apr-2023 08:39 cuda-keyring_1.1-1_all.deb
+  116582 drwxr-xr-x     0      0      4096 28-Oct-2024 00:14 .anthropic
+   11873 drwxr-xr-x  1000   1000      4096 28-Oct-2024 16:07 cuda
+   49731 drwxr-xr-x  1000   1000      4096  9-Jun-2024 11:29 .dotnet
+    2371 drwxr-xr-x  1000   1000      4096  9-Jun-2024 11:49 .keras
+  108766 drwxr-xr-x  1000   1000      4096  9-Jun-2024 12:59 .ipython
+   80084 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:23 EVA
+   13697 drwx------  1000   1000      4096  1-Aug-2024 20:32 .config
+   29596 drwxr-xr-x  1000   1000      4096 29-Oct-2024 01:49 .ollama
+  149759 -rw-r--r--  1000   1000       146  9-Jun-2024 17:36 .asoundrc
+   53453 drwxr-xr-x  1000   1000      4096 18-Jun-2024 15:54 .wespeaker
+   14495 -rw-------  1000   1000        20 30-Oct-2024 22:31 .lesshst
+   17773 -rw-------  1000   1000        55 31-Jul-2024 21:24 .Xauthority
+   13343 drwxr-xr-x  1000   1000      4096 28-Oct-2024 16:50 .eclipse
+    2554 drwxr-xr-x  1000   1000      4096 30-Oct-2024 13:12 .cursor-server
+   29695 drwxr-xr-x  1000   1000      4096 24-Jul-2024 01:02 .docker
+   52170 lrwxrwxrwx  1000   1000        30 23-Jun-2024 19:13 .aws
+   52172 lrwxrwxrwx  1000   1000        32 23-Jun-2024 19:13 .azure
+  317146 drwxr-xr-x  1000   1000      4096 23-Jun-2024 19:22 .vscode-remote-containers
+   53490 drwx------  1000   1000      4096 11-Jul-2024 15:51 .ssh
+    2868 drwxr-xr-x  1000   1000      4096  4-Aug-2024 23:59 .oh-my-zsh
+   29546 -rw-r--r--  1000   1000     49237  5-Aug-2024 00:00 .zcompdump
+  372003 -rw-r--r--  1000   1000      3996  4-Aug-2024 23:59 .zshrc
+  373852 -rw-------  1000   1000        20  5-Aug-2024 00:00 .zsh_history
+  373844 -rw-r--r--  1000   1000     50686  5-Aug-2024 00:00 .zcompdump-dancinkid6-5.8.1
+  373847 -r--r--r--  1000   1000    117248  5-Aug-2024 00:00 .zcompdump-dancinkid6-5.8.1.zwc
+
+dir_partition inode=80084
+   P ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+Directory /home/mantis/EVA
+   80084 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:23 .
+     477 drwxr-x---  1000   1000      4096 30-Oct-2024 23:00 ..
+  325926 drwxr-xr-x  1000   1000      4096  5-Jul-2024 23:00 docs
+   10600 -rw-r--r--  1000   1000      4441 30-Oct-2024 21:14 requirements.txt
+    3805 -rw-r--r--  1000   1000      3477 30-Oct-2024 21:31 README.md
+    2144 drwxr-xr-x  1000   1000      4096 29-Oct-2024 15:13 eva
+     602 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:23 .git
+   70260 drwxr-xr-x  1000   1000      4096 13-Jun-2024 22:39 __pycache__
+   11910 -rw-r--r--  1000   1000       162 30-Oct-2024 14:31 .cursorignore
+   14442 drwxr-xr-x  1000   1000      4096 30-Oct-2024 23:28 app
+   24210 -rw-r--r--  1000   1000        94 30-Oct-2024 21:09 .gitignore
+  150105 drwxr-xr-x  1000   1000      4096 11-Jul-2024 23:39 .vscode
+  159279 drwxr-xr-x  1000   1000      4096  9-Sep-2024 23:02 tests
+
+dir_partition inode=14442
+   P ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+Directory /home/mantis/EVA/app
+   14442 drwxr-xr-x  1000   1000      4096 30-Oct-2024 23:28 .
+   80084 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:23 ..
+   14455 -rw-r--r--  1000   1000        25 30-Jul-2024 02:23 __init__.py
+   50508 -rw-r--r--  1000   1000      1116 30-Oct-2024 21:14 main.py
+   38137 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:14 config
+   50504 drwxr-xr-x  1000   1000      4096 30-Oct-2024 23:14 core
+   14546 drwxr-xr-x  1000   1000      4096 14-Aug-2024 21:32 data
+   50515 drwxr-xr-x  1000   1000      4096 30-Oct-2024 22:02 tools
+   50525 drwxr-xr-x  1000   1000      4096  1-Aug-2024 23:45 utils
+   50365 -rw-r--r--  1000   1000       849 28-Oct-2024 22:59 .env
+   50539 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:14 client
+    3838 -rw-r--r--     0      0      4096 30-Oct-2024 23:28 testdisk.log
+
+dir_partition inode=50504
+   P ext4                     0   0  1 133674 172  2 2147483648
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 1099 GB / 1024 GiB
+Directory /home/mantis/EVA/app/core
+   50504 drwxr-xr-x  1000   1000      4096 30-Oct-2024 23:14 .
+   14442 drwxr-xr-x  1000   1000      4096 30-Oct-2024 23:28 ..
+   50502 -rw-r--r--  1000   1000         0 30-Oct-2024 21:14 __init__.py
+   50505 -rw-r--r--  1000   1000      3833 30-Oct-2024 21:14 nodes.py
+    2785 drwxr-xr-x  1000   1000      4096 29-Oct-2024 19:36 __pycache__
+   50506 -rw-r--r--  1000   1000      1652  5-Aug-2024 12:28 functions.py
+  348375 -rw-r--r--  1000   1000       540 12-Aug-2024 19:01 classes.py
+   10595 -rw-r--r--     0      0     61268 30-Oct-2024 23:25 testdisk.log
+Directory /home/mantis/EVA/app
+   14442 drwxr-xr-x  1000   1000      4096 30-Oct-2024 23:28 .
+   80084 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:23 ..
+   14455 -rw-r--r--  1000   1000        25 30-Jul-2024 02:23 __init__.py
+   50508 -rw-r--r--  1000   1000      1116 30-Oct-2024 21:14 main.py
+   38137 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:14 config
+   50504 drwxr-xr-x  1000   1000      4096 30-Oct-2024 23:14 core
+   14546 drwxr-xr-x  1000   1000      4096 14-Aug-2024 21:32 data
+   50515 drwxr-xr-x  1000   1000      4096 30-Oct-2024 22:02 tools
+   50525 drwxr-xr-x  1000   1000      4096  1-Aug-2024 23:45 utils
+   50365 -rw-r--r--  1000   1000       849 28-Oct-2024 22:59 .env
+   50539 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:14 client
+    3838 -rw-r--r--     0      0      4096 30-Oct-2024 23:28 testdisk.log
+Directory /home/mantis/EVA
+   80084 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:23 .
+     477 drwxr-x---  1000   1000      4096 30-Oct-2024 23:00 ..
+  325926 drwxr-xr-x  1000   1000      4096  5-Jul-2024 23:00 docs
+   10600 -rw-r--r--  1000   1000      4441 30-Oct-2024 21:14 requirements.txt
+    3805 -rw-r--r--  1000   1000      3477 30-Oct-2024 21:31 README.md
+    2144 drwxr-xr-x  1000   1000      4096 29-Oct-2024 15:13 eva
+     602 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:23 .git
+   70260 drwxr-xr-x  1000   1000      4096 13-Jun-2024 22:39 __pycache__
+   11910 -rw-r--r--  1000   1000       162 30-Oct-2024 14:31 .cursorignore
+   14442 drwxr-xr-x  1000   1000      4096 30-Oct-2024 23:28 app
+   24210 -rw-r--r--  1000   1000        94 30-Oct-2024 21:09 .gitignore
+  150105 drwxr-xr-x  1000   1000      4096 11-Jul-2024 23:39 .vscode
+  159279 drwxr-xr-x  1000   1000      4096  9-Sep-2024 23:02 tests
+Directory /home/mantis
+     477 drwxr-x---  1000   1000      4096 30-Oct-2024 23:00 .
+   16386 drwxr-xr-x     0      0      4096  9-Jun-2024 01:29 ..
+    1026 -rw-r--r--  1000   1000       807  9-Jun-2024 01:29 .profile
+   29540 -rw-r--r--  1000   1000       220  9-Jun-2024 01:29 .bash_logout
+   29543 -rw-r--r--  1000   1000      4379 28-Oct-2024 20:26 .bashrc
+    1089 drwx------  1000   1000      4096 29-Oct-2024 15:35 .cache
+   29615 -rw-r--r--  1000   1000         0 30-Oct-2024 13:04 .motd_shown
+   29617 -rw-r--r--  1000   1000         0  9-Jun-2024 01:29 .sudo_as_admin_successful
+     325 drwxr-xr-x  1000   1000      4096  9-Jun-2024 01:43 .vscode-server
+    9402 -rw-------  1000   1000     42020 30-Oct-2024 23:00 .bash_history
+   37537 drwxr-xr-x  1000   1000      4096  8-Aug-2024 19:27 .local
+   37540 -rw-r--r--  1000   1000       263 20-Jul-2024 02:10 .wget-hsts
+   37541 drwxr-xr-x  1000   1000      4096  9-Jun-2024 13:34 train
+   38203 -rw-------  1000   1000       336  7-Aug-2024 20:16 .sqlite_history
+   24452 drwxr-xr-x  1000   1000      4096 28-Oct-2024 00:11 docker
+    2146 drwxr-xr-x     0      0      4096 13-Aug-2024 21:54 suno
+   37579 drwxr-xr-x  1000   1000      4096  5-Jul-2024 20:49 nltk_data
+  313126 drwxr-xr-x  1000   1000      4096  5-Jul-2024 20:49 .streamlit
+    2147 -rw-r--r--  1000   1000       176 29-Jul-2024 16:12 .gitconfig
+    1475 drwxr-xr-x  1000   1000      4096 20-Jul-2024 02:01 dns
+   20262 drwx------  1000   1000      4096  9-Jun-2024 02:43 .nv
+  326310 drwxr-xr-x  1000   1000      4096  6-Jul-2024 04:10 .modelscope
+  209812 drwxr-xr-x  1000   1000      4096 21-Jul-2024 17:27 .pywebview
+   54987 drwx------  1000   1000      4096 27-Jul-2024 16:08 snap
+    2176 drwxr-xr-x  1000   1000      4096 25-Jul-2024 14:22 BACKUP-7.25
+     326 -rw-r--r--  1000   1000      4332 20-Apr-2023 08:39 cuda-keyring_1.1-1_all.deb
+  116582 drwxr-xr-x     0      0      4096 28-Oct-2024 00:14 .anthropic
+   11873 drwxr-xr-x  1000   1000      4096 28-Oct-2024 16:07 cuda
+   49731 drwxr-xr-x  1000   1000      4096  9-Jun-2024 11:29 .dotnet
+    2371 drwxr-xr-x  1000   1000      4096  9-Jun-2024 11:49 .keras
+  108766 drwxr-xr-x  1000   1000      4096  9-Jun-2024 12:59 .ipython
+   80084 drwxr-xr-x  1000   1000      4096 30-Oct-2024 21:23 EVA
+   13697 drwx------  1000   1000      4096  1-Aug-2024 20:32 .config
+   29596 drwxr-xr-x  1000   1000      4096 29-Oct-2024 01:49 .ollama
+  149759 -rw-r--r--  1000   1000       146  9-Jun-2024 17:36 .asoundrc
+   53453 drwxr-xr-x  1000   1000      4096 18-Jun-2024 15:54 .wespeaker
+   14495 -rw-------  1000   1000        20 30-Oct-2024 22:31 .lesshst
+   17773 -rw-------  1000   1000        55 31-Jul-2024 21:24 .Xauthority
+   13343 drwxr-xr-x  1000   1000      4096 28-Oct-2024 16:50 .eclipse
+    2554 drwxr-xr-x  1000   1000      4096 30-Oct-2024 13:12 .cursor-server
+   29695 drwxr-xr-x  1000   1000      4096 24-Jul-2024 01:02 .docker
+   52170 lrwxrwxrwx  1000   1000        30 23-Jun-2024 19:13 .aws
+   52172 lrwxrwxrwx  1000   1000        32 23-Jun-2024 19:13 .azure
+  317146 drwxr-xr-x  1000   1000      4096 23-Jun-2024 19:22 .vscode-remote-containers
+   53490 drwx------  1000   1000      4096 11-Jul-2024 15:51 .ssh
+    2868 drwxr-xr-x  1000   1000      4096  4-Aug-2024 23:59 .oh-my-zsh
+   29546 -rw-r--r--  1000   1000     49237  5-Aug-2024 00:00 .zcompdump
+  372003 -rw-r--r--  1000   1000      3996  4-Aug-2024 23:59 .zshrc
+  373852 -rw-------  1000   1000        20  5-Aug-2024 00:00 .zsh_history
+  373844 -rw-r--r--  1000   1000     50686  5-Aug-2024 00:00 .zcompdump-dancinkid6-5.8.1
+  373847 -r--r--r--  1000   1000    117248  5-Aug-2024 00:00 .zcompdump-dancinkid6-5.8.1.zwc
+Directory /home
+   16386 drwxr-xr-x     0      0      4096  9-Jun-2024 01:29 .
+       2 drwxr-xr-x     0      0      4096 30-Oct-2024 23:08 ..
+     477 drwxr-x---  1000   1000      4096 30-Oct-2024 23:00 mantis
+Directory /
+       2 drwxr-xr-x     0      0      4096 30-Oct-2024 23:08 .
+       2 drwxr-xr-x     0      0      4096 30-Oct-2024 23:08 ..
+      11 drwx------     0      0     16384  9-Jun-2024 01:29 lost+found
+      12 lrwxrwxrwx     0      0         7 23-Nov-2023 05:36 bin
+    8193 drwxr-xr-x     0      0      4096 19-Jun-2024 03:18 boot
+    8194 drwxr-xr-x     0      0      4096 23-Nov-2023 05:36 dev
+   16385 drwxr-xr-x     0      0      4096 30-Oct-2024 23:08 etc
+   16386 drwxr-xr-x     0      0      4096  9-Jun-2024 01:29 home
+    1188 lrwxrwxrwx     0      0         7 23-Nov-2023 05:36 lib
+    1189 lrwxrwxrwx     0      0         9 23-Nov-2023 05:36 lib32
+    1190 lrwxrwxrwx     0      0         9 23-Nov-2023 05:36 lib64
+    1191 lrwxrwxrwx     0      0        10 23-Nov-2023 05:36 libx32
+   24577 drwxr-xr-x     0      0      4096 23-Nov-2023 05:36 media
+   24578 drwxr-xr-x     0      0      4096 19-Jun-2024 03:19 mnt
+   32769 drwxr-xr-x     0      0      4096 28-Oct-2024 02:43 opt
+   32770 drwxr-xr-x     0      0      4096 18-Apr-2022 18:28 proc
+   40961 drwx------     0      0      4096 27-Jun-2024 21:01 root
+   40962 drwxr-xr-x     0      0      4096 23-Nov-2023 05:37 run
+    1219 lrwxrwxrwx     0      0         8 23-Nov-2023 05:36 sbin
+   49153 drwxr-xr-x     0      0      4096 27-Jul-2024 16:08 snap
+   49154 drwxr-xr-x     0      0      4096 23-Nov-2023 05:36 srv
+   57345 drwxr-xr-x     0      0      4096 18-Apr-2022 18:28 sys
+   57346 drwxrwxrwt     0      0     36864 30-Oct-2024 23:27 tmp
+   65537 drwxr-xr-x     0      0      4096 23-Nov-2023 05:36 usr
+   32771 drwxr-xr-x     0      0      4096 28-Oct-2024 02:41 var
+ 33554433 drwxr-xr-x     0      0      4096 23-Jun-2024 19:13 Docker
+ 33554435 drwx------     0      0      4096 20-Jul-2024 01:27 wslPifEmG
+ 33554436 drwx------     0      0      4096 20-Jul-2024 01:27 wslIdGcnG
+ 33554437 drwx------     0      0      4096 20-Jul-2024 01:27 wsllclloG
+ 33554438 drwx------     0      0      4096 20-Jul-2024 01:27 wslMDCpoG
+   29521 -rwxr-xr-x     0      0         0 30-Oct-2024 23:08 init
+ 33554439 drwx------     0      0      4096  7-Oct-2024 17:16 wsldEijmf
+ 33554440 drwx------     0      0      4096  7-Oct-2024 17:16 wslpmPBof
+ 33554441 drwx------     0      0      4096  7-Oct-2024 17:16 wslkjjJDg
+ 33554442 drwx------     0      0      4096  7-Oct-2024 17:16 wslCPdaDg
+
+interface_write()
+   P ext4                     0   0  1 133674 172  2 2147483648
+ 
+Write isn't available because the partition table type "None" has been selected.
+
+TestDisk exited normally.

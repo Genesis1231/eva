@@ -83,19 +83,17 @@ class WSLClient:
         
         except Exception as e:
             logger.error(f"Error: Failed to stream to client: {str(e)}")
-            return "Failed to launch the media player."
+            return "Client Error: Failed to launch the media player."
 
     def launch_youtube(self, id: str, title: str) -> str:
         """ Client tool function, Stream the youtube video to the client """
         try:
             html = self.load_html("youtube.html", video_id=id, video_title=title)
             self.window.launch_html(html)
-            
-            return "The video player is launched."
         
         except Exception as e:
             logger.error(f"Error: Failed to launch youtube video to client: {str(e)}")
-            return "The video player is not launched properly."
+            return "Client Error: The video player could not be launched properly."
     
     def launch_epad(self, html: str) -> Optional[str]:
         """ Client tool function, Launch the epad with HTML to the client """
@@ -106,7 +104,7 @@ class WSLClient:
             return None
         except Exception as e:
             logger.error(f"Error: Failed to launch epad to client: {str(e)}")
-            return "The epad is not launched properly." 
+            return "Client Error: The epad could not be launched properly." 
     
     def launch_gallery(self, image_urls: List) -> Optional[str]:
         """ Client tool function, Display the image to the client """
@@ -121,7 +119,7 @@ class WSLClient:
         
         except Exception as e:
             logger.error(f"Error: Failed to display images: {str(e)}")
-            return "The gallery is not launched properly."
+            return "Client Error: The images could not be displayed."
         
     def deactivate(self) -> None:
         self.watcher.deactivate()

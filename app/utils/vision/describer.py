@@ -72,7 +72,7 @@ class Describer:
                 self.model = "gpt-4o-mini"
             
             def generate(self, template_name: str, image: str, **kwarg) -> str:
-                prompt_template = load_prompt(f"{template_name}_chatgpt").format(**kwarg)
+                prompt_template = load_prompt(f"{template_name}_ollama").format(**kwarg)
                 headers = { "Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}" }
                 payload = {
                     "model": self.model,

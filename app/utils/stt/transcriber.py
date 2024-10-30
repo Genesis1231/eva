@@ -32,24 +32,14 @@ class Transcriber:
     
     def _get_model_factory(self) -> Dict[str, Callable]:
         return {
-            "SENSEVOICE" : self._create_sensevoice_model,
             "FASTER-WHISPER" : self._create_fasterwhisper_model,
             "WHISPER" : self._create_whisper_model,
         }
         
-    def _create_sensevoice_model(self):
-        from .model import SenseVoiceSmall
-        
-        model_dir = "iic/SenseVoiceSmall"
-        model, kwargs = SenseVoiceSmall.from_pretrained(model=model_dir)
-        self.kwargs = kwargs
-        
-        return model
-        
     def _create_fasterwhisper_model(self):
         from faster_whisper import WhisperModel
         
-        model_size = "distil-medium.en"   
+        model_size = "distil-medium.en"   # choose a medium size english to improve speed
         device = "cuda" if cuda.is_available() else "cpu"
         
         # Run on GPU with Float16 (Float32)

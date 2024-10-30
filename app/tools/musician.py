@@ -3,7 +3,7 @@ import requests
 from config import logger
 from typing import Type, Dict, List, Optional, Any
 
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 from langchain_core.tools import BaseTool
 
 
@@ -53,7 +53,7 @@ class Musician(BaseTool):
         self,
         query: str,
         instrumental: bool,
-        base_url: str = 'http://localhost:3000'
+        base_url: str = 'http://localhost:3000' # The url for the Suno-API docker
     ) -> Dict:
         payload = {
             "prompt": query,
@@ -74,7 +74,7 @@ class Musician(BaseTool):
                 time.sleep(1)
                 print(f"waiting for Suno to complete ... {i}s", end="\r")
             else:
-                return {"error": f"Failed to create music: Timeout waiting for response."}
+                return {"error": f"Failed to create music: Timeout for the response."}
                 
             content = f"I have created a song called '{title}'. The style is {desc}."
 
@@ -84,5 +84,5 @@ class Musician(BaseTool):
 
         return {"action": content, "url": url, "cover_url": cover_url, "title": title}
  
-    def run_client(self, client, **kwargs: Dict) -> Optional[Dict]:
+    def run_client(self, client: Any, **kwargs) -> Optional[Dict]:
         return client.stream_music(url=kwargs.get("url"), cover_url=kwargs.get("cover_url"), title=kwargs.get("title"))

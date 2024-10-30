@@ -1,2 +1,1 @@
-Tell a grounded narrative within fifty words.
-Only tell the narrative of your observation.
+Tell a grounded narrative of your observation within fifty words.
