@@ -106,14 +106,14 @@ python main.py
 configure EVA setting in app/config/config.py
 ```python
 eva_configuration = {
-    "DEVICE": "desktop",
-    "LANGUAGE": "en",
-    "BASE_URL": "http://localhost:11434",
-    "CHAT_MODEL": "chatgpt",
-    "IMAGE_MODEL": "llava-phi3",
-    "STT_MODEL": "faster-whisper",
-    "TTS_MODEL": "coqui",
-    "SUMMARIZE_MODEL": "llama"
+    "DEVICE": "desktop", # "desktop" or "mobile" (still testing)
+    "LANGUAGE": "en", # keep it as english for now, need to have prompt templates in other languages.
+    "BASE_URL": "http://localhost:11434", # URL for local Ollama server, you can leave it if you dont plan to use local models
+    "CHAT_MODEL": "chatgpt", # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Google Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
+    "IMAGE_MODEL": "llava-phi3", # Supports Chatgpt-4o-mini and Ollama llava-phi3/llava1.5(local), recommend: 4omini, but llava-phi3 is very small and free
+    "STT_MODEL": "faster-whisper", # supports local Whisper and Faster-whisper
+    "TTS_MODEL": "coqui", # Supports elevenlabs and coqui TTS (local
+    "SUMMARIZE_MODEL": "llama" Supports groq-llama3.1-8b, Anthropic-claude-sonnet3.5 and Ollama-llama3.1(local)
 }
 ```
 
