@@ -76,8 +76,8 @@ EVA/
 ## 💻 System Requirements
 
 - Python 3.10+
-- CUDA-compatible GPU (If you want to run locally)
-- 10GB free disk space
+- CUDA-compatible GPU (if you want to run locally)
+- 10GB free disk space (if you want to run locally)
 - Linux/macOS
 
 ## 🚀 Quick Start
