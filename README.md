@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![EVA Logo](path/to/logo.png)
+![EVA Logo](logo.png)
 
 *Experimental Voice Assistant*
 
@@ -104,7 +104,18 @@ python main.py
 ```
 ## 🛠️ Configuration
 configure EVA setting in app/config/config.py
-follow the instructions in the file
+```python
+eva_configuration = {
+    "DEVICE": "desktop",
+    "LANGUAGE": "en",
+    "BASE_URL": "http://localhost:11434",
+    "CHAT_MODEL": "chatgpt",
+    "IMAGE_MODEL": "llava-phi3",
+    "STT_MODEL": "faster-whisper",
+    "TTS_MODEL": "coqui",
+    "SUMMARIZE_MODEL": "llama"
+}
+```
 
 ## 🔧 Tool Setup
 
@@ -190,4 +201,3 @@ This project wouldn't be possible without these amazing open-source projects:
 <div align="center">
   <sub>Built with ❤️ by the Adam</sub>
 </div>
-```
