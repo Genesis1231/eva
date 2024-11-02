@@ -9,7 +9,7 @@ from utils.extension import DiscordMJ
 
 class PainterInput(BaseModel):
     """Input for painter tool."""
-    query: str = Field(description="Input for painter tool, should be the idea or subject of the painting.")
+    query: str = Field(description="Input for painter tool, should be the description of painting.")
 
 class Painter(BaseTool):
     """
@@ -26,7 +26,6 @@ class Painter(BaseTool):
     description: str = "Tool for creating pictures. This process might take a while."
     type: str = "chat" # can be used in chatbot
     client: str = "all"
-    prompter : SmallAgent = SmallAgent("llama")
     generator : DiscordMJ = DiscordMJ()
     args_schema: Type[BaseModel] = PainterInput
 
@@ -35,11 +34,7 @@ class Painter(BaseTool):
         query: str,
     ) -> Dict:
 
-        prompt = self.generate_prompt(query)
-        if not prompt:
-            return {"error": "Failed to generate prompt, try again later."}
-
-        midjourney_prompt = f"{prompt} --c 20 --ar 3:4 --s 300"
+        midjourney_prompt = f"{self.filter_prompt(query)} --c 20 --ar 3:4 --s 300"
         if image_urls := self.generator.send_message(midjourney_prompt):
             content = f"I have created images with the query: {query}"
             return {"action": content, "image_urls": image_urls}
@@ -54,18 +49,6 @@ class Painter(BaseTool):
             prompt = prompt.replace(word, '*')
         
         return prompt
-    
-    def generate_prompt(self, query: str) -> Optional[str]:
-        """ Generate a prompt for the midjourney tool"""
-        
-        try:
-            response = self.prompter.generate(template="painter", input=query)
-            
-            return self.filter_prompt(response.lower())
-        except Exception as e:
-            logger.error(f"Error: Failed to generate prompt: {str(e)}.")
-            return None   
-        
         
     def run_client(self, client, **kwargs) -> Optional[Dict]:
         return client.launch_gallery(image_urls=kwargs.get("image_urls"))

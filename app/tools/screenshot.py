@@ -20,7 +20,7 @@ class Screenshot(BaseTool):
     name: str = "screenshot_tool"
     description: str = "Tool for capturing and analyzing the computer screenshot."
     type: str = "conversational"
-    client: str = "desktop/none"
+    client: str = "none"
     args_schema: Type[BaseModel] = ScreenshotInput
     
     def _run(

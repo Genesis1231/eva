@@ -1,65 +1,82 @@
-# EVA (Enhanced Voice Assistant) 🎙️
+# E.V.A. 🎙️
 
 <div align="center">
 
 ![EVA Logo](path/to/logo.png)
 
-*Your AI-powered companion for seamless voice interaction*
+*Experimental Voice Assistant*
 
-[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
-[![GitHub Issues](https://img.shields.io/github/issues/yourusername/EVA)](https://github.com/yourusername/EVA/issues)
-[![GitHub Stars](https://img.shields.io/github/stars/yourusername/EVA)](https://github.com/yourusername/EVA/stargazers)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Discord](https://img.shields.io/discord/YOUR_DISCORD_ID)](https://discord.gg/your-invite-link)
-
-[Demo](link) • [Documentation](link) • [Discord](link) • [Contributing](link)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![GitHub Issues](https://img.shields.io/github/issues/Genesis1231/EVA)](https://github.com/Genesis1231/EVA/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/Genesis1231/EVA)](https://github.com/Genesis1231/EVA/stargazers)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)]
 
 </div>
 
-## 🎯 Overview
+## 🎯 Overview of EVA
 
-EVA is a prototype voice assistant I built to learn more about AI. It is designed to explore the possibilities of human AI interactions. EVA is designed to act proactively and freely with the user. EVA is capable of working with multiple tools like creating images and videos.
+Hello Github wizards! Thanks for stopping by~ 🤗
+
+So, here's the story - I used to sling code back in the days (like, when Perl was still cool), but then a year ago AI came along and stroke me with awe. I became very interested in human-AI interaction and how it can be applied in our daily life. However, most of the online projects only focused on a few specific tasks. So I spent a few months to develop EVA myself. 
+
+EVA is an experimental voice assistant that explores human-AI experience through proactive engagement and autonomous behavior. Built with a modular architecture, it aims to provide a more natural and dynamic interaction experience to users, include an extensive tool framework that allows for continuous enhancement of its capabilities.
 
 <div align="center">
   <img src="path/to/demo.gif" alt="EVA Demo" width="600px"/>
 </div>
 
+
 ## ✨ Key Features
 
-### 🎙️ Advanced Speech Processing
-- Real-time speech recognition with 98% accuracy
-- Support for 10+ languages including English, Chinese, Japanese
-- Custom SANM (Streaming chunk-aware multihead attention) implementation
-- Noise-resistant processing
+EVA is built on LangGraph framework, with some customized modules and tools. You can run it purely local with no cost.
 
-### 🖼️ Rich Media Handling
-- Responsive image gallery with touch/mouse controls
-- YouTube integration with adaptive streaming
-- Real-time particle animations
-- WebGL-powered visual effects
+### 🎙️ Cross platform modular design
+- Configurable model selection for LLM, TTS, STT, etc.
+- Integrated with OpenAI, Anthropic, Groq, Google, and Ollama.
+- Easy modification of prompts and tools.
+- Supports both desktop and mobile app
 
-### 🔌 Smart Integrations
-- Gmail API integration for email management
-- Discord bot with Midjourney AI image generation
-- Extensible plugin architecture
-- WebSocket-based real-time communications
+### 🖼️ Interactive experience
+- Voice ID and vision ID for personalized interaction.
+- Proactive style communication (varies between models)
+- Multi-modal outputs with asynchronous action.
 
-## 🏗️ Architecture
+### 🔌 Dynamic Tool system
+- Web search through DuckDuckGo/Tavily
+- Youtube video search
+- Discord Midjourney AI image generation
+- Suno music generation
+- Screenshot and analysis 
+- Compatible with all Langchain tools
+- Easy implementation of new tool with single file.
 
-```mermaid
-graph TD
-    A[Speech Input] --> B[Speech Recognition Engine]
-    B --> C[NLP Processing]
-    C --> D[Action Handler]
-    D --> E[Response Generator]
-    E --> F[Multi-modal Output]
+
+## 📁 Project Structure
+
+```
+EVA/
+├── app/
+│   ├── client/          # Client-side implementation
+│   ├── config/          # Configuration files and log
+│   ├── core/            # Core process
+│   ├── data/            # Data storage
+│   ├── tools/           # Tool implementations
+│   └── utils/           # Utility functions
+│       ├── agent/       # LLM agent classes and functions
+│       ├── memory/      # Mmeory module classes 
+│       ├── prompt/      # Utility prompts
+│       ├── stt/         # Speech recognition models and classes
+│       ├── tts/         # Text-to-Speech models and classes
+│       └── vision/      # Vision models and functions
+├── tests/               # Test cases (😢)
+└── docs/                # Documentation (😩)
+
 ```
 
 ## 💻 System Requirements
 
 - Python 3.10+
-- CUDA-compatible GPU (recommended)
-- 8GB RAM minimum
+- CUDA-compatible GPU (If you want to run locally)
 - 10GB free disk space
 - Linux/macOS
 
@@ -81,48 +98,93 @@ pip install -r requirements.txt
 cp .env.example .env
 
 # Run EVA
-python eva/main.py
+cd app
+python main.py
 
 ```
-##🛠️ Configuration
+## 🛠️ Configuration
 configure EVA setting in app/config/config.py
 follow the instructions in the file
 
-### Tool setup
+## 🔧 Tool Setup
+
+- Music generation tool Requires a Suno-API docker running on the base_url. 
+  Install from https://github.com/gcui-art/suno-api
+
+- Image generation tool requires a midjourney account and a private discord server.
+  Need include the discord channel information in .env file.
+
+If you want to disable some tools, just change the client setting in related .py file.
+
+```python
+    client: str = "none"
+```
+But I like to leave them all on since it is very interesting to observe how AI select tools.
 
 
-## 📊 
+## 🤝 Contribution
 
-## 
+Due to my limited time, the code is far from perfect. I would be very grateful if anyone is willing to contribute🍝
 
+### How You Can Help
 
+1. **Code Contributions**
+   - Found a bug? Report it and fix it.
+   - Got a cool feature idea? Build it.
+   - Fork, branch, commit, PR - you know the drill.
 
-## 🤝 Contributing
+2. **Documentation**
+   - Help me turn my late-night code comments into actual docs.
+   - Spot a typo? Fix it.
+   - Think something needs more explanation? Add it.
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+3. **Ideas & Feedback**
+   - All ideas welcome, from "what if..." to "why didn't you..."
+   - Share your use cases.
+   - Tell me what breaks (hopefully not everything)
+   
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 🗺️ Future Roadmap
 
-## 🗺️ Roadmap
+- [ ] More tools for EVA to use
+- [ ] Long term memory
+- [ ] Self-motivation through reflections
+- [ ] Complete Mobile SDK (WIP)
 
-- [ ] Emotion detection in speech
-- [ ] Multi-speaker separation
-- [ ] Real-time translation
-- [ ] Custom wake word training
-- [ ] Mobile SDK
 
 ## 📜 License
 
 This project is licensed under the MIT License.
 
-## 📬 Contact
 
-- GitHub Issues: For bug reports and feature requests
-- Discord: Join our [community server](https://discord.gg/your-invite-link)
+## 📊 Credits & Acknowledgments
+
+This project wouldn't be possible without these amazing open-source projects:
+
+### Core & Language Models
+- [LangChain](https://github.com/langchain-ai/) - Amazing AI Dev Framework 
+- [Groq](https://github.com/groq/) - Free LLM access and really fast
+- [Ollama](https://github.com/ollama/) - Best local model deployment
+- [Numpy](https://github.com/numpy/) - The Numpy
+- [FastAPI](https://github.com/fastapi/) - Excellent API framework
+- [Tqdm](https://github.com/tqdm/) - Great progress bar
+
+### Utility modules
+- [OpenCV](https://github.com/opencv/) - Legendary Vision Library
+- [Faster-Whisper](https://github.com/guillaumekln/faster-whisper) - Fastest Speech transcription
+- [Coqui TTS](https://github.com/coqui-ai/TTS) - Admirable text-to-speech synthesis
+- [Face Recognition](https://github.com/ageitgey/face_recognition) - Face detection
+- [Speech Recognition](https://github.com/Uberi/speech_recognition) - Easy-to-use Speech detection
+- [PyAudio](https://github.com/jleb/pyaudio) - Powerful Audio I/O 
+- [Wespeaker](https://github.com/wenet-e2e/wespeaker) - Speaker verification
+- [NLTK](https://github.com/nltk/) - Natural Language Toolkit
+
+### Tools development
+- [Chromium](https://github.com/chromium/) - Best open-source web browser
+- [DuckDuckGo](https://github.com/duckduckgo/) - Free Web search
+- [Youtube_search](https://github.com/joetats/youtube_search) - YouTube search
+- [Suno-API](https://github.com/suno-ai/suno-api) - Music generation API for Suno
+- [PyautoGUI](https://github.com/asweigart/pyautogui) - cross-platform GUI automation
 
 
 <div align="center">
