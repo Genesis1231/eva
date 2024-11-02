@@ -51,7 +51,7 @@ class WSLClient:
     def start(self) -> Dict:
         observation = self.watcher.glance()
         
-        html = load_html("hello.html", message="Hello!")
+        html = load_html("hello.html", message="Hello there!")
         self.window.launch_html(html)
         
         return {"observation": observation}
