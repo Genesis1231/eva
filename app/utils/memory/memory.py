@@ -86,6 +86,7 @@ class Memory:
         
         # summarize the chat_memory by calling the summarizer
         summary = self.summarizer.generate(template="summarize", conversation="\n".join(chat_memory))
+        summary = json.loads(summary).get("summary")
         
         return {
             "time": self._session_memory[0].get("timestamp"),

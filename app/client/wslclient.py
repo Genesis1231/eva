@@ -1,11 +1,12 @@
 import os
 from config import logger
-
 from typing_extensions import Dict, List, Optional
+
 from utils.tts import Speaker, AudioPlayer
 from utils.vision import Watcher
 from utils.stt import Listener
 from utils.extension import Window
+from client.html import load_html
 
 class WSLClient:
     """
@@ -46,26 +47,12 @@ class WSLClient:
             "user_message": message,
             "observation": observation
         }
-        
-    def load_html(self, template: str, **kwargs) -> str:
-
-        dir = os.path.dirname(__file__)
-        html_path = os.path.join(dir, "html", template)
-        
-        try:
-            with open(html_path, 'r') as f:
-                html = f.read().strip()
-        
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Prompt file {html_path} not found.")
-        
-        for key, value in kwargs.items():
-            html = html.replace(f"<{key}>", value)
-            
-        return html
     
     def start(self) -> Dict:
         observation = self.watcher.glance()
+        
+        html = load_html("hello.html", message="Hello!")
+        self.window.launch_html(html)
         
         return {"observation": observation}
 
@@ -75,7 +62,7 @@ class WSLClient:
     def stream_music(self, url: str, cover_url: str, title: str) -> str:
         """ Client tool function, Stream the media to the client """
         try:
-            html = self.load_html("music.html", image_url=cover_url, music_title=title)
+            html = load_html("music.html", image_url=cover_url, music_title=title)
             self.window.launch_html(html)
             self.player.stream(url)
             
@@ -88,7 +75,7 @@ class WSLClient:
     def launch_youtube(self, id: str, title: str) -> str:
         """ Client tool function, Stream the youtube video to the client """
         try:
-            html = self.load_html("youtube.html", video_id=id, video_title=title)
+            html = load_html("youtube.html", video_id=id, video_title=title)
             self.window.launch_html(html)
         
         except Exception as e:
@@ -98,7 +85,7 @@ class WSLClient:
     def launch_epad(self, html: str) -> Optional[str]:
         """ Client tool function, Launch the epad with HTML to the client """
         try:
-            html = self.load_html("blank.html", full_html=html)
+            html = load_html("blank.html", full_html=html)
             self.window.launch_html(html)
             
             return None
@@ -112,7 +99,7 @@ class WSLClient:
         html = "\n".join([f"<div class='slide'><img src='{url}'></div>" for url in image_urls])
 
         try:
-            html = self.load_html("gallery.html", image_block=html)
+            html = load_html("gallery.html", image_block=html)
             self.window.launch_html(html)
             
             return None

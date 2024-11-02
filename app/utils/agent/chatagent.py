@@ -109,8 +109,8 @@ class ChatAgent:
         chain = prompt_template | self.llm | parser
         
         try: 
-            response = chain.invoke({"tools": self.tool_info})
-            print(json.dumps(response, indent=2))
+            response = chain.invoke({"tools": json.dumps(self.tool_info)})
+            logger.info(json.dumps(response, indent=2))
             response = self._format_response(response)
             
         except Exception as e:

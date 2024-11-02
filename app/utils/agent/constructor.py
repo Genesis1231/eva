@@ -9,29 +9,31 @@ def format_history(history: Optional[List[Dict]]) -> str:
         return ""
     
     messages = []
-    messages.append("<|start_header_id|>Conversation History:<|end_header_id|>")
+    messages.append("<CONVERSATION_HISTORY>")
         
     for chat in history:
         for role, message in [("user", chat.get("user_message")),
                               ("assistant", chat.get("eva_message")),
                               ("memory", chat.get("premeditation"))
                               ]:
-            if message and message is not None:
-                if role == "memory":
-                    message = "" if not message  else f"<|start_header_id|>assistant<|end_header_id|>I remember {message}"
-                else:
-                    message = f"<|start_header_id|>{role}<|end_header_id|>{message}"
-               
-                message += "<|eot_id|>\n"
-                messages.append(message)
-        
+            if not message:
+                continue
+            
+            if role == "memory":
+                message = f"<assistant>I remember {message} </assistant>"
+            else:
+                message = f"<{role}>{message}</{role}>"
+            
+            messages.append(message)
+                
+    messages.append("</CONVERSATION_HISTORY>")
     return "\n".join(messages)
 
 def format_observation(observation: Optional[str]) -> str:
-    return "" if not observation else f"I see {observation} "
+    return "" if not observation else f"<observation>I see: {observation} </observation>"
 
 def format_message(user_message: Optional[str]) -> str:
-    return "" if not user_message else f"I hear {user_message} "
+    return "" if not user_message else f"<human_reply>I hear: {user_message} </human_reply>"
 
 def format_action_results(results: Optional[List[Dict]]) -> str:
     """ Format the action results into string for LLM """
@@ -39,6 +41,8 @@ def format_action_results(results: Optional[List[Dict]]) -> str:
         return ""
     
     action_results = []
+    action_results.append("<action_results>I received the following results from my previous actions:")
+    
     # simple way to format the results
     for result_item in results:
         result = result_item.get("result")
@@ -52,9 +56,8 @@ def format_action_results(results: Optional[List[Dict]]) -> str:
             if additional_info:=result_item.get("additional"):
                 action_results.append(additional_info)
             
-    action_results = "\n".join(action_results)
-        
-    return f"\n <|start_header_id|>ipython<|end_header_id|>My previous action results:\n <action results>{action_results} </action results><|eot_id|>"
+    action_results.append("</action_results>")
+    return "\n".join(action_results)
 
 def build_prompt(timestamp : str, sense: Dict, history: List[Dict], action_results: List[Dict]) -> str:
     """
@@ -65,36 +68,36 @@ def build_prompt(timestamp : str, sense: Dict, history: List[Dict], action_resul
         3. Instructions: the steps for the LLM to follow
     """
     
-    user_message = sense.get("user_message")
-    observation = sense.get("observation")
-    system_prompt = load_prompt("persona")
+    user_message: Optional[str] = sense.get("user_message")
+    observation: Optional[str] = sense.get("observation")
+    system_prompt: Optional[str] = load_prompt("persona")
     
-    action_results = format_action_results(action_results)
-    user_message = format_message(user_message)
-    observation = format_observation(observation)
-    history_prompt = format_history(history)
+    action_results: Optional[str] = format_action_results(action_results)
+    user_message: Optional[str] = format_message(user_message)
+    observation: Optional[str] = format_observation(observation)
+    history_prompt: Optional[str] = format_history(history)
     
-    PROMPT_TEMPLATE = f"""
-        <|begin_of_text|><|start_header_id|>system<|end_header_id|>
+    PROMPT_TEMPLATE = f"""  
+        <PERSONA>
         {system_prompt}
+        </PERSONA>
         
-        I have the access to the following tools:
+        <TOOLS>
+        I have the access to the following tools for action:
         {{tools}}
-        
-        <|eot_id|>
+        </TOOLS>
         
         {history_prompt}
         
-        <|start_header_id|>user<|end_header_id|>
-        ### <Context> ###
-        - Current time is {timestamp}.
-        - {observation} 
-        - {user_message} 
+        <CONTEXT>
+        <current_time>{timestamp}</current_time>
+        {observation} 
+        {user_message} 
         {action_results}
-        </context>
+        </CONTEXT>
 
 
-        ### <Instructions> ###
+        <INSTRUCTIONS>
         Step 1: Analysis:
         - Analyze the conversation history and current context to form a cohesive understanding of my situation.
         - Resolve potential misspoken words or typos by the user.
@@ -110,16 +113,18 @@ def build_prompt(timestamp : str, sense: Dict, history: List[Dict], action_resul
         - If the information from action results is enough, form the response and avoid any new action.
         
         Step 4: Verbal Response: 
-        - Craft a concise verbal response.
+        - Craft an appropriate verbal response. No emojis.
         - If action is planned, inform the user about the action and remove questions in the verbal response.
+        </INSTRUCTIONS>
         
-        ### Final Generation and formatting: ###
         Based on the above context and instructions, craft appropriate response with the following Json format.
         
+        <FORMATTING>
         {{format_instructions}}
-        
-        <|eot_id|>
-        <|start_header_id|>assistant<|end_header_id|>
+        </FORMATTING>
+ 
+        <ASSISTANT>
     """
-    logger.info(PROMPT_TEMPLATE)
+ 
+    logger.info(PROMPT_TEMPLATE) 
     return PROMPT_TEMPLATE

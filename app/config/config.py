@@ -38,7 +38,7 @@ eva_configuration = {
     "DEVICE": "desktop",
     "LANGUAGE": "en",
     "BASE_URL": "http://localhost:11434",
-    "CHAT_MODEL": "anthropic",
+    "CHAT_MODEL": "chatgpt",
     "IMAGE_MODEL": "llava-phi3",
     "STT_MODEL": "faster-whisper",
     "TTS_MODEL": "coqui",
