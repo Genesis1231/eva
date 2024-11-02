@@ -9,7 +9,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![GitHub Issues](https://img.shields.io/github/issues/Genesis1231/EVA)](https://github.com/Genesis1231/EVA/issues)
 [![GitHub Stars](https://img.shields.io/github/stars/Genesis1231/EVA)](https://github.com/Genesis1231/EVA/stargazers)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 </div>
 
