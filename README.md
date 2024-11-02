@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![EVA Logo](path/to/logo.png)
+![EVA Logo](logo.png)
 
 *Experimental Voice Assistant*
 
