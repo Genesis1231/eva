@@ -39,7 +39,7 @@ class Describer:
         return {
             "LLAVA-PHI3" : lambda: self._create_ollama_model("llava-phi3"),
             "LLAVA:13B" : lambda: self._create_ollama_model("llava:13b"),
-            "CHATGPT" : self._create_openai_model
+            "OPENAI" : self._create_openai_model
         }
         
     def _create_ollama_model(self, model_name: str):

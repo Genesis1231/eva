@@ -48,13 +48,17 @@ class ChatAgent:
     def _get_model_factory(self) -> Dict[str, Callable[[], BaseLanguageModel]]:
         """ Get the model factory for creating language models. """
         return {
-            "GROQ" : lambda: create_groq_model("llama-3.1-70b-versatile", self.model_temperature),
-            "ANTHROPIC": lambda: create_anthropic_model(self.model_temperature),
-            "MISTRAL": lambda: create_mistral_model(self.model_temperature),
-            "GOOGLE": lambda: create_google_model(self.model_temperature),
-            "CHATGPT" : lambda: create_openai_model(self.model_temperature),
-            "LLAMA" : lambda: create_ollama_model(self.base_url, "llama3.1", self.model_temperature),
-            "QWEN": lambda: create_ollama_model(self.base_url, "qwen2:72b", self.model_temperature),
+            "GROQ" : lambda: create_groq_model(model_name="llama-3.1-70b-versatile", temperature=self.model_temperature),
+            "ANTHROPIC": lambda: create_anthropic_model(temperature=self.model_temperature),
+            "MISTRAL": lambda: create_mistral_model(temperature=self.model_temperature),
+            "GOOGLE": lambda: create_google_model(temperature=self.model_temperature),
+            "OPENAI" : lambda: create_openai_model(temperature=self.model_temperature),
+            "LLAMA" : lambda: create_ollama_model(base_url=self.base_url, 
+                                                  model_name="llama3.1:70b", 
+                                                  temperature=self.model_temperature),
+            "QWEN": lambda: create_ollama_model(base_url=self.base_url, 
+                                                model_name="qwen2.5:72b", 
+                                                temperature=self.model_temperature),
         }
         
     def _initialize_model(self)-> BaseLanguageModel:

@@ -132,18 +132,34 @@ COPY . .
 
 ## 🛠️ Configuration
 configure EVA setting in app/config/config.py
+
 ```python
 eva_configuration = {
     "DEVICE": "desktop", # Currently "desktop" or "mobile" (testing)
     "LANGUAGE": "en", # Only english for now, need to have prompt templates in other languages.
     "BASE_URL": "http://localhost:11434", # URL for local Ollama server, you can leave it if you dont plan to use local models
-    "CHAT_MODEL": "chatgpt", # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Google Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
-    "IMAGE_MODEL": "llava-phi3", # Supports Chatgpt-4o-mini and Ollama llava-phi3/llava1.5(local), recommend: 4omini, but llava-phi3 is very small and free. 
-    "STT_MODEL": "faster-whisper", # supports local Whisper and Faster-whisper.  
+    "CHAT_MODEL": "anthropic", # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Google Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
+    "IMAGE_MODEL": "llava-phi3", # Supports Chatgpt-4o-mini and Ollama llava-phi3/llava13b(local), recommend: 4omini, but llava-phi3 is very small and free. 
+    "STT_MODEL": "faster-whisper", # supports OpenAI Whisper, Groq(free) and Faster-whisper(local).  
     "TTS_MODEL": "coqui", # Supports elevenlabs and coqui TTS (local).
     "SUMMARIZE_MODEL": "llama" # Supports groq-llama3.1-8b, Anthropic-claude-sonnet3.5 and Ollama-llama3.1(local).
 }
 ```
+The best combination(my preference):
+- Claude3.5/Chatgpt4o as the chat model. The response is more coherent due to the huge amount of information.
+- o4-mini as the image model, for the accuracy and low cost.
+- Faster-whisper as the speech recognition model. since this local approach is actually 2x faster than all online models.
+- Elevenlabs as the TTS model, for the best quality.
+
+EVA also works with a completely free combination:
+- Groq-llama3.2-70b as the chat model. (if you have better GPU, you can run llama3.1-70b locally)
+- Ollama-llava-phi3 as the image model.
+- Faster-whisper as the speech recognition model.
+- Coqui TTS as the TTS model.
+
+The performance is also good if you have a decent GPU. 
+Groq is free too but it has a limit for token usage per minute.
+
 
 ## 🔧 Tool Setup
 
@@ -164,31 +180,6 @@ But I like to leave them all on since it is very interesting to observe how AI s
 ## 🤝 Contribution
 
 Due to my limited time, the code is far from perfect. I would be very grateful if anyone is willing to contribute🍝
-
-### How You Can Help
-
-1. **Code Contributions**
-   - Found a bug? Report it and fix it.
-   - Got a cool feature idea? Build it.
-   - Fork, branch, commit, PR - you know the drill.
-
-2. **Documentation**
-   - Help me turn my late-night code comments into actual docs.
-   - Spot a typo? Fix it.
-   - Think something needs more explanation? Add it.
-
-3. **Ideas & Feedback**
-   - All ideas welcome, from "what if..." to "why didn't you..."
-   - Share your use cases.
-   - Tell me what breaks (hopefully not everything)
-   
-
-## 🗺️ Future Roadmap
-
-- [ ] More tools for EVA to use
-- [ ] Long term graph memory (WIP)
-- [ ] Self-motivation through reflections
-- [ ] Complete Mobile SDK (WIP)
 
 
 ## 📜 License

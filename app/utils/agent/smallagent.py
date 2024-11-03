@@ -10,7 +10,8 @@ from utils.prompt import load_prompt
 from utils.agent.models import (
     create_groq_model,
     create_ollama_model,
-    create_anthropic_model
+    create_anthropic_model,
+    create_openai_model
 )
 
 class SmallAgent:
@@ -43,9 +44,12 @@ class SmallAgent:
 
     def _get_model_factory(self) -> Dict[str, Callable[[], BaseLanguageModel]]:
         return {
-            "GROQ" : lambda: create_groq_model("llama-3.1-8b-instant", self.model_temperature),
-            "LLAMA" : lambda: create_ollama_model(self._base_url, "llama3.1", self.model_temperature),
-            "ANTHROPIC": lambda: create_anthropic_model(self.model_temperature),
+            "GROQ" : lambda: create_groq_model(model_name="llama-3.1-8b-instant", temperature=self.model_temperature),
+            "ANTHROPIC": lambda: create_anthropic_model(model_name=None, temperature=self.model_temperature),
+            "OPENAI": lambda: create_openai_model(model_name="gpt-4o-mini", temperature=self.model_temperature),
+            "LLAMA" : lambda: create_ollama_model(base_url=self._base_url, 
+                                                  model_name="llama3.1", 
+                                                  temperature=self.model_temperature),
         }
  
     def _initialize_model(self)-> BaseLanguageModel:
