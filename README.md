@@ -73,14 +73,15 @@ EVA/
 
 ```
 
-## 💻 System Requirements
+## 🚀 Setup Guide
+
+
+### 💻System Requirements
 
 - Python 3.10+
 - CUDA-compatible GPU (if you want to run locally)
-- 10GB free disk space
-- Linux/macOS
 
-## 🚀 Quick Start
+### 📥 Quick Start
 
 ```bash
 # Clone repository
@@ -130,7 +131,7 @@ COPY . .
 
 ```
 
-## 🛠️ Configuration
+### 🛠️ Configuration
 configure EVA setting in app/config/config.py
 
 ```python
@@ -145,6 +146,7 @@ eva_configuration = {
     "SUMMARIZE_MODEL": "llama" # Supports groq-llama3.1-8b, Anthropic-claude-sonnet3.5 and Ollama-llama3.1(local).
 }
 ```
+
 The best combination(my preference):
 - Claude3.5/Chatgpt-4o as the chat model. The response is more coherent with larger amount of input information.
 - Chatgpt-4o-mini as the image model, because of accuracy and low cost.
@@ -161,7 +163,7 @@ The performance is also good if you have a decent GPU.
 Groq is free too but it has a limit for token usage per minute. So you might run out of tokens quickly.
 
 
-## 🔧 Tool Setup
+### 🔧 Tool Setup
 
 - Music generation tool Requires a Suno-API docker running on the base_url. 
   Install from https://github.com/gcui-art/suno-api
