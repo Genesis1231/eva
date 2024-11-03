@@ -132,7 +132,7 @@ COPY . .
 ```
 
 ### 🛠️ Configuration
-configure EVA setting in app/config/config.py
+configure EVA setting in app/config/config.py 
 
 ```python
 eva_configuration = {
