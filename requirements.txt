@@ -241,8 +241,3 @@ Werkzeug==3.0.3
 wrapt==1.16.0
 yarl==1.9.4
 youtube-search==2.1.2
-python-dotenv
-sounddevice
-soundfile
-numpy
-mpv

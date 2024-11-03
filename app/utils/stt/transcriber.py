@@ -3,10 +3,15 @@ import os
 import threading
 import secrets
 from queue import Queue
-from typing_extensions import Dict, Optional, Callable
+from typing import Dict, Optional, Callable
 
-from torch import cuda
 from utils.stt.voiceid import VoiceIdentifier
+from utils.stt.models import (
+    create_fasterwhisper_model, 
+    create_whisper_model, 
+    create_groq_model
+)
+
 class Transcriber:
     """
     The Transcriber class is responsible for transcribing audio clips using different models.
@@ -14,10 +19,12 @@ class Transcriber:
         model_name (str): The name of the model to use for transcription. Default is "faster-whisper".
     Attributes:
         _model_selection (str): The selected model name.
-        model_factory (dict): A dictionary mapping model names to their corresponding creation methods.
         model: The initialized transcription model instance.
+        identifier: The initialized voice identifier instance.
+        name_queue: A queue to store the speaker identification results.
     Methods:
         _initialize_model: Initialize the selected transcription model.
+        _get_model_factory: Get the model factory.
         transcribe: Combine the transcription and identification of the speaker.
         transcribe_audio: Transcribe the given audio clip using the selected model.
     """
@@ -32,69 +39,31 @@ class Transcriber:
     
     def _get_model_factory(self) -> Dict[str, Callable]:
         return {
-            "FASTER-WHISPER" : self._create_fasterwhisper_model,
-            "WHISPER" : self._create_whisper_model,
+            "FASTER-WHISPER" : create_fasterwhisper_model,
+            "WHISPER" : create_whisper_model,
+            "GROQ" : create_groq_model,
         }
-        
-    def _create_fasterwhisper_model(self):
-        from faster_whisper import WhisperModel
-        
-        model_size = "distil-medium.en"   # choose a medium size english to improve speed
-        device = "cuda" if cuda.is_available() else "cpu"
-        
-        # Run on GPU with Float16 (Float32)
-        try:
-            model = WhisperModel(model_size, device=device, compute_type="float16")
-        except Exception as e:
-            raise Exception(f"Error: Fail to load Faster Whisper Model {str(e)}")
-            
-        return model
-     
-    def _create_whisper_model(self):
-        import whisper
-        try: 
-            model = whisper.load_model("base").to("cuda")
-        except Exception as e:
-            raise Exception(f"Error: failed to load Whisper Model {str(e)}")
-        
-        return model
-    
+
     def _initialize_model(self):
         model_factory = self._get_model_factory()
         model = model_factory.get(self._model_selection)
+        
         if model is None:
             raise ValueError(f"Error: Model {self._model_selection} is not supported")
         
         return model()
     
-    def transcribe_audio(self, audioclip) -> Optional[str]:
-        """ transcribe audio to text using the selected model """
-        
-        try:
-            segments, _ = self.model.transcribe(
-                audioclip,
-                beam_size=5,
-                vad_filter=True,
-                vad_parameters=dict(min_silence_duration_ms=100)
-            )
-            
-        except Exception as e:
-            logger.error(f"Error: Failed to transcribe audio: {str(e)}")
-            return None
-            
-        text = ""
-        
-        for segment in segments:
-            text += segment.text
-        
-        return text
 
     def transcribe(self, audioclip) -> Optional[str]:  
         """ Transcribe the given audio clip and identify the speaker """
+        
+        while not self.name_queue.empty(): # Clear queue 
+            self.name_queue.get()
+        
         thread = threading.Thread(target=self.identifier.identify, args=(audioclip, self.name_queue))
         thread.start()
         
-        transcription = self.transcribe_audio(audioclip)
+        transcription = self.model.transcribe_audio(audioclip)
         if not transcription:
             thread.join()
             return None

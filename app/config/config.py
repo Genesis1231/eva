@@ -19,7 +19,7 @@
 #
 # Speech-to-Text:
 #   - Default: Faster-Whisper (local)
-#   - Whisper, Sensevoice
+#   - OpenAI Whisper API, Groq Whisper API
 #
 # Text-to-Speech:
 #   - Default: Coqui TTS (local)
@@ -40,7 +40,7 @@ eva_configuration = {
     "BASE_URL": "http://localhost:11434",
     "CHAT_MODEL": "chatgpt",
     "IMAGE_MODEL": "llava-phi3",
-    "STT_MODEL": "faster-whisper",
+    "STT_MODEL": "groq",
     "TTS_MODEL": "coqui",
     "SUMMARIZE_MODEL": "llama"
 }
