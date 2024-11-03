@@ -19,7 +19,7 @@ Hello Github wizards! Thanks for stopping by~ 🤗
 
 So, here's the story - I used to sling code back in the days (like, when Perl was still cool), but then a year ago AI came along and stroke me with awe. I became very interested in human-AI interaction and how it can be applied in our daily life. However, most of the online projects only focused on a few specific tasks. So I spent a few months to develop EVA myself. 
 
-EVA is an experimental voice assistant that explores human-AI experience through proactive engagement and autonomous behavior. Built with a modular architecture, it aims to provide a more natural and dynamic interaction experience to users, include an extensive tool framework that allows for continuous enhancement of its capabilities.
+EVA is an experimental voice assistant that explores human-AI experience through proactive engagement and autonomous behavior. Built with a modular architecture, it aims to provide a more natural and dynamic interaction to users, include an extensive tool framework that allows for continuous enhancement of its capabilities.
 
 <div align="center">
   <img src="path/to/demo.gif" alt="EVA Demo" width="600px"/>
@@ -28,7 +28,7 @@ EVA is an experimental voice assistant that explores human-AI experience through
 
 ## ✨ Key Features
 
-EVA is built on LangGraph framework, with some customized modules and tools. You can run it purely local with no cost.
+EVA is built on LangGraph framework, with some customized modules and tools. Importantly, You can run it purely local with no cost. (if you have a GPU computer)
 
 ### 🎙️ Cross platform modular design
 - Configurable model selection for LLM, TTS, STT, etc.
@@ -102,6 +102,8 @@ cd app
 python main.py
 
 ```
+
+
 ## 🛠️ Configuration
 configure EVA setting in app/config/config.py
 ```python
@@ -158,7 +160,7 @@ Due to my limited time, the code is far from perfect. I would be very grateful i
 ## 🗺️ Future Roadmap
 
 - [ ] More tools for EVA to use
-- [ ] Long term memory
+- [ ] Long term graph memory (WIP)
 - [ ] Self-motivation through reflections
 - [ ] Complete Mobile SDK (WIP)
 
