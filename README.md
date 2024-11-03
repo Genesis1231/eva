@@ -77,22 +77,23 @@ EVA/
 
 - Python 3.10+
 - CUDA-compatible GPU (if you want to run locally)
-- 10GB free disk space (if you want to run locally)
+- 10GB free disk space
 - Linux/macOS
 
 ## 🚀 Quick Start
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/EVA.git
+git clone https://github.com/Genesis1231/EVA.git
 cd EVA
 
 # Create virtual environment
-python -m venv eva_env
+python3 -m venv eva_env
 source eva_env/bin/activate  
 
 # Install dependencies
 pip install -r requirements.txt
+pip install git+https://github.com/wenet-e2e/wespeaker.git
 
 # Configure .env with your API keys
 cp .env.example .env
@@ -102,7 +103,32 @@ cd app
 python main.py
 
 ```
+Similarly, you can run EVA with docker.
 
+```dockerfile
+# Use official Python image with FastAPI
+FROM tiangolo/uvicorn-gunicorn-fastapi
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install system dependencies 
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    libsndfile1 \
+    ffmpeg \
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application
+COPY . .
+
+```
 
 ## 🛠️ Configuration
 configure EVA setting in app/config/config.py

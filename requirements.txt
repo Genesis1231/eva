@@ -238,7 +238,11 @@ wcwidth==0.2.13
 weasel==0.4.1
 websockets==12.0
 Werkzeug==3.0.3
-wespeaker==0.0.0
 wrapt==1.16.0
 yarl==1.9.4
 youtube-search==2.1.2
+python-dotenv
+sounddevice
+soundfile
+numpy
+mpv
