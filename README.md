@@ -83,26 +83,33 @@ EVA/
 
 ### 📥 Quick Start
 
+Clone repository
 ```bash
-# Clone repository
 git clone https://github.com/Genesis1231/EVA.git
 cd EVA
+```
 
-# Create virtual environment
+Create virtual environment
+```bash
 python3 -m venv eva_env
 source eva_env/bin/activate  
+```
 
-# Install dependencies
+Install dependencies
+```bash
 pip install -r requirements.txt
 pip install git+https://github.com/wenet-e2e/wespeaker.git
+```
 
-# Configure .env with your API keys
+Configure .env with your API keys
+```bash
 cp .env.example .env
+```
 
-# Run EVA
+Run EVA 
+```bash
 cd app
 python main.py
-
 ```
 Similarly, you can run EVA with docker.
 
@@ -140,9 +147,9 @@ eva_configuration = {
     "LANGUAGE": "en", # Only english for now, need to have prompt templates in other languages.
     "BASE_URL": "http://localhost:11434", # URL for local Ollama server, you can leave it if you dont plan to use local models
     "CHAT_MODEL": "anthropic", # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Google Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
-    "IMAGE_MODEL": "llava-phi3", # Supports Chatgpt-4o-mini and Ollama llava-phi3/llava13b(local), recommend: 4omini, but llava-phi3 is very small and free. 
+    "IMAGE_MODEL": "openai", # Supports Chatgpt-4o-mini and Ollama llava-phi3/llava13b(local), recommend: 4omini, but llava-phi3 is very small and free. 
     "STT_MODEL": "faster-whisper", # supports OpenAI Whisper, Groq(free) and Faster-whisper(local).  
-    "TTS_MODEL": "coqui", # Supports elevenlabs, openAI and coqui TTS (local).
+    "TTS_MODEL": "elevenlabs", # Supports elevenlabs, openAI and coqui TTS (local).
     "SUMMARIZE_MODEL": "llama" # Supports groq-llama3.1-8b, Anthropic-claude-sonnet3.5 and Ollama-llama3.1(local).
 }
 ```
@@ -154,7 +161,7 @@ The best combination(my preference):
 - Elevenlabs as the TTS model, for the best quality.
 
 EVA also works with a completely free combination:
-- Groq-llama3.1-70b as the chat model. (if you have better GPU, you can run llama3.1-70b locally)
+- Ollama-llama3.1-70b as the chat model. (if you have a good GPU, you can also use groq-llama3.2)
 - Ollama-llava-phi3 as the image model.
 - Faster-whisper as the speech recognition model.
 - Coqui TTS as the TTS model.

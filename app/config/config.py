@@ -42,9 +42,9 @@ eva_configuration = {
     "DEVICE": "desktop",
     "LANGUAGE": "en",
     "BASE_URL": "http://localhost:11434",
-    "CHAT_MODEL": "openai",
+    "CHAT_MODEL": "anthropic",
     "IMAGE_MODEL": "llava-phi3",
-    "STT_MODEL": "whisper",
-    "TTS_MODEL": "openai",
+    "STT_MODEL": "faster-whisper",
+    "TTS_MODEL": "coqui",
     "SUMMARIZE_MODEL": "llama"
 }
