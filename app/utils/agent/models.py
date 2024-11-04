@@ -2,7 +2,11 @@ from config import logger
 from typing import Optional
 from langchain_core.language_models import BaseLanguageModel
 
-def create_groq_model(model_name: str, temperature: float)-> BaseLanguageModel:
+def create_groq_model(
+        model_name: str = "llama-3.1-70b-versatile", 
+        temperature: float = 0.8
+    ) -> BaseLanguageModel:
+    
     from langchain_groq import ChatGroq
 
     try:
@@ -13,8 +17,14 @@ def create_groq_model(model_name: str, temperature: float)-> BaseLanguageModel:
     except Exception as e:
         raise Exception(f"Error: Failed to initialize Groq model: {str(e)}.")
     
-def create_ollama_model(base_url: str, model_name: str, temperature: float) -> BaseLanguageModel:
+def create_ollama_model(
+        base_url: str = "http://localhost:11434", 
+        model_name: str = "llama3.1:70b", 
+        temperature: float = 0.6
+    ) -> BaseLanguageModel:
+    
     from langchain_ollama import ChatOllama
+    
     try:
         model = ChatOllama(
             base_url=base_url,
@@ -30,37 +40,49 @@ def create_ollama_model(base_url: str, model_name: str, temperature: float) -> B
     
     return model
     
-def create_openai_model(model_name: Optional[str]=None, temperature: float=0.8) -> BaseLanguageModel:
+def create_openai_model(
+        model_name: str = "gpt-4o", 
+        temperature: float = 0.8
+    ) -> BaseLanguageModel:
+    
     from langchain_openai import ChatOpenAI
-    model_name = "gpt-4o" if not model_name else model_name
     
     try:
-        return ChatOpenAI(model_name=model_name, temperature=temperature, max_tokens=4096)
+        return ChatOpenAI(model_name=model_name, temperature=temperature)
         
     except Exception as e:
         raise Exception(f"Error: Failed to initialize Openai model: {str(e)}")
 
-def create_mistral_model(model_name: Optional[str]=None, temperature: float=0.8) -> BaseLanguageModel:
+def create_mistral_model(
+        model_name: str = "mistral-large-latest", 
+        temperature: float = 0.8
+    ) -> BaseLanguageModel:
+    
     from langchain_mistralai.chat_models import ChatMistralAI
-    model_name = "mistral-large-latest" if not model_name else model_name
     
     try:
         return ChatMistralAI(model_name=model_name, temperature=temperature)
     except Exception as e:
         raise Exception(f"Error: Failed to initialize Openai model: {str(e)}")
 
-def create_google_model(model_name: Optional[str]=None, temperature: float=0.8) -> BaseLanguageModel:
+def create_google_model(
+        model_name: str = "gemini-1.5-pro", 
+        temperature: float = 0.9
+    ) -> BaseLanguageModel:
+    
     from langchain_google_genai import ChatGoogleGenerativeAI
-    model_name = "gemini-1.5-pro" if not model_name else model_name
     
     try:
         return ChatGoogleGenerativeAI(model=model_name, temperature=temperature)
     except Exception as e:
         raise Exception(f"Error: Failed to initialize Google model: {str(e)}")
     
-def create_anthropic_model(model_name: Optional[str]=None, temperature: float=0.8) -> BaseLanguageModel:
+def create_anthropic_model(
+        model_name: str = "claude-3-5-sonnet-20241022", 
+        temperature: float = 0.7
+    ) -> BaseLanguageModel:
+    
     from langchain_anthropic import ChatAnthropic
-    model_name = "claude-3-5-sonnet-20241022" if not model_name else model_name
     
     try:
         return ChatAnthropic(model_name=model_name, temperature=temperature)

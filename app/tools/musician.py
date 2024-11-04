@@ -80,7 +80,7 @@ class Musician(BaseTool):
 
         except Exception as e:
             logger.error(f"Error: Failed to create music: {str(e)}")
-            return {"error": f"Failed to create music: {str(e)}."}
+            return {"error": f"Failed to create music: {str(e)}. DO NOT try again."}
 
         return {"action": content, "url": url, "cover_url": cover_url, "title": title}
  

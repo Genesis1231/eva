@@ -8,7 +8,7 @@ from langchain_community.tools import BaseTool
 from youtube_search import YoutubeSearch
 
 class YoutubeInput(BaseModel):
-    query: str = Field(description="Input for Youtube tool, normally no more than 4 words.")
+    query: str = Field(description="Input for Youtube tool, no more than 4 words.")
     
 class Youtuber(BaseTool):
     """
@@ -26,8 +26,12 @@ class Youtuber(BaseTool):
     
     def _run(
         self,
-        query: str,
+        query: Optional[str] = None,
     ) -> Dict:
+        """ Main method to run the tool """
+        if not query:
+            logger.error("No query was provided.")
+            return {"error": "Error: No query provided for youtube tool, please try again."}
 
         try:
             results = YoutubeSearch(query).to_json()

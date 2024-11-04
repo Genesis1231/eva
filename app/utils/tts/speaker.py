@@ -32,7 +32,7 @@ class Speaker:
         }
 
     def _create_coqui_model(self):
-        from utils.tts.speaker_coqui import CoquiSpeaker
+        from utils.tts.model_coqui import CoquiSpeaker
         
         try:
             return CoquiSpeaker()
@@ -40,7 +40,7 @@ class Speaker:
             raise Exception(f"Error: Failed to initialize Coqui TTS model {str(e)} ")
 
     def _create_elevenlab_model(self):
-        from utils.tts.speaker_elevenlabs import ElevenLabsSpeaker
+        from utils.tts.model_elevenlabs import ElevenLabsSpeaker
         
         try:
             return ElevenLabsSpeaker()
@@ -48,7 +48,7 @@ class Speaker:
             raise Exception(f"Error: Failed to initialize ElevenLabs model {str(e)} ")
 
     def _create_openai_model(self):
-        from utils.tts.speaker_openai import OpenAISpeaker
+        from utils.tts.model_openai import OpenAISpeaker
         
         try:
             return OpenAISpeaker()

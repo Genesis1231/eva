@@ -6,15 +6,11 @@ from queue import Queue
 from typing import Dict, Optional, Callable
 
 from utils.stt.voiceid import VoiceIdentifier
-from utils.stt.models import (
-    create_fasterwhisper_model, 
-    create_whisper_model, 
-    create_groq_model
-)
 
 class Transcriber:
     """
     The Transcriber class is responsible for transcribing audio clips using different models.
+    
     Args:
         model_name (str): The name of the model to use for transcription. Default is "faster-whisper".
     Attributes:
@@ -27,10 +23,12 @@ class Transcriber:
         _get_model_factory: Get the model factory.
         transcribe: Combine the transcription and identification of the speaker.
         transcribe_audio: Transcribe the given audio clip using the selected model.
+        
     """
     
     def __init__(self, model_name: str = "faster-whisper"):
         self._model_selection: str = model_name.upper()
+        self._model_language: str = "en"
         self.model = self._initialize_model()
         self.identifier = VoiceIdentifier()
         self.name_queue = Queue()
@@ -39,11 +37,35 @@ class Transcriber:
     
     def _get_model_factory(self) -> Dict[str, Callable]:
         return {
-            "FASTER-WHISPER" : create_fasterwhisper_model,
-            "WHISPER" : create_whisper_model,
-            "GROQ" : create_groq_model,
+            "FASTER-WHISPER" : self._create_fasterwhisper_model,
+            "WHISPER" : self._create_whisper_model,
+            "GROQ" : self._create_groq_model,
         }
-
+        
+    def _create_groq_model(self):
+        from utils.stt.model_groq import GroqTranscriber
+        
+        try:
+            return GroqTranscriber(self._model_language)
+        except Exception as e:
+            raise Exception(f"Error: failed to load Whisper Model {str(e)}")
+        
+    def _create_fasterwhisper_model(self):
+        from utils.stt.model_fasterwhisper import FWTranscriber
+        
+        try:
+            return FWTranscriber(self._model_language)
+        except Exception as e:
+            raise Exception(f"Error: Fail to load Faster Whisper Model {str(e)}")
+        
+    def _create_whisper_model(self):
+        from utils.stt.model_whisper import WhisperTranscriber
+        
+        try:
+            return WhisperTranscriber(self._model_language)
+        except Exception as e:
+            raise Exception(f"Error: failed to load Whisper Model {str(e)}")
+        
     def _initialize_model(self):
         model_factory = self._get_model_factory()
         model = model_factory.get(self._model_selection)
