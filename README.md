@@ -144,7 +144,7 @@ configure EVA setting in app/config/config.py
 ```python
 eva_configuration = {
     "DEVICE": "desktop", # Currently "desktop" or "mobile" (testing)
-    "LANGUAGE": "en", # Only english for now, need to have prompt templates in other languages.
+    "LANGUAGE": "en", # Englsih or Multilingual (much slower)
     "BASE_URL": "http://localhost:11434", # URL for local Ollama server, you can leave it if you dont plan to use local models
     "CHAT_MODEL": "anthropic", # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Google Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
     "IMAGE_MODEL": "openai", # Supports Chatgpt-4o-mini and Ollama llava-phi3/llava13b(local), recommend: 4omini, but llava-phi3 is very small and free. 
