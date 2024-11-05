@@ -1,8 +1,9 @@
 from config import logger
+from datetime import datetime
 from threading import Thread
 
 from config import eva_configuration
-from core.functions import get_timestamp, initialize_modules
+from core.functions import initialize_modules
 
 
 def eva_initialize(state):
@@ -36,7 +37,7 @@ def eva_conversate(state):
     action_results = state["action_results"]
 
     history = memory.recall_conversation()
-    timestamp = get_timestamp()
+    timestamp = datetime.now()
     
     # get response from the LLM agent
     response = agent.respond(

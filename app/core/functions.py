@@ -1,4 +1,3 @@
-import time
 from tqdm import tqdm
 from typing_extensions import Dict, List
 
@@ -6,9 +5,7 @@ from client import WSLClient, MobileClient
 from utils.agent import ChatAgent 
 from utils.memory import Memory
 from tools import ToolManager
-    
-def get_timestamp()-> str:
-    return time.strftime("%A, %B %d, %Y at %I:%M %p", time.localtime())
+
 
 def load_classes(class_dict)-> Dict:
     """ Load the classes from the dictionary, using tqdm to show progress """

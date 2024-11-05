@@ -38,8 +38,8 @@ class FWTranscriber:
         try:
             segments, info = self.model.transcribe(
                 audioclip,
-                beam_size=5,
                 vad_filter=True,
+                language=self.language,
                 vad_parameters=dict(min_silence_duration_ms=100)
             )
             

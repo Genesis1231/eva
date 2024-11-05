@@ -37,17 +37,22 @@ class WhisperTranscriber:
                     api_params = {
                         "model": "whisper-1",
                         "file": audio_file,
-                        "response_format": "text",
+                        "prompt": "specify punctuation",
+                        "response_format": "verbose_json",
                     }
                 
-                    if self.language == "en":
+                    if self.language != "multilingual":
                         api_params["language"] = self.language
-                        response = self.model.audio.transcriptions.create(**api_params)
-                    else:
-                        response = self.model.audio.translations.create(**api_params)
-        
+                        
+                    response = self.model.audio.transcriptions.create(**api_params)
+                
+                if self.language == "multilingual":
+                    language = response.language
+                else:
+                    language = self.language
+                
         except Exception as e:
             logger.error(f"Error: Failed to transcribe audio with OpenAI Whisper: {str(e)}")
             return None
         
-        return response
+        return response.text

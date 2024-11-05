@@ -1,11 +1,11 @@
 from config import logger
 import os
-import threading
+from threading import Thread
 import secrets
 from typing import Optional
 
 from openai import OpenAI
-from pyaudio import PyAudio, paInt16
+from utils.tts.audio_player import AudioPlayer
 
 class OpenAISpeaker:
     """ 
@@ -20,30 +20,26 @@ class OpenAISpeaker:
         generate_audio: Generate audio files from text using OpenAI TTS.
     """
     
-    def __init__(self, voice: str = None) -> None:
-        self.model = OpenAI()
-        self.voice = voice if voice else "nova"  # default OpenAI voice
-        self.player = PyAudio()
-        self.player_stream = self.player.open(
-            format=paInt16, 
-            channels=1, 
-            rate=24000, 
-            output=True
-        )
+    def __init__(self, voice: str = "nova") -> None:
+        self.model: OpenAI = OpenAI()
+        self.voice: str = voice  # default OpenAI voice
+        self.audio_thread: Optional[Thread] = None
         
     def eva_speak(self, text: str, wait: bool = True) -> None:
         """ Speak the given text using OpenAI """  
                                 
         def stream_audio():
             try:
-                with self.model.audio.speech.with_streaming_response.create(
+                audio_player = AudioPlayer()
+                response = self.model.audio.speech.create(
                     model="tts-1",
                     voice=self.voice,
-                    response_format="pcm",
+                    response_format="mp3",
                     input=text
-                ) as response:
-                    for chunk in response.iter_bytes(chunk_size=1024):
-                        self.player_stream.write(chunk)
+                )
+                
+                audio_player.play_openai_stream(response)
+                    
             except Exception as e:
                 logger.error(f"Error during text to speech synthesis: {e}")
                 return None
@@ -51,7 +47,11 @@ class OpenAISpeaker:
         if wait:
             stream_audio()
         else:
-            threading.Thread(target=stream_audio, daemon=True).start()
+            if self.audio_thread and self.audio_thread.is_alive():
+                self.audio_thread.join()
+                
+            self.audio_thread = Thread(target=stream_audio, daemon=True)
+            self.audio_thread.start()
                 
     def generate_audio(self, text: str, media_folder: str) -> Optional[str]:
         """ Generate mp3 from text using OpenAI TTS """
@@ -75,12 +75,3 @@ class OpenAISpeaker:
         except Exception as e:
             logger.error(f"Error during text to speech synthesis: {e}")
             return None
-
-            
-    def __del__(self) -> None:
-        if hasattr(self, 'player_stream'):
-            self.player_stream.stop_stream()
-            self.player_stream.close()
-            
-        if hasattr(self, 'player'):
-            self.player.terminate()

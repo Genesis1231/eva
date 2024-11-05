@@ -1,6 +1,6 @@
 from config import logger
 import os
-import threading
+from threading import Thread
 import secrets
 from typing import Optional
 
@@ -8,9 +8,10 @@ from elevenlabs.client import ElevenLabs
 from elevenlabs import stream
     
 class ElevenLabsSpeaker:
-    def __init__(self, voice: str = None) -> None:
-        self.model = ElevenLabs()
-        self.voice = voice if voice else "Ana" # voice could be configured in the future
+    def __init__(self, voice: str = "a448u8B0Hooh9RgovyPK") -> None:
+        self.model: ElevenLabs = ElevenLabs()
+        self.audio_thread: Optional[Thread] = None
+        self.voice: str = voice # voice could be configured in the future
         
     def eva_speak(self, text: str, wait: bool = True) -> None:
         """ Speak the given text using ElevenLabs """
@@ -21,14 +22,15 @@ class ElevenLabsSpeaker:
                 voice=self.voice,
                 stream=True,
             )
-            
+     
             if wait:
                 stream(audio_stream)
             else:
-                threading.Thread(
-                    target=lambda: stream(audio_stream),
-                    daemon=True
-                ).start()
+                if self.audio_thread and self.audio_thread.is_alive():
+                    self.audio_thread.join()
+                    
+                self.audio_thread = Thread(target=lambda: stream(audio_stream), daemon=True)
+                self.audio_thread.start()
 
         except Exception as e:
             logger.error(f"Error during text to speech synthesis: {e}")

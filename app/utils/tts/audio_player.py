@@ -1,6 +1,8 @@
 import os
-import threading
-from typing_extensions import Union, Optional
+import tempfile
+from io import BytesIO
+from threading import Thread
+from typing import Union, Optional
 
 import sounddevice as sd
 import soundfile as sf
@@ -24,10 +26,9 @@ class AudioPlayer:
     
     """
     def __init__(self):
-        self._device = "WSL/PC"
-        self._sample_rate = 22050
-        self._audio_thread = None
-        self.mpv_player = None
+        self._sample_rate: int = 22050
+        self._audio_thread: Optional[Thread] = None
+        self.player: mpv.MPV = mpv.MPV()
             
     def play_audio(self, audio_data: Optional[Union[str, np.ndarray]], from_file: bool = False)-> None:
         if audio_data is None:
@@ -57,15 +58,17 @@ class AudioPlayer:
         
     def _play_mp3_stream(self, mp3_url: str)-> None:
         try:
-            self.mpv_player = mpv.MPV(ytdl=True)
-            self.mpv_player.volume = 50
-            self.mpv_player.play(mp3_url)
-            self.mpv_player.wait_for_playback()
+            player = mpv.MPV(ytdl=True)
+            player.volume = 50
+            player.play(mp3_url)
+            player.wait_for_playback()
+            
+            # clean up
+            player.terminate()
             
         except Exception as e:
             raise Exception(f"Error: Failed to play mp3 stream: {e}")
-
-            
+       
     def stream(self, url: str)-> None:
         if not url:
             return
@@ -73,8 +76,30 @@ class AudioPlayer:
         if self._audio_thread and self._audio_thread.is_alive():
             self._audio_thread.join()
             
-        self._audio_thread = threading.Thread(target=self._play_mp3_stream, daemon=True, args=(url,))
+        self._audio_thread = Thread(target=self._play_mp3_stream, daemon=True, args=(url,))
         self._audio_thread.start()
     
     
- 
+    def play_openai_stream(self, audio_stream) -> None:
+        """Play audio directly from OpenAI's streaming response"""
+        try:
+            # Create a temporary file to store the audio
+            with tempfile.NamedTemporaryFile(suffix='.mp3', delete=False) as temp_file:
+                # Collect chunks and write to temp file
+                for chunk in audio_stream.iter_bytes():
+                    temp_file.write(chunk)
+                temp_file_path = temp_file.name
+
+            # Play the temporary file
+            self.player.play(temp_file_path)
+            self.player.wait_for_playback()
+            
+            # Clean up
+            os.unlink(temp_file_path)
+            
+        except Exception as e:
+            raise Exception(f"Error: Failed to play OpenAI stream: {e}")
+
+    def __del__(self) -> None:
+        if self._audio_thread and self._audio_thread.is_alive():
+            self._audio_thread.join()

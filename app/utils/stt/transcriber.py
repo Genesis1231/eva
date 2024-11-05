@@ -105,6 +105,6 @@ class Transcriber:
         #     self.identifier.save_audio_file(audioclip, filepath)
         #     content += f" (<speaker_id>{speaker_id}</speaker_id>)"
 
-        print(content)
+        print(f"\n {content} \n")
         
         return content
