@@ -18,7 +18,7 @@ class FWTranscriber:
         transcribe_audio: Transcribe the given audio clip using the Faster Whisper model.
     """
     
-    def __init__(self, language: str = "zh"):
+    def __init__(self, language: str = "en"):
         self.language: str = language
         self.device: str = "cuda" if cuda.is_available() else "cpu"
         self.model: WhisperModel = self._get_model()

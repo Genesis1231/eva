@@ -97,7 +97,6 @@ def build_prompt(timestamp : str, sense: Dict, history: List[Dict], action_resul
         {action_results}
         </CONTEXT>
 
-
         <INSTRUCTIONS>
         {instructions}
         </INSTRUCTIONS>

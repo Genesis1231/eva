@@ -1,51 +1,42 @@
-from pathlib import Path
 from config import logger
-import sqlite3
+from threading import Thread
+from typing import List, Dict, Optional
 import json
 
-from typing import List, Dict, Optional, Any
 from utils.agent import SmallAgent
-
+from utils.memory.sqliteDB import SQLiteLogger
 
 class Memory:
-    def __init__(self, model_name: str, base_url: str):
-        self._dblink: str = self._get_database_path()
-        self._session_memory: List[Dict] = []
-        
-        self.summarizer = SmallAgent(model_name=model_name, base_url=base_url, model_temperature=0)
-        self._initialize_log()
+    """
+    Memory class to save the conversation and memory to the database.
     
-    def _get_database_path(self) -> str:
-        """Return the path to the memory log database."""
-        return Path(__file__).resolve().parents[2] / 'data' / 'database' / 'eva.db'
+    Attributes:
+        model_name (str): The name of the model to use for summarization.
+        base_url (str): The base URL of the API to use for summarization.
+        _session_memory (List[Dict]): The memory of the current session.
+        _memory_thread (Optional[Thread]): The thread to save the memory.
+        _summarizer (SmallAgent): The summarizer to summarize the memory.
+        _memorylogger (SQLiteLogger): The logger to save the memory to the database.
+    Methods:
+        create_memory: 
+            Create a single entry of memory. timestamp, user_name, user_message, speech, sight, analysis, strategy, expectation
+            save it to the database and if the conversation is more than 10, summarize them.
+        remember:
+            Return a single entry of memory.
+        recall_conversation:
+            Return only the conversation between user and eva.
+    """
+    
+    def __init__(self, model_name: str, base_url: str):
+        self._session_memory: List[Dict] = []
+        self._memory_thread: Optional[Thread] = None
         
-    def _initialize_log(self) -> None:
-        """ Initialize the memory log database. """
-        
-        with sqlite3.connect(self._dblink) as conn:
-            cursor = conn.cursor()
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS memorylog (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    time TEXT NOT NULL,
-                    user_name TEXT,
-                    user_message TEXT,
-                    eva_message TEXT,
-                    observation TEXT,
-                    analysis TEXT,
-                    strategy TEXT,
-                    premeditation TEXT,
-                    action TEXT
-                )
-            ''')
-            conn.commit()
+        self._summarizer = SmallAgent(model_name=model_name, base_url=base_url, model_temperature=0)
+        self._memory_logger = SQLiteLogger()
 
     def create_memory(self, timestamp: str, user_response: Dict, response: Dict) -> None:
-        """
-        Create a single entry of memory. timestamp, user_name, user_message, speech, sight, analysis, strategy, expectation
-        save it to the database and if the conversation is more than 10, summarize them.
-        """
-        
+        """ thread the memory creation to save time """
+
         # split the user message into user_name and user_message
         user_name = None
         if user_message := user_response.get("user_message"):
@@ -58,7 +49,44 @@ class Memory:
         action = response.get("action")
         analysis = response.get("analysis")
         strategy = response.get("strategy")
-        premeditation = response.get("premeditation")      
+        premeditation = response.get("premeditation")    
+                
+        if self._memory_thread and self._memory_thread.is_alive():
+            self._memory_thread.join()
+        
+        try:
+            self._memory_thread = Thread(target=self._save_memory, daemon=True, kwargs={
+                "timestamp": timestamp, 
+                "user_name": user_name,
+                "user_message": user_message,
+                "eva_message": eva_message,
+                "observation": observation,
+                "analysis": analysis,
+                "strategy": strategy,
+                "premeditation": premeditation,
+                "action": action 
+                })
+        
+            self._memory_thread.start()
+        except Exception as e:
+            logger.error(f"Error creating memory: {e}")
+    
+    def _save_memory(self, 
+                     timestamp: str, 
+                     user_name: str, 
+                     user_message: str, 
+                     eva_message: str, 
+                     observation: str, 
+                     analysis: str, 
+                     strategy: str, 
+                     premeditation: str, 
+                     action: str
+                    ) -> None:
+        
+        """
+        Create a single entry of memory. timestamp, user_name, user_message, speech, sight, analysis, strategy, expectation
+        save it to the database and if the conversation is more than 10, summarize them.
+        """  
         
         entry = {
             "time": timestamp,
@@ -72,7 +100,7 @@ class Memory:
             "action": action
         }
         
-        self.save_memory_to_db(entry)
+        self._memory_logger.save_memory_to_db(entry)
         self._session_memory.append(entry)
         
         if len(self._session_memory) > 10:
@@ -89,7 +117,7 @@ class Memory:
             chat_memory.append(f"EVA01: {entry['eva_message']}")
         
         # summarize the chat_memory by calling the summarizer
-        summary = self.summarizer.generate(template="summarize", conversation="\n".join(chat_memory))
+        summary = self._summarizer.generate(template="summarize", conversation="\n".join(chat_memory))
         summary = json.loads(summary).get("summary")
         
         return {
@@ -100,25 +128,6 @@ class Memory:
             "strategy": None,
             "premeditation": None
         }
-        
-    def save_memory_to_db(self, memory: Dict) -> None:
-        """Save a single memory entry to the SQLite database."""
-        try:
-            with sqlite3.connect(self._dblink) as conn:
-                cursor = conn.cursor()
-                cursor.execute('''
-                    INSERT INTO memorylog (time, user_name, user_message, eva_message, observation, analysis, strategy, premeditation, action)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (memory["time"], memory["user_name"], memory["user_message"], memory["eva_message"], 
-                    memory["observation"], memory["analysis"], memory["strategy"], memory["premeditation"], json.dumps(memory["action"])))
-                conn.commit()
-                
-        except Exception as e:
-            logger.error(f"Error: Failed to save memory to database: {str(e)}")
-        finally:
-            conn.close()  
-            
-        logger.info(f"Memory: Entry created at { memory['time'] }")
         
     def remember(self, time: str = None) -> Optional[Dict]:
         """Return a single entry of memory."""
@@ -145,9 +154,6 @@ class Memory:
         conversation[-1]["premeditation"] = self._session_memory[-1].get("premeditation")
         
         return conversation
-
-    def __len__(self) -> int:
-        return len(self._session_memory)
         
 
     

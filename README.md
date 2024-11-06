@@ -194,6 +194,10 @@ If you want to disable some tools, just change the client setting in related .py
 ```
 But I like to leave them all on since it is very interesting to observe how AI select tools.
 
+### 🧰 Exit & Shutdown
+
+EVA will shutdown if you say "exit" or "bye"
+
 
 ## 🤝 Contribution
 
