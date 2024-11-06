@@ -17,4 +17,3 @@ class EvaState(TypedDict):
     action_results: List[Optional[Dict]]
     num_conv: int
     last_conv: datetime
- 

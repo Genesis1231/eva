@@ -111,5 +111,5 @@ def build_prompt(timestamp : str, sense: Dict, history: List[Dict], action_resul
         <ASSISTANT>
     """
  
-    # logger.info(PROMPT_TEMPLATE) 
+    logger.info(PROMPT_TEMPLATE) 
     return PROMPT_TEMPLATE

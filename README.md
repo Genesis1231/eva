@@ -95,7 +95,13 @@ python3 -m venv eva_env
 source eva_env/bin/activate  
 ```
 
-Install dependencies
+Install system dependencies in case you don't have them
+```bash
+sudo apt-get update
+sudo apt-get install -y cmake build-essential ffmpeg chromium mpv
+```
+
+Install Python dependencies
 ```bash
 pip install -r requirements.txt
 pip install git+https://github.com/wenet-e2e/wespeaker.git
@@ -108,8 +114,7 @@ cp .env.example .env
 
 Run EVA 
 ```bash
-cd app
-python main.py
+python app/main.py
 ```
 Similarly, you can run EVA with docker.
 
@@ -129,12 +134,16 @@ RUN apt-get update && apt-get install -y \
     cmake \
     libsndfile1 \
     ffmpeg \
+    chromium \
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application
 COPY . .
+
+# Run the application 
+CMD ["python", "/app/main.py"]
 
 ```
 
@@ -161,7 +170,7 @@ The best combination(my preference):
 - Elevenlabs as the TTS model, for the best quality.
 
 EVA also works with a completely free combination:
-- Ollama-llama3.1-70b as the chat model. (if you have a good GPU, you can also use groq-llama3.2)
+- Groq-llama-3.2 as the chat model. (if you have a good GPU, you can also use Ollama-llama3.1-70b)
 - Ollama-llava-phi3 as the image model.
 - Faster-whisper as the speech recognition model.
 - Coqui TTS as the TTS model.

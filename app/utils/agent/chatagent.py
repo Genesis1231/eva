@@ -34,11 +34,12 @@ class ChatAgent:
         clear_chat_history: Clear the chat history.
     """
     
-    def __init__(self, model_name: str = "llama", base_url: str = "http://localhost:11434")-> None:
+    def __init__(self, model_name: str = "llama", base_url: str = "http://localhost:11434", language: str = "english")-> None:
         self.model_selection: str = model_name.upper()
         self.model_temperature: float = 0.8
         self.base_url: str = base_url
-
+        self.language: str = language
+        
         self.llm: BaseLanguageModel = self._initialize_model()
         self.output_format: BaseModel = self._initialize_output()
         self.tool_info: List[Dict] = []

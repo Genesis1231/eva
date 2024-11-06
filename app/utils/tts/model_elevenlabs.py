@@ -18,17 +18,18 @@ class ElevenLabsSpeaker:
         
         try:
             audio_stream = self.model.generate(
+                output_format="mp3_22050_32",
                 text=text,
                 voice=self.voice,
                 stream=True,
             )
-     
+            
+            if self.audio_thread and self.audio_thread.is_alive():
+                self.audio_thread.join()
+                
             if wait:
                 stream(audio_stream)
-            else:
-                if self.audio_thread and self.audio_thread.is_alive():
-                    self.audio_thread.join()
-                    
+            else:   
                 self.audio_thread = Thread(target=lambda: stream(audio_stream), daemon=True)
                 self.audio_thread.start()
 
@@ -43,8 +44,7 @@ class ElevenLabsSpeaker:
         
         try:
             audio_stream = self.model.generate(
-                output_format="mp3_22050_32",
-                model="eleven_multilingual_v2",                           
+                output_format="mp3_22050_32",                      
                 text=text,
                 voice=self.voice,
                 optimize_streaming_latency = 1,

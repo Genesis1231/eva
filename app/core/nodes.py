@@ -9,12 +9,11 @@ from core.functions import initialize_modules
 def eva_initialize(state):
     """Initialize Eva, load all the modules"""
 
-    modules = initialize_modules(eva_configuration)
-    modules["LLM"].set_tools(modules["toolbox"].get_tools_info())
+    modules = initialize_modules(eva_configuration) 
     
     return {
         "status": "active", 
-        "agent": modules["LLM"],
+        "agent": modules["agent"],
         "client": modules["client"],
         "memory": modules["memory"],
         "toolbox": modules["toolbox"],

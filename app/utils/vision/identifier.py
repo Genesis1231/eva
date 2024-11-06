@@ -2,6 +2,7 @@ from config import logger
 import os
 import base64
 import sqlite3
+from pathlib import Path
 from queue import Queue
 from typing import Dict, List, Union
 
@@ -27,7 +28,7 @@ class Identifier:
         
     def _initialize_ids(self)-> List[Dict]:
         """ Load the photo IDs and corresponding face encodings. """
-        pid_directory = os.path.join(os.getcwd(), "data", "pids")
+        pid_directory = Path(__file__).resolve().parents[2] / 'data' / 'pids'
         photo_ids = {}
         
         for filename in os.listdir(pid_directory):
@@ -49,7 +50,7 @@ class Identifier:
                     raise Exception(f"Error processing {filename}: {str(e)}")
 
         return photo_ids
-            
+    
     def _base64_to_numpy(self, base64_str: str)-> np.ndarray:
         """ Convert a base64 string to a numpy array. """
         img_array = np.frombuffer(base64.b64decode(base64_str), dtype=np.uint8)

@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from config import logger
 import sqlite3
 import json
@@ -9,12 +9,16 @@ from utils.agent import SmallAgent
 
 class Memory:
     def __init__(self, model_name: str, base_url: str):
-        self._dblink: str = os.path.join(os.getcwd(), "data", "database", "eva.db")
+        self._dblink: str = self._get_database_path()
         self._session_memory: List[Dict] = []
         
         self.summarizer = SmallAgent(model_name=model_name, base_url=base_url, model_temperature=0)
         self._initialize_log()
     
+    def _get_database_path(self) -> str:
+        """Return the path to the memory log database."""
+        return Path(__file__).resolve().parents[2] / 'data' / 'database' / 'eva.db'
+        
     def _initialize_log(self) -> None:
         """ Initialize the memory log database. """
         

@@ -1,5 +1,7 @@
+from functools import partial
 from tqdm import tqdm
-from typing_extensions import Dict, List
+from config import validate_language
+from typing import Dict
 
 from client import WSLClient, MobileClient
 from utils.agent import ChatAgent 
@@ -23,22 +25,31 @@ def initialize_modules(config : dict):
     """ Initialize the modules for Eva """
     
     base_url = config.get("BASE_URL")
-    stt_model = config.get("STT_MODEL")
-    tts_model = config.get("TTS_MODEL")
-    image_model = config.get("IMAGE_MODEL")
+    language = validate_language(config.get("LANGUAGE"))
     
-    modules = {
-        "LLM": lambda: ChatAgent(config.get("CHAT_MODEL"), base_url),
-        "memory" : lambda: Memory(config.get("SUMMARIZE_MODEL"), base_url),
-        "toolbox" : lambda: ToolManager(config.get("DEVICE"))
+    # Pre-configure partial functions with common parameters
+    client_params = {
+        'stt_model': config.get("STT_MODEL"),
+        'vision_model': config.get("IMAGE_MODEL"),
+        'tts_model': config.get("TTS_MODEL"),
+        'base_url': base_url
+    }
+    
+    module_list = {
+        "agent": partial(ChatAgent, config.get("CHAT_MODEL"), base_url, language),
+        "memory" : partial(Memory, config.get("SUMMARIZE_MODEL"), base_url),
+        "toolbox" : partial(ToolManager, config.get("DEVICE"))
     }
     
     client_type = config.get("DEVICE").upper()
     if client_type == "DESKTOP":
-        modules["client"] = lambda: WSLClient(stt_model, image_model, tts_model, base_url)
+        module_list["client"] = partial(WSLClient, **client_params)
     elif client_type == "MOBILE":
-        modules["client"] = lambda: MobileClient(stt_model, image_model, tts_model, base_url)
+        module_list["client"] = partial(MobileClient, **client_params)
     else:
         raise ValueError(f"Client type {client_type} not supported.")
 
-    return load_classes(modules)
+    modules = load_classes(module_list)
+    modules["agent"].set_tools(modules["toolbox"].get_tools_info())
+    
+    return modules

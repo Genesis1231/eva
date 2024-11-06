@@ -7,6 +7,7 @@ from typing_extensions import List, Dict, Any
 from concurrent.futures import ThreadPoolExecutor
 
 from langchain_community.tools import DuckDuckGoSearchRun
+# from langchain_community.tools import WikipediaQueryRun
 
 class ToolManager:
     """
@@ -71,12 +72,15 @@ class ToolManager:
         return imported_tools 
 
     def initialize_tools(self) -> List[Any]:
+        """ Initialize all the tools """
         all_tools = self.import_tools_from_folder()
+        
         # Add built-in tools
         search_tool = DuckDuckGoSearchRun()
+        # wikipedia_tool = WikipediaQueryRun()
         
         built_in_tools = [
-            search_tool,  # tool to search internet
+            search_tool,  # tool to search the internet
         ]
             
         all_tools.extend(built_in_tools)

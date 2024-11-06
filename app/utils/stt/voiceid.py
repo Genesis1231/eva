@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from config import logger
 import sqlite3
 from queue import Queue
@@ -14,7 +15,7 @@ class VoiceIdentifier:
     It uses the wespeaker library to identify the speaker from the audio clip.
     """
     def __init__(self):
-        self._dblink: str = os.path.join(os.getcwd(), "data", "database", "eva.db")
+        self._dblink: str = self._get_database_path()
         self._void_list: Dict = self._initialize_database()
         self.voice_recognizer = self._initialize_recognizer()
     
@@ -24,7 +25,7 @@ class VoiceIdentifier:
             vmodel.set_gpu(0)
             num = 0
             
-            vid_directory = os.path.join(os.getcwd(), "data", "voids")
+            vid_directory =Path(__file__).resolve().parents[2] / 'data' / 'voids'
             for filename in os.listdir(vid_directory):
                 if filename.lower().endswith('.wav'):
                     name = os.path.splitext(filename)[0]
@@ -89,7 +90,11 @@ class VoiceIdentifier:
             sf.write(filepath, 16000, audioclip)
         except Exception as e:
             logger.error(f"Error: Failed to save audio: {str(e)}")
-        
+    
+    def _get_database_path(self) -> str:
+        """Return the path to the memory log database."""
+        return Path(__file__).resolve().parents[2] / 'data' / 'database' / 'eva.db'
+    
     def identify(self, audioclip: ndarray, name_queue: Queue) -> None:
         """
         Voice identification using wespeaker cli. 

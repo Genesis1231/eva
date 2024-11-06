@@ -43,13 +43,13 @@ class OpenAISpeaker:
             except Exception as e:
                 logger.error(f"Error during text to speech synthesis: {e}")
                 return None
+        
+        if self.audio_thread and self.audio_thread.is_alive():
+            self.audio_thread.join()
 
         if wait:
             stream_audio()
         else:
-            if self.audio_thread and self.audio_thread.is_alive():
-                self.audio_thread.join()
-                
             self.audio_thread = Thread(target=stream_audio, daemon=True)
             self.audio_thread.start()
                 
