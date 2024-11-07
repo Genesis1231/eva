@@ -4,8 +4,9 @@ import numpy as np
 import base64
 import requests
 import threading
+from functools import partial
 from queue import Queue
-from typing import List, Dict, Callable, Union
+from typing import Dict, Callable, Union
 
 import cv2
 from utils.vision.identifier import Identifier
@@ -37,8 +38,8 @@ class Describer:
 
     def _get_model_factory(self) -> Dict[str, Callable]:
         return {
-            "LLAVA-PHI3" : lambda: self._create_ollama_model("llava-phi3"),
-            "LLAVA:13B" : lambda: self._create_ollama_model("llava:13b"),
+            "LLAVA-PHI3" : partial(self._create_ollama_model, "llava-phi3"),
+            "LLAVA:13B" : partial(self._create_ollama_model, "llava:13b"),
             "OPENAI" : self._create_openai_model
         }
         

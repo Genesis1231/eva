@@ -42,7 +42,6 @@ class ChatAgent:
         
         self.constructor = PromptConstructor()
         self.llm: BaseLanguageModel = self._initialize_model()
-        self.output_format: BaseModel = self._get_output_format()
         self.tool_info: List[Dict[str, Any]] = []
         
         logger.info(f"Agent: {self.model_selection} is ready.")
@@ -69,14 +68,14 @@ class ChatAgent:
     
     def _get_output_format(self) -> BaseModel:
         """Pydantic output format for the response"""
-        verbal_language = f"(RESPOND ONLY IN NATIVE {self.language})" if self.language != "ENGLISH" else ""
+        verbal_language = f"(RESPOND ONLY IN NATIVE {self.language})" if self.language != "ENGLISH" and self.language != "MULTILINGUAL" else ""
         
         class AgentOutput(BaseModel):
             analysis: str = Field(description="My reflection and analysis")
             strategy: str = Field(description="My response strategy")
             response: str = Field(description=f"My verbal response {verbal_language}")
             premeditation: str = Field(description="My predetermined information")
-            action: List[Dict] = Field(description="The name of the tools I choose to use and the args for input.")
+            action: List[Dict[str, Any]] = Field(description="The name of the tools I choose to use and the args for input.")
         
         return AgentOutput
     
@@ -107,7 +106,7 @@ class ChatAgent:
             action_results=action_results
         )
         
-        parser = JsonOutputParser(pydantic_object=self.output_format)
+        parser = JsonOutputParser(pydantic_object=self._get_output_format())
         
         prompt_template = PromptTemplate(
             input_variables=["tools"],

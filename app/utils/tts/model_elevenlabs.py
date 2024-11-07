@@ -28,6 +28,7 @@ class ElevenLabsSpeaker:
                 text=text,
                 voice=self.voice,
                 stream=True,
+                optimize_streaming_latency = 1,
             )
             
             if self.audio_thread and self.audio_thread.is_alive():
@@ -53,15 +54,11 @@ class ElevenLabsSpeaker:
                 model=self.model_name,
                 output_format="mp3_22050_32",                      
                 text=text,
-                voice=self.voice,
-                optimize_streaming_latency = 1,
-                stream = True
+                voice=self.voice
             )
         
             with open(file_path, 'wb') as f:
-                for chunk in audio_stream:
-                    if chunk:
-                        f.write(chunk)     
+                f.write(audio_stream)
             
             return f"audio/{filename}"
         

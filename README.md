@@ -1,10 +1,10 @@
-# E.V.A. 🎙️
+# E.V.A. - Enhanced Voice Assistant🎙️
 
 <div align="center">
 
 ![EVA Logo](logo.png)
 
-*Experimental Voice Assistant*
+*Multimodal, Multilingual, Cross Platform, Modular Architecture*
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![GitHub Issues](https://img.shields.io/github/issues/Genesis1231/EVA)](https://github.com/Genesis1231/EVA/issues)

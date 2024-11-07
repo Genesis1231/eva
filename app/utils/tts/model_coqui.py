@@ -3,7 +3,7 @@ import os
 import time
 from threading import Thread
 import secrets
-from typing import Optional
+from typing import Optional, List
 from queue import Queue, Empty
 
 from TTS.api import TTS
@@ -36,24 +36,23 @@ class CoquiSpeaker:
         self.language: str = language
         self.play_thread: Optional[Thread] = None
         self.speakerID: Optional[str] = None
+        self.device: str = "cuda" if cuda.is_available() else "cpu"
         
         self.audio_queue: Queue = Queue()    
-        self.model: TTS = self.initialize_TTS()
+        self.model: TTS = self._initialize_TTS()
         self.player: AudioPlayer = AudioPlayer()
 
-    def initialize_TTS(self) -> TTS:
+    def _initialize_TTS(self) -> TTS:
         """ Initialize the TTS model """
-        
+            
         if self.language == "en":
             model_name = "tts_models/en/vctk/vits"
             self.speakerID = "p306"
         else:
             model_name = "tts_models/multilingual/multi-dataset/xtts_v2"
             self.speakerID = "Daisy Studious"
-            
-        device = "cuda" if cuda.is_available() else "cpu"
         
-        return TTS(model_name=model_name).to(device)
+        return TTS(model_name=model_name).to(self.device)
         
     def play(self) -> None:
         while True:
@@ -69,7 +68,17 @@ class CoquiSpeaker:
                 self.audio_queue.task_done()
             except Empty:
                 continue  # If queue is empty, continue the loop
-
+    
+    def _generate_speech(self, text: str) -> List[np.ndarray]:
+        """ Generate speech from text using Coqui TTS """
+        
+        language = "zh-cn" if self.language == "zh" else self.language # correct the language code for TTS model
+        
+        if self.language == "en":
+            return self.model.tts(text=text, speaker=self.speakerID)
+        else:
+            return self.model.tts(text=text, speaker=self.speakerID, language=language)
+    
     def eva_speak(self,  text: str, wait: bool = True) -> None:
         """ Speak the given text using Coqui TTS """
         
@@ -79,7 +88,7 @@ class CoquiSpeaker:
             self.play_thread.start()
                     
         for sentence in sentences:
-            wav = self.model.tts(text=sentence, speaker=self.speakerID)
+            wav = self._generate_speech(sentence)
             self.audio_queue.put(wav)
         
         if wait:
@@ -90,10 +99,6 @@ class CoquiSpeaker:
         if self.play_thread:
             self.play_thread.join()
             self.play_thread = None
-            
-    def __del__(self):
-        self.stop_playback()
-        
         
     def generate_audio(self, text: str, media_folder: str) -> Optional[str]:
         """ Generate mp3 from text using Coqui TTS """
@@ -101,7 +106,7 @@ class CoquiSpeaker:
         try:
             sentences = nltk.sent_tokenize(text)
             for sentence in sentences:
-                wav = self.model.tts(text=sentence, speaker="p306")
+                wav = self._generate_speech(sentence)
                 audio_data = (np.array(wav) * 32767).astype(np.int16)
                 filename = f"{secrets.token_hex(16)}.mp3"
                 
@@ -121,4 +126,14 @@ class CoquiSpeaker:
         except Exception as e:
             logger.error(f"Error during text to speech synthesis: {e}")
             return None
-    
+
+    def __del__(self):
+        self.stop_playback()
+        
+        if hasattr(self, 'model') and self.model is not None:
+            del self.model
+            self.model = None
+
+        # Clear CUDA cache if using GPU
+        if self.device == "cuda":
+            cuda.empty_cache()

@@ -1,13 +1,14 @@
 import requests
 import os
 import time
+from pathlib import Path
 from config import logger
 from typing import List, Dict, Optional
 
 import cv2
 import numpy as np
 
-class DiscordMJ():
+class MidjourneyServer():
     """
     A class for sending prompts to discord midjourney and getting the image url.
     simple implementation to retrieve images from midjourney.
@@ -20,13 +21,14 @@ class DiscordMJ():
         self.id = os.environ.get("MJ_ID")
         self.authorization = os.environ.get("MJ_Authorization")
         
+        self._image_directory = Path(__file__).resolve().parents[2] / 'data' / 'images'
         self._url = "https://discord.com/api/v9/interactions"
         self._msg_url = f'https://discord.com/api/v9/channels/{self.channel_id}/messages'
         self._headers = {
             'Authorization': self.authorization,
             'Content-Type': 'application/json',
         }
-
+        
         self.prev_message_id = self._load_previous()
         
     def _load_previous(self) -> Optional[str]:
@@ -43,6 +45,7 @@ class DiscordMJ():
         return None
         
     def _get_data(self, prompt: str)-> Dict:
+        """ Get the data for the discord request """
         return {
             "type": 2,
             "application_id": self.application_id,
@@ -124,21 +127,27 @@ class DiscordMJ():
 
     def _process_image(self, image_data: bytes, image_id: str) -> List[str]:
         """Process the image data and save it"""
-        png_data = np.frombuffer(image_data, np.uint8)
-        img = cv2.imdecode(png_data, cv2.IMREAD_COLOR)
+        
+        try:
+            png_data = np.frombuffer(image_data, np.uint8)
+            img = cv2.imdecode(png_data, cv2.IMREAD_COLOR)
             
-        height, width = img.shape[:2]
-        mid_h, mid_w = height // 2, width // 2
+            height, width = img.shape[:2]
+            mid_h, mid_w = height // 2, width // 2
         
-        # Split the image into 4 parts
-        parts = [img[:mid_h, :mid_w], img[:mid_h, mid_w:], 
-                 img[mid_h:, :mid_w], img[mid_h:, mid_w:]]
-        
-        base_filename = os.path.join(os.getcwd(), "data", "images", image_id)
-        image_paths = [f"{base_filename}_{i+1}.jpg" for i in range(4)]
-        
-        for i, part in enumerate(parts):
-            cv2.imwrite(image_paths[i], part)
+            # Split the image into 4 parts
+            parts = [img[:mid_h, :mid_w], img[:mid_h, mid_w:], 
+                     img[mid_h:, :mid_w], img[mid_h:, mid_w:]]
+            
+            
+            base_filename = os.path.join(self._image_directory, image_id)
+            image_paths = [f"{base_filename}_{i+1}.jpg" for i in range(4)]
+            
+            for i, part in enumerate(parts):
+                cv2.imwrite(image_paths[i], part)
    
-        return image_paths
+            return image_paths
+        except Exception as e:
+            logger.error(f"Error processing image: {e}")
+            return None
     

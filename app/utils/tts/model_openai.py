@@ -20,37 +20,35 @@ class OpenAISpeaker:
         generate_audio: Generate audio files from text using OpenAI TTS.
     """
     
-    def __init__(self, voice: str = "nova") -> None:
+    def __init__(self, voice: str = "nova", language: str = "en") -> None:
         self.model: OpenAI = OpenAI()
+        self.audio_player: AudioPlayer = AudioPlayer()
         self.voice: str = voice  # default OpenAI voice
+        self.language: str = language
         self.audio_thread: Optional[Thread] = None
-        
+            
     def eva_speak(self, text: str, wait: bool = True) -> None:
         """ Speak the given text using OpenAI """  
                                 
-        def stream_audio():
-            try:
-                audio_player = AudioPlayer()
-                response = self.model.audio.speech.create(
-                    model="tts-1",
-                    voice=self.voice,
-                    response_format="mp3",
-                    input=text
-                )
-                
-                audio_player.play_openai_stream(response)
-                    
-            except Exception as e:
-                logger.error(f"Error during text to speech synthesis: {e}")
-                return None
+        try:
+            response = self.model.audio.speech.create(
+                model="tts-1",
+                voice=self.voice,
+                response_format="mp3",
+                input=text
+            )
+   
+        except Exception as e:
+            logger.error(f"Error during text to speech synthesis: {e}")
+            return None
         
         if self.audio_thread and self.audio_thread.is_alive():
             self.audio_thread.join()
 
         if wait:
-            stream_audio()
+            self.audio_player.play_openai_stream(response)
         else:
-            self.audio_thread = Thread(target=stream_audio, daemon=True)
+            self.audio_thread = Thread(target=lambda: self.audio_player.play_openai_stream(response), daemon=True)
             self.audio_thread.start()
                 
     def generate_audio(self, text: str, media_folder: str) -> Optional[str]:

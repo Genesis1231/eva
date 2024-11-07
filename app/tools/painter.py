@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from langchain_core.tools import BaseTool
 
 from utils.agent import SmallAgent
-from utils.extension import DiscordMJ
+from utils.extension import MidjourneyServer
 
 class PainterInput(BaseModel):
     """Input for painter tool."""
@@ -26,7 +26,7 @@ class Painter(BaseTool):
     description: str = "Tool for creating pictures. This process might take a while."
     type: str = "chat" # can be used in chatbot
     client: str = "all"
-    generator : DiscordMJ = DiscordMJ()
+    generator : MidjourneyServer = MidjourneyServer()
     args_schema: Type[BaseModel] = PainterInput
 
     def _run(
@@ -36,14 +36,15 @@ class Painter(BaseTool):
 
         midjourney_prompt = f"{self.filter_prompt(query)} --c 20 --ar 3:4 --s 300"
         if image_urls := self.generator.send_message(midjourney_prompt):
-            content = f"I have created images with the query: {query}"
+            content = f"I have created 4 images with the query: {query}"
             return {"action": content, "image_urls": image_urls}
         
         return {"error": "Failed to create images."}
 
     def filter_prompt(self, prompt: str) -> str:
         """ Filter the query to remove banned words"""
-        banned_words = ("corpse", "naked", "nude", "patriotic", "organ", "lingerie", "sexy", "lolita")
+        banned_words = ("corpse", "naked", "nude", "patriotic", "organ", "lingerie", "sex", "lolita", 
+                        "blood", "erotic", "porn", "suicide", "rape", "nazi")
         
         for word in banned_words:
             prompt = prompt.replace(word, '*')

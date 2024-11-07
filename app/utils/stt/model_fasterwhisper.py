@@ -52,3 +52,13 @@ class FWTranscriber:
             return None
         
         return transcription 
+
+    def __del__(self):
+        """ clean up the transcriber """
+        if hasattr(self, 'model') and self.model is not None:
+            del self.model
+            self.model = None
+            
+        # Clear CUDA cache if using GPU
+        if self.device == "cuda":
+            cuda.empty_cache()

@@ -3,185 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eva Message</title><script type='text/javascript'>window.onload = window.resizeTo(450, 600); </script>
+    <title>Image Slider</title><script type='text/javascript'>window.onload = window.resizeTo(450, 600); </script>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
-            background-color: black;
+            background-color: #000;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            font-family: Arial, sans-serif;
+            align-items: center;
+            overflow: hidden;
         }
-        canvas {
-            display: block;
+        .slider-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
         }
-
+        .slider {
+            display: flex;
+            height: 100%;
+            transition: transform 0.3s ease-out;
+            cursor: grab;
+        }
+        .slider.grabbing {
+            cursor: grabbing;
+        }
+        .slide {
+            min-width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        img.loaded {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+    <div class="slider-container">
+        <div class="slider">
+            <div class='slide'><img src='/home/mantis/EVA/app/data/images/1304146704865431595_1.jpg'></div>
+<div class='slide'><img src='/home/mantis/EVA/app/data/images/1304146704865431595_2.jpg'></div>
+<div class='slide'><img src='/home/mantis/EVA/app/data/images/1304146704865431595_3.jpg'></div>
+<div class='slide'><img src='/home/mantis/EVA/app/data/images/1304146704865431595_4.jpg'></div>
+        </div>
+    </div>
+
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const textInput = document.getElementById('textInput');
+        const slider = document.querySelector('.slider');
+        const slides = document.querySelectorAll('.slide');
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID = 0;
+        let currentIndex = 0;
 
-        canvas.width = 450;
-        canvas.height = 600;
+        // Disable context menu on long press for mobile devices
+        window.oncontextmenu = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
 
-        let particles = [];
-        let targetPositions = [];
-        let currentText = "Hello there!";
-        let fontSize = 100;
-        const particleSize = 1.5;
-        const initialSpeed = 0.2;
-        const transitionDuration = 60;
-        const maxWidth = 400; // Maximum width for text wrapping
-        const particleDensity = 0.8; // Adjust this to control particle density
-
-        function wrapText(text, maxWidth) {
-            let words = text.split(' ');
-            let lines = [];
-            let currentLine = words[0];
-
-            for (let i = 1; i < words.length; i++) {
-                let word = words[i];
-                let width = ctx.measureText(currentLine + " " + word).width;
-                if (width < maxWidth) {
-                    currentLine += " " + word;
+        // Preload images
+        function preloadImages() {
+            slides.forEach(slide => {
+                const img = slide.querySelector('img');
+                if (img.complete) {
+                    imageLoaded(img);
                 } else {
-                    lines.push(currentLine);
-                    currentLine = word;
+                    img.onload = () => imageLoaded(img);
                 }
-            }
-            lines.push(currentLine);
-            return lines;
+            });
         }
 
-        function initializeAnimation(text) {
-            particles = [];
-            targetPositions = [];
-            currentText = text;
+        function imageLoaded(img) {
+            console.log('Image loaded:', img.src);
+            img.classList.add('loaded');
+        }
 
-            // Adjust font size based on text length
-            fontSize = Math.max(30, Math.min(100, 1000 / Math.sqrt(text.length)));
+        // Adjust image size
+        function adjustImageSize() {
+            const containerWidth = document.body.clientWidth;
+            const containerHeight = document.body.clientHeight;
+            const aspectRatio = 3 / 4;
 
-            ctx.font = `italic ${fontSize}px 'Brush Script MT', cursive`;
-            ctx.fillStyle = 'white';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let imgWidth, imgHeight;
 
-            let lines = wrapText(text, maxWidth);
-            let lineHeight = fontSize * 1.2; // Adjust line spacing here
-            let totalHeight = lineHeight * lines.length;
-            let startY = (canvas.height - totalHeight) / 2 + fontSize / 2;
-
-            lines.forEach((line, index) => {
-                ctx.fillText(line, canvas.width / 2, startY + lineHeight * index);
-            });
-
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let y = 0; y < canvas.height; y += 2) {
-                for (let x = 0; x < canvas.width; x += 2) {
-                    if (imageData.data[(y * canvas.width + x) * 4 + 3] > 128) {
-                        if (Math.random() < particleDensity) {
-                            targetPositions.push({ x, y });
-                        }
-                    }
-                }
+            if (containerWidth / containerHeight > aspectRatio) {
+                imgHeight = containerHeight;
+                imgWidth = imgHeight * aspectRatio;
+            } else {
+                imgWidth = containerWidth;
+                imgHeight = imgWidth / aspectRatio;
             }
 
-            targetPositions.forEach(() => {
-                const offscreenPos = getOffscreenPosition();
-                particles.push({
-                    x: offscreenPos.x,
-                    y: offscreenPos.y,
-                    targetX: 0,
-                    targetY: 0,
-                    initialX: offscreenPos.x,
-                    initialY: offscreenPos.y,
-                    size: Math.random() * particleSize + 0.5,
-                    speed: Math.random() * 0.1 + initialSpeed,
-                    angle: Math.random() * Math.PI * 2,
-                    radius: Math.random() * 1.5 + 0.5,
-                    angleSpeed: (Math.random() - 0.5) * 0.1,
-                    transitionProgress: 0,
-                    easingProgress: 0
-                });
-            });
-
-            assignTargets();
-        }
-
-        function easeOutCubic(x) {
-            return 1 - Math.pow(1 - x, 3);
-        }
-
-        function getOffscreenPosition() {
-            const angle = Math.random() * Math.PI * 2;
-            const extraDistance = 50;
-            const radius = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2 + extraDistance;
-            return {
-                x: canvas.width / 2 + Math.cos(angle) * radius,
-                y: canvas.height / 2 + Math.sin(angle) * radius
-            };
-        }
-
-        function assignTargets() {
-            particles.forEach((particle, index) => {
-                const target = targetPositions[index];
-                particle.targetX = target.x;
-                particle.targetY = target.y;
+            slides.forEach(slide => {
+                const img = slide.querySelector('img');
+                img.style.width = `${imgWidth}px`;
+                img.style.height = `${imgHeight}px`;
+                console.log('Image resized:', img.src, imgWidth, imgHeight);
             });
         }
 
-        function animate() {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-
-            particles.forEach(particle => {
-                const dx = particle.targetX - particle.x;
-                const dy = particle.targetY - particle.y;
-
-                particle.easingProgress = Math.min(particle.easingProgress + 0.01, 1);
-                const easedProgress = easeOutCubic(particle.easingProgress);
-
-                const linearWeight = Math.max(0, 1 - particle.transitionProgress / transitionDuration);
-                const circularWeight = 1 - linearWeight;
-
-                const easedX = particle.initialX + (particle.targetX - particle.initialX) * easedProgress;
-                const easedY = particle.initialY + (particle.targetY - particle.initialY) * easedProgress;
-                particle.x = particle.x * 0.7 + easedX * 0.3;
-                particle.y = particle.y * 0.7 + easedY * 0.3;
-
-                particle.angle += particle.angleSpeed;
-                const circularX = particle.targetX + Math.cos(particle.angle) * particle.radius;
-                const circularY = particle.targetY + Math.sin(particle.angle) * particle.radius;
-
-                particle.x = particle.x * linearWeight + circularX * circularWeight;
-                particle.y = particle.y * linearWeight + circularY * circularWeight;
-
-                particle.transitionProgress = Math.min(particle.transitionProgress + 1, transitionDuration);
-
-                ctx.beginPath();
-                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            requestAnimationFrame(animate);
+        // Initialize slider
+        function initSlider() {
+            console.log('Initializing slider');
+            preloadImages();
+            adjustImageSize();
         }
 
-        initializeAnimation(currentText);
-        animate();
+        window.addEventListener('load', initSlider);
+        window.addEventListener('resize', adjustImageSize);
+
+        slides.forEach((slide, index) => {
+            const slideImage = slide.querySelector('img');
+            slideImage.addEventListener('dragstart', (e) => e.preventDefault());
+            
+            // Touch events
+            slide.addEventListener('touchstart', touchStart(index));
+            slide.addEventListener('touchend', touchEnd);
+            slide.addEventListener('touchmove', touchMove);
+            
+            // Mouse events
+            slide.addEventListener('mousedown', touchStart(index));
+            slide.addEventListener('mouseup', touchEnd);
+            slide.addEventListener('mouseleave', touchEnd);
+            slide.addEventListener('mousemove', touchMove);
+        });
+
+        function touchStart(index) {
+            return function(event) {
+                currentIndex = index;
+                startPos = getPositionX(event);
+                isDragging = true;
+                animationID = requestAnimationFrame(animation);
+                slider.classList.add('grabbing');
+            }
+        }
+
+        function touchEnd() {
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            const movedBy = currentTranslate - prevTranslate;
+            
+            if (movedBy < -100 && currentIndex < slides.length - 1) {
+                currentIndex += 1;
+            }
+            
+            if (movedBy > 100 && currentIndex > 0) {
+                currentIndex -= 1;
+            }
+            
+            setPositionByIndex();
+            slider.classList.remove('grabbing');
+        }
+
+        function touchMove(event) {
+            if (isDragging) {
+                const currentPosition = getPositionX(event);
+                currentTranslate = prevTranslate + currentPosition - startPos;
+            }
+        }
+
+        function getPositionX(event) {
+            return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+        }
+
+        function animation() {
+            setSliderPosition();
+            if (isDragging) requestAnimationFrame(animation);
+        }
+
+        function setSliderPosition() {
+            slider.style.transform = `translateX(${currentTranslate}px)`;
+        }
+
+        function setPositionByIndex() {
+            currentTranslate = currentIndex * -window.innerWidth;
+            prevTranslate = currentTranslate;
+            setSliderPosition();
+        }
     </script>
 </body>
 </html>

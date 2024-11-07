@@ -43,6 +43,7 @@ def initialize_modules(config : dict):
         'language': language
     }
     
+    # Initialize the client
     client_type = config.get("DEVICE").upper()
     if client_type == "DESKTOP":
         module_list["client"] = partial(WSLClient, **client_params)
