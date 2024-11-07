@@ -1,7 +1,7 @@
 from config import logger
 import os
 import time
-import threading
+from threading import Thread
 import secrets
 from typing import Optional
 from queue import Queue, Empty
@@ -32,15 +32,29 @@ class CoquiSpeaker:
         generate_audio: Generate audio files from text using Coqui TTS.
     """
     
-    def __init__(self, model_name: str = None)-> None:
-        self.model_name = model_name if model_name else "tts_models/en/vctk/vits" # can be configured in the future
-        self.device = "cuda" if cuda.is_available() else "cpu"
-        self.model = TTS(model_name=self.model_name).to(self.device)
-        self.player = AudioPlayer()
+    def __init__(self, language: str = "en")-> None:
+        self.language: str = language
+        self.play_thread: Optional[Thread] = None
+        self.speakerID: Optional[str] = None
         
-        self.audio_queue = Queue()
-        self.play_thread = None
+        self.audio_queue: Queue = Queue()    
+        self.model: TTS = self.initialize_TTS()
+        self.player: AudioPlayer = AudioPlayer()
+
+    def initialize_TTS(self) -> TTS:
+        """ Initialize the TTS model """
+        
+        if self.language == "en":
+            model_name = "tts_models/en/vctk/vits"
+            self.speakerID = "p306"
+        else:
+            model_name = "tts_models/multilingual/multi-dataset/xtts_v2"
+            self.speakerID = "Daisy Studious"
             
+        device = "cuda" if cuda.is_available() else "cpu"
+        
+        return TTS(model_name=model_name).to(device)
+        
     def play(self) -> None:
         while True:
             try:
@@ -61,11 +75,11 @@ class CoquiSpeaker:
         
         sentences = nltk.sent_tokenize(text)
         if not self.play_thread:
-            self.play_thread = threading.Thread(target=self.play, daemon=True)
+            self.play_thread = Thread(target=self.play, daemon=True)
             self.play_thread.start()
                     
         for sentence in sentences:
-            wav = self.model.tts(text=sentence, speaker="p306")
+            wav = self.model.tts(text=sentence, speaker=self.speakerID)
             self.audio_queue.put(wav)
         
         if wait:

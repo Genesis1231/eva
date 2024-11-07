@@ -16,6 +16,6 @@ LANGUAGE_DICT = {
 
 def validate_language(language: str)-> str:
     if language not in LANGUAGE_DICT:
-        raise ValueError(f"Language {language} is not supported.")
-    
-    return LANGUAGE_DICT.get(language, "multilingual") 
+        logger.error(f"Language {language} is not supported, switching to multilingual mode.")
+
+    return LANGUAGE_DICT.get(language, "multilingual")

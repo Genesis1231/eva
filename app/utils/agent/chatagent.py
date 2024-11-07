@@ -1,5 +1,6 @@
 from config import logger
 import json
+from functools import partial
 from typing import Callable, Dict, Any, List
 
 from langchain_core.prompts import PromptTemplate
@@ -7,7 +8,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
 from langchain_core.language_models import BaseLanguageModel
 
-from utils.agent.constructor import build_prompt
+from utils.agent.constructor import PromptConstructor
 from utils.agent.models import (
     create_groq_model,
     create_ollama_model,
@@ -36,30 +37,26 @@ class ChatAgent:
     
     def __init__(self, model_name: str = "llama", base_url: str = "http://localhost:11434", language: str = "english")-> None:
         self.model_selection: str = model_name.upper()
-        self.model_temperature: float = 0.8
         self.base_url: str = base_url
-        self.language: str = language
+        self.language: str = language.upper()
         
+        self.constructor = PromptConstructor()
         self.llm: BaseLanguageModel = self._initialize_model()
-        self.output_format: BaseModel = self._initialize_output()
-        self.tool_info: List[Dict] = []
+        self.output_format: BaseModel = self._get_output_format()
+        self.tool_info: List[Dict[str, Any]] = []
         
         logger.info(f"Agent: {self.model_selection} is ready.")
 
     def _get_model_factory(self) -> Dict[str, Callable[[], BaseLanguageModel]]:
-        """ Get the model factory for creating language models. """
+        """ Get the model factory for creating LLM models. """
         return {
-            "GROQ" : lambda: create_groq_model(model_name="llama-3.1-70b-versatile", temperature=self.model_temperature),
-            "ANTHROPIC": lambda: create_anthropic_model(temperature=self.model_temperature),
-            "MISTRAL": lambda: create_mistral_model(temperature=self.model_temperature),
-            "GOOGLE": lambda: create_google_model(temperature=self.model_temperature),
-            "OPENAI" : lambda: create_openai_model(temperature=self.model_temperature),
-            "LLAMA" : lambda: create_ollama_model(base_url=self.base_url, 
-                                                  model_name="llama3.1:70b", 
-                                                  temperature=self.model_temperature),
-            "QWEN": lambda: create_ollama_model(base_url=self.base_url, 
-                                                model_name="qwen2.5:72b", 
-                                                temperature=self.model_temperature),
+            "GROQ" : partial(create_groq_model, model_name="llama-3.1-70b-versatile"),
+            "ANTHROPIC": create_anthropic_model,
+            "MISTRAL":  create_mistral_model,
+            "GOOGLE": create_google_model,
+            "OPENAI" : create_openai_model,
+            "LLAMA" : partial(create_ollama_model, base_url=self.base_url, model_name="llama3.1:70b"),
+            "QWEN": partial(create_ollama_model, base_url=self.base_url, model_name="qwen2.5:72b"),
         }
         
     def _initialize_model(self)-> BaseLanguageModel:
@@ -70,22 +67,23 @@ class ChatAgent:
     
         return model() 
     
-    def _initialize_output(self) -> BaseModel:
+    def _get_output_format(self) -> BaseModel:
         """Pydantic output format for the response"""
+        verbal_language = f"(RESPOND ONLY IN NATIVE {self.language})" if self.language != "ENGLISH" else ""
         
-        class Output(BaseModel):
+        class AgentOutput(BaseModel):
             analysis: str = Field(description="My reflection and analysis")
             strategy: str = Field(description="My response strategy")
-            response: str = Field(description="My verbal response to the user")
+            response: str = Field(description=f"My verbal response {verbal_language}")
             premeditation: str = Field(description="My predetermined information")
             action: List[Dict] = Field(description="The name of the tools I choose to use and the args for input.")
         
-        return Output
+        return AgentOutput
     
     def set_tools(self, tool_info: List[Dict])-> None:
         self.tool_info = tool_info
     
-    def _format_response(self, response: Any) -> Dict[str, Any]:
+    def _format_response(self, response: Dict[str, Any]) -> Dict[str, Any]:
         """ Deals with the inconsistent response parsing format from various models"""
          
         if response.get("properties"):
@@ -102,7 +100,13 @@ class ChatAgent:
     def respond(self, timestamp : str, sense: Dict, history: List[Dict], action_results: List[Dict]) -> Dict:
         """Main response function that build the prompt and get response from the language model"""
         
-        prompt = build_prompt(timestamp=timestamp, sense=sense, history=history, action_results=action_results)
+        prompt = self.constructor.build_prompt(
+            timestamp=timestamp, 
+            sense=sense, 
+            history=history, 
+            action_results=action_results
+        )
+        
         parser = JsonOutputParser(pydantic_object=self.output_format)
         
         prompt_template = PromptTemplate(

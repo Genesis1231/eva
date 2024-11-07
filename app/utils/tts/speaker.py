@@ -17,9 +17,10 @@ class Speaker:
         speak: Speak the given text using the selected speaker model.
     """
     
-    def __init__(self, speaker_model: str = "coqui", media_folder: str = "/media"):
+    def __init__(self, speaker_model: str = "coqui", language: str = "en", media_folder: str = "/media"):
         self._model_selection: str = speaker_model.upper()
         self._media_folder: str = media_folder
+        self._language: str = language
         self.model = self._initialize_model()
         
         logger.info(f"Speaker: {self._model_selection} is ready.")
@@ -35,7 +36,7 @@ class Speaker:
         from utils.tts.model_coqui import CoquiSpeaker
         
         try:
-            return CoquiSpeaker()
+            return CoquiSpeaker(language=self._language)
         except Exception as e:
             raise Exception(f"Error: Failed to initialize Coqui TTS model {str(e)} ")
 
@@ -43,7 +44,7 @@ class Speaker:
         from utils.tts.model_elevenlabs import ElevenLabsSpeaker
         
         try:
-            return ElevenLabsSpeaker()
+            return ElevenLabsSpeaker(language=self._language)
         except Exception as e:
             raise Exception(f"Error: Failed to initialize ElevenLabs model {str(e)} ")
 
@@ -51,7 +52,7 @@ class Speaker:
         from utils.tts.model_openai import OpenAISpeaker
         
         try:
-            return OpenAISpeaker()
+            return OpenAISpeaker(language=self._language)
         except Exception as e:
             raise Exception(f"Error: Failed to initialize OpenAI model {str(e)}")
     

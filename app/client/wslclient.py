@@ -23,8 +23,11 @@ class WSLClient:
         deactivate: Deactivate the client.
     
     """
-    def __init__(self, stt_model: str, vision_model: str, tts_model: str, base_url: str):
-        self.speaker = Speaker(tts_model)
+    def __init__(self, stt_model: str, vision_model: str, tts_model: str, base_url: str, language: str):
+        self.speaker = Speaker(
+            speaker_model=tts_model, 
+            language=language
+        )
         self.watcher = Watcher(vision_model, base_url)
         self.listener = Listener(stt_model)
         self.player = AudioPlayer()

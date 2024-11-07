@@ -25,11 +25,11 @@ def initialize_modules(config : dict):
     """ Initialize the modules for EVA """
     
     base_url = config.get("BASE_URL")
-    language = validate_language(config.get("LANGUAGE"))
+    language = config.get("LANGUAGE")
 
     # Initialize the modules
     module_list = {
-        "agent": partial(ChatAgent, config.get("CHAT_MODEL"), base_url, language),
+        "agent": partial(ChatAgent, config.get("CHAT_MODEL"), base_url, validate_language(language)),
         "memory" : partial(Memory, config.get("SUMMARIZE_MODEL"), base_url),
         "toolbox" : partial(ToolManager, config.get("DEVICE"))
     } 
@@ -39,7 +39,8 @@ def initialize_modules(config : dict):
         'stt_model': config.get("STT_MODEL"),
         'vision_model': config.get("IMAGE_MODEL"),
         'tts_model': config.get("TTS_MODEL"),
-        'base_url': base_url
+        'base_url': base_url,
+        'language': language
     }
     
     client_type = config.get("DEVICE").upper()

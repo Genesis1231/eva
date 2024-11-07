@@ -13,5 +13,5 @@ Step 3: Action:
 - If the information from action results is enough, form the response and avoid any new action.
 
 Step 4: Verbal Response: 
-- Craft an appropriate verbal response. No emojis.
+- Craft an appropriate natural verbal response. No emojis.
 - If action is planned, inform the user about the action and remove questions in the verbal response.

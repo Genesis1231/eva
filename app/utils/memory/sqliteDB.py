@@ -5,8 +5,11 @@ from typing import Dict
 import json
 
 class SQLiteLogger:
+    """
+    SQLiteLogger class to save the conversation and memory to the database.
+    """
     def __init__(self):
-        self._dblink = self._get_database_path()
+        self._dblink: str = self._get_database_path()
         self._create_memory_table()
 
     def _get_database_path(self) -> str:

@@ -1,6 +1,6 @@
 from config import logger
-from typing import Dict, Callable
-from functools import lru_cache
+from typing import Dict, Callable, Optional
+from functools import partial
 
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -30,28 +30,29 @@ class SmallAgent:
         self._model_selection: str = model_name.upper() 
         self._base_url: str = base_url
         self.model_temperature: float = model_temperature
-        self._llm = None
+        self._llm: Optional[BaseLanguageModel] = None
     
     @property
-    def llm(self):
+    def llm(self)-> BaseLanguageModel:
         if self._llm is None:
             self._llm = self._initialize_model()
         return self._llm
 
     @llm.setter
-    def llm(self, value):
+    def llm(self, value: BaseLanguageModel)-> None:
         self._llm = value
 
     def _get_model_factory(self) -> Dict[str, Callable[[], BaseLanguageModel]]:
         return {
-            "GROQ" : lambda: create_groq_model(model_name="llama-3.1-8b-instant", temperature=self.model_temperature),
-            "ANTHROPIC": lambda: create_anthropic_model(model_name=None, temperature=self.model_temperature),
-            "OPENAI": lambda: create_openai_model(model_name="gpt-4o-mini", temperature=self.model_temperature),
-            "LLAMA" : lambda: create_ollama_model(base_url=self._base_url, 
-                                                  model_name="llama3.1", 
-                                                  temperature=self.model_temperature),
+            "GROQ" : partial(create_groq_model, model_name="llama-3.1-8b-instant", temperature=self.model_temperature),
+            "ANTHROPIC": partial(create_anthropic_model, temperature=self.model_temperature),
+            "OPENAI": partial(create_openai_model, model_name="gpt-4o-mini", temperature=self.model_temperature),
+            "LLAMA" : partial(create_ollama_model, 
+                              base_url=self._base_url, 
+                              model_name="llama3.1", 
+                              temperature=self.model_temperature),
         }
- 
+
     def _initialize_model(self)-> BaseLanguageModel:
         model_factory = self._get_model_factory()
         model = model_factory.get(self._model_selection)

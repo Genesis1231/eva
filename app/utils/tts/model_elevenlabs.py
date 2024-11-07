@@ -8,16 +8,22 @@ from elevenlabs.client import ElevenLabs
 from elevenlabs import stream
     
 class ElevenLabsSpeaker:
-    def __init__(self, voice: str = "a448u8B0Hooh9RgovyPK") -> None:
+    def __init__(self, voice: str = "Jessica", language: str = "en") -> None:
         self.model: ElevenLabs = ElevenLabs()
         self.audio_thread: Optional[Thread] = None
         self.voice: str = voice # voice could be configured in the future
+        self.language: str = language
+    
+    def set_language(self, language: str) -> None:
+        self.language = language
         
     def eva_speak(self, text: str, wait: bool = True) -> None:
         """ Speak the given text using ElevenLabs """
+        model_name: str = "eleven_monolingual_v1" if self.language == "en" else "eleven_turbo_v2_5"
         
         try:
             audio_stream = self.model.generate(
+                model=model_name,
                 output_format="mp3_22050_32",
                 text=text,
                 voice=self.voice,
@@ -44,6 +50,7 @@ class ElevenLabsSpeaker:
         
         try:
             audio_stream = self.model.generate(
+                model=self.model_name,
                 output_format="mp3_22050_32",                      
                 text=text,
                 voice=self.voice,
