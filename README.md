@@ -13,13 +13,13 @@
 
 </div>
 
-## 🎯 Overview of EVA
+## 🎯 The Vision Behind EVA
 
-Hello Github wizards! Thanks for stopping by~ 🤗
+Hi there! Welcome to the EVA project 👋
 
-So, here's the story - I used to sling code back in the days (like, when Perl was still cool), but then a year ago AI came along and stroke me with awe. I became very interested in human-AI interaction and how it can be applied in our daily life. However, most of the online projects only focused on a few specific tasks. So I spent a few months to develop EVA myself. 
+So, here's the story - I used to sling code back in the days (like, when Perl was still cool), but then a year ago AI came along and i became fascinated by the potential of AI to transform how we interact with technology. I noticed many projects most focused on specific use cases rather than providing a flexible foundation for experimentation. So I spent a few months to code EVA myself.
 
-EVA is an experimental voice assistant that explores human-AI experience through proactive engagement and autonomous behavior. Built with a modular architecture, it aims to provide a more natural and dynamic interaction to users, include an extensive tool framework that allows for continuous enhancement of its capabilities.
+EVA is an experimental voice assistant that reimagines human-AI interaction through intelligent, proactive engagement and autonomous capabilities. EVA actively participates in conversations while executing complex tasks seamlessly in the background. Its flexible, modular architecture allows it to leverage AI models for speech, vision, and problem solving, while an extensive framework of tools enables EVA to perform a wide range of actions. 
 
 <div align="center">
   <img src="path/to/demo.gif" alt="EVA Demo" width="600px"/>
@@ -63,9 +63,9 @@ EVA/
 │   ├── tools/           # Tool implementations
 │   └── utils/           # Utility functions
 │       ├── agent/       # LLM agent classes and functions
-│       ├── memory/      # Mmeory module classes 
+│       ├── memory/      # Memory module classes 
 │       ├── prompt/      # Utility prompts
-│       ├── stt/         # Speech recognition models and classes
+│       ├── stt/         # Speech-to-text models and classes
 │       ├── tts/         # Text-to-Speech models and classes
 │       └── vision/      # Vision models and functions
 ├── tests/               # Test cases (😢)
@@ -153,10 +153,10 @@ configure EVA setting in app/config/config.py
 ```python
 eva_configuration = {
     "DEVICE": "desktop", # Currently "desktop" or "mobile" (testing)
-    "LANGUAGE": "en", # suports all major languages suffix such "en" (English), "es" (Spanish), "zh" (Chinese), or you can use "multilingual"(slower)
+    "LANGUAGE": "en", # suports all major languages. suffix such "en" (English), "es" (Spanish), "zh" (Chinese), or you can use "multilingual"(slower)
     "BASE_URL": "http://localhost:11434", # URL for local Ollama server, you can leave it if you dont plan to use local models
     "CHAT_MODEL": "anthropic", # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Google Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
-    "IMAGE_MODEL": "openai", # Supports Chatgpt-4o-mini and Ollama llava-phi3/llava13b(local), recommend: 4omini, but llava-phi3 is very small and free. 
+    "IMAGE_MODEL": "openai", # Supports Chatgpt-4o-mini, Groq-llama-3.2-11b-vision (free) and Ollama llava-phi3/llava13b(local), recommend: 4omini, but llava-phi3 is very small and free. 
     "STT_MODEL": "faster-whisper", # supports OpenAI Whisper, Groq(free) and Faster-whisper(local).  
     "TTS_MODEL": "elevenlabs", # Supports elevenlabs, openAI and coqui TTS (local).
     "SUMMARIZE_MODEL": "llama" # Supports groq-llama3.1-8b, Anthropic-claude-sonnet3.5 and Ollama-llama3.1(local).

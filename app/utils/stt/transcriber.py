@@ -68,6 +68,8 @@ class Transcriber:
             raise Exception(f"Error: failed to load Whisper Model {str(e)}")
         
     def _initialize_model(self):
+        """ Initialize the selected transcription model """
+        
         model_factory = self._get_model_factory()
         model = model_factory.get(self._model_selection)
         
@@ -97,7 +99,7 @@ class Transcriber:
         
         # if the name is unknown, return content with a new line, there is a new person speaking, save it into a database
         if name == "unknown":
-            content = f"{transcription.strip()} (I couldn't tell whose voice it is.)"
+            content = f"{transcription.strip()} (I couldn't ID the voice.)"
         else:
             content = f"{name}:: {transcription.strip()}"
         # if name == "unknown person":

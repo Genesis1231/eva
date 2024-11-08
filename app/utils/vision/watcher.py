@@ -43,7 +43,7 @@ class Watcher:
         
         # logger.info(f"Watcher: Frame change detected. Percentage: {change_percentage}") 
         # only  return a description if there is significant change.
-        return change_percentage > 0.5
+        return change_percentage > 0.4
     
     def glance(self) -> Optional[str]:
         frame = self.device.capture()

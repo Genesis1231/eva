@@ -1,16 +1,14 @@
-import os
 from config import logger
 import numpy as np
 import base64
-import requests
 import threading
 from functools import partial
 from queue import Queue
-from typing import Dict, Callable, Union
+from typing import Dict, Callable, Union, Optional
 
 import cv2
 from utils.vision.identifier import Identifier
-from utils.prompt import load_prompt
+
 
 class Describer:
     """
@@ -40,66 +38,24 @@ class Describer:
         return {
             "LLAVA-PHI3" : partial(self._create_ollama_model, "llava-phi3"),
             "LLAVA:13B" : partial(self._create_ollama_model, "llava:13b"),
-            "OPENAI" : self._create_openai_model
+            "OPENAI" : self._create_openai_model,
+            "GROQ" : self._create_groq_model
         }
         
     def _create_ollama_model(self, model_name: str):
-        """ Create an Ollama model instance for vision. """
-        from ollama import Client
+        from utils.vision.model_ollama import OllamaVision
         
-        class VisionClient:
-            def __init__(self, model_name: str, base_url: str):
-                self.client = Client(base_url)
-                self.model = model_name
-                
-            def generate(self, template_name: str, image: str, **kwargs) -> str:
-                prompt_template = load_prompt(f"{template_name}_ollama").format(**kwargs)
-                response = self.client.generate(
-                    model=self.model,
-                    keep_alive="1h",
-                    prompt=prompt_template, 
-                    images=[image],
-                    options=dict(temperature=0.1)
-                )
-                return response['response']
-
-        return VisionClient(model_name, self._base_url)
+        return OllamaVision(model_name, self._base_url)
     
     def _create_openai_model(self):
-        """ Create an OpenAI model instance for vision. """
-        class VisionClient:
-            def __init__(self):
-                self.api_key = os.environ.get("OPENAI_API_KEY")
-                self.model = "gpt-4o-mini"
-            
-            def generate(self, template_name: str, image: str, **kwarg) -> str:
-                prompt_template = load_prompt(f"{template_name}_ollama").format(**kwarg)
-                headers = { "Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}" }
-                payload = {
-                    "model": self.model,
-                    "messages": [{
-                        "role": "user",
-                        "content": [{
-                                "type": "text",
-                                "text": prompt_template,
-                            },
-                            {
-                                "type": "image_url",
-                                "image_url": { "url": f"data:image/jpeg;base64,{image}" }
-                            }]
-                        }],
-                    "max_tokens": 300,
-                    "temperature": 0.1
-                    }
-            
-                try:
-                    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-                except Exception as e:
-                    raise Exception(f"Error: Failed to complete from openai: {str(e)}")
-                
-                return response.json()["choices"][0]["message"]["content"]
+        from utils.vision.model_openai import OpenAIVision
         
-        return VisionClient()
+        return OpenAIVision()
+    
+    def _create_groq_model(self):
+        from utils.vision.model_groq import GroqVision
+        
+        return GroqVision()
     
     def _initialize_model(self):
         model_factory = self._get_model_factory()
@@ -118,15 +74,22 @@ class Describer:
         
         return image_data
     
-    def describe_screenshot(self, image_data: Union[np.ndarray, str], query: str) -> str:
+    def describe_screenshot(self, image_data: Union[np.ndarray, str], query: str) -> Optional[str]:
+        """ Describe a screenshot using the vision model. """
+        
         image_base64 = self._convert_base64(image_data)
         
-        return self.model.generate(template_name="screenshot",
-                                    image=image_base64,
-                                    query=query)
+        try:
+            result = self.model.generate(template_name="screenshot",
+                                        image=image_base64,
+                                        query=query)
+        except Exception as e:
+            logger.error(f"Error: Failed to describe screenshot: {str(e)}")
+            return None
         
+        return result
         
-    def describe(self, template_name: str, image_data: Union[np.ndarray, str]) -> str:
+    def describe(self, template_name: str, image_data: Union[np.ndarray, str]) -> Optional[str]:
         """ 
         Describe an image using the vision model.
         Image data could be a numpy array or a base64 encoded string.
@@ -136,13 +99,16 @@ class Describer:
             identity: A boolean flag to identify individuals in the image.
             **kwarg: Additional keyword arguments to replace strings in the template.
         """
-        
-        thread = threading.Thread(target=self.identifier.identify, args=(image_data, self.name_queue))
-        thread.start()
-        
-        image_base64 = self._convert_base64(image_data)
-        sight = self.model.generate(template_name=template_name,
-                                    image=image_base64)
+        try:    
+            thread = threading.Thread(target=self.identifier.identify, args=(image_data, self.name_queue))
+            thread.start()
+            
+            image_base64 = self._convert_base64(image_data)
+            sight = self.model.generate(template_name=template_name,
+                                        image=image_base64)
+        except Exception as e:
+            logger.error(f"Error: Failed to describe image: {str(e)}")
+            return None
         
         name = self.name_queue.get()
         thread.join()

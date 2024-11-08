@@ -19,7 +19,7 @@
 # 
 # IMAGE_MODEL:
 #   Model for vision interpretation.
-#   Options: "OpenAI", "Llava13b", "Llava-phi3"
+#   Options: "OpenAI", "Llava13b", "Llava-phi3", "Groq"
 #   Default: Llava-phi3 (local)
 #   Recommended: Chatgpt-4o-mini
 #   - Could support more models in the future
@@ -49,8 +49,8 @@ eva_configuration = {
     "LANGUAGE": "multilingual",
     "BASE_URL": "http://localhost:11434",
     "CHAT_MODEL": "anthropic",
-    "IMAGE_MODEL": "llava-phi3",
-    "STT_MODEL": "groq",
+    "IMAGE_MODEL": "groq",
+    "STT_MODEL": "faster-whisper",
     "TTS_MODEL": "elevenlabs",
     "SUMMARIZE_MODEL": "llama"
 }
