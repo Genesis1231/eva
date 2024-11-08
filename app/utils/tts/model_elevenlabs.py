@@ -8,18 +8,15 @@ from elevenlabs.client import ElevenLabs
 from elevenlabs import stream
     
 class ElevenLabsSpeaker:
-    def __init__(self, voice: str = "Jessica", language: str = "en") -> None:
+    def __init__(self, voice: str = "Ana") -> None:
         self.model: ElevenLabs = ElevenLabs()
         self.audio_thread: Optional[Thread] = None
         self.voice: str = voice # voice could be configured in the future
-        self.language: str = language
-    
-    def set_language(self, language: str) -> None:
-        self.language = language
         
-    def eva_speak(self, text: str, wait: bool = True) -> None:
+    def eva_speak(self, text: str, language: Optional[str] = None, wait: bool = True) -> None:
         """ Speak the given text using ElevenLabs """
-        model_name: str = "eleven_monolingual_v1" if self.language == "en" else "eleven_turbo_v2_5"
+        
+        model_name = "eleven_monolingual_v1" if language == "en" else "eleven_turbo_v2_5"
         
         try:
             audio_stream = self.model.generate(
@@ -43,15 +40,17 @@ class ElevenLabsSpeaker:
         except Exception as e:
             logger.error(f"Error during text to speech synthesis: {e}")
             
-    def generate_audio(self, text: str, media_folder: str) -> Optional[str]:
+    def generate_audio(self, text: str, language: Optional[str], media_folder: str) -> Optional[str]:
         """ Generate mp3 from text using ElevenLabs """
+        
+        model_name: str = "eleven_monolingual_v1" if self.language == "en" else "eleven_turbo_v2_5"
         
         filename = f"{secrets.token_hex(16)}.mp3"
         file_path = os.path.join(media_folder, "audio", filename)
         
         try:
             audio_stream = self.model.generate(
-                model=self.model_name,
+                model=model_name,
                 output_format="mp3_22050_32",                      
                 text=text,
                 voice=self.voice

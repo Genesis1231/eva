@@ -1,6 +1,6 @@
 import os
 from config import logger
-from typing import Dict, Callable
+from typing import Dict, Callable, Optional
 
 class Speaker:
     """
@@ -44,7 +44,7 @@ class Speaker:
         from utils.tts.model_elevenlabs import ElevenLabsSpeaker
         
         try:
-            return ElevenLabsSpeaker(language=self._language)
+            return ElevenLabsSpeaker()
         except Exception as e:
             raise Exception(f"Error: Failed to initialize ElevenLabs model {str(e)} ")
 
@@ -52,7 +52,7 @@ class Speaker:
         from utils.tts.model_openai import OpenAISpeaker
         
         try:
-            return OpenAISpeaker(language=self._language)
+            return OpenAISpeaker() # OpenAI does not need language selection
         except Exception as e:
             raise Exception(f"Error: Failed to initialize OpenAI model {str(e)}")
     
@@ -68,10 +68,10 @@ class Speaker:
         """ Stop the speaker model """
         self.model.stop_playback()
         
-    def speak(self, answer: str, wait: bool) -> None:
+    def speak(self, answer: str, language: Optional[str] = "en", wait: bool = True) -> None:
         """ Speak the given text using the selected speaker model """
         try:
-            self.model.eva_speak(answer, wait)
+            self.model.eva_speak(answer, language, wait)
             
         except Exception as e:
             raise Exception(f"Error: Failed to speak {str(e)} ")

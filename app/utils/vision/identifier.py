@@ -48,7 +48,7 @@ class Identifier:
                         
                 except Exception as e:
                     raise Exception(f"Error processing {filename}: {str(e)}")
-
+        
         return photo_ids
     
     def _base64_to_numpy(self, base64_str: str)-> np.ndarray:
@@ -58,23 +58,29 @@ class Identifier:
     
     def identify(self, frames: Union[np.ndarray, str], name_queue: Queue) -> None:
         """ Identify individuals from the given frames. """
+        
         if isinstance(frames, str):
             frames = self._base64_to_numpy(frames)
-            
-        frames = cv2.cvtColor(cv2.resize(frames, (0, 0), fx=0.5, fy=0.5), cv2.COLOR_BGR2RGB)
+        
+        try:
+            frames = cv2.cvtColor(cv2.resize(frames, (0, 0), fx=0.5, fy=0.5), cv2.COLOR_BGR2RGB)
 
-        face_locations = fr.face_locations(frames)
-        face_encodings = fr.face_encodings(frames, face_locations)
+            face_locations = fr.face_locations(frames)
+            face_encodings = fr.face_encodings(frames, face_locations)
 
-        names = []
-        # Compare the captured face encoding with known face encodings
-        for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
-            for name, face_id in self._ids.values():
-                matches = fr.compare_faces([face_id], face_encoding)
-                if True in matches:
-                    names.append(f"{name},")
-                    break
-
+            names = []
+            # Compare the captured face encoding with known face encodings
+            for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+                for name, face_id in self._ids.values():
+                    matches = fr.compare_faces([face_id], face_encoding)
+                    if True in matches:
+                        names.append(f"{name},")
+                        break
+                    
+        except Exception as e:
+            logger.error(f"Identifier: Failed to identify faces: {str(e)}")
+            return
+        
         name = "unknown" if not names else ", ".join(names)
         
         if name_queue:

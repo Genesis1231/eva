@@ -26,10 +26,13 @@ def initialize_modules(config : dict):
     
     base_url = config.get("BASE_URL")
     language = config.get("LANGUAGE")
-
+    
+    if not (language := validate_language(language)):
+        language = "multilingual"
+    
     # Initialize the modules
     module_list = {
-        "agent": partial(ChatAgent, config.get("CHAT_MODEL"), base_url, validate_language(language)),
+        "agent": partial(ChatAgent, config.get("CHAT_MODEL"), base_url, language),
         "memory" : partial(Memory, config.get("SUMMARIZE_MODEL"), base_url),
         "toolbox" : partial(ToolManager, config.get("DEVICE"))
     } 

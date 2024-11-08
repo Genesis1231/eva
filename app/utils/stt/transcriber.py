@@ -26,9 +26,10 @@ class Transcriber:
         
     """
     
-    def __init__(self, model_name: str = "faster-whisper"):
+    def __init__(self, model_name: str = "faster-whisper", language: str = "en"):
         self._model_selection: str = model_name.upper()
-        self._model_language: str = "en"
+        self._model_language: str = language
+        
         self.model = self._initialize_model()
         self.identifier = VoiceIdentifier()
         self.name_queue = Queue()
@@ -76,7 +77,7 @@ class Transcriber:
         return model()
     
 
-    def transcribe(self, audioclip) -> Optional[str]:  
+    def transcribe(self, audioclip) -> Optional[tuple[str, str]]:  
         """ Transcribe the given audio clip and identify the speaker """
         
         while not self.name_queue.empty(): # Clear queue 
@@ -85,7 +86,7 @@ class Transcriber:
         thread = threading.Thread(target=self.identifier.identify, args=(audioclip, self.name_queue))
         thread.start()
         
-        transcription = self.model.transcribe_audio(audioclip)
+        transcription, language = self.model.transcribe_audio(audioclip)
         if not transcription:
             thread.join()
             return None
@@ -107,4 +108,4 @@ class Transcriber:
 
         logger.info(f"{content} \n")
         
-        return content
+        return content, language

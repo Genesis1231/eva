@@ -1,5 +1,4 @@
 from config import logger
-from typing import Optional
 from langchain_core.language_models import BaseLanguageModel
 
 def create_groq_model(

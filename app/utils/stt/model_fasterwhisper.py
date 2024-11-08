@@ -21,19 +21,25 @@ class FWTranscriber:
     def __init__(self, language: str = "en"):
         self.language: str = language
         self.device: str = "cuda" if cuda.is_available() else "cpu"
-        self.model: WhisperModel = self._get_model()
+        self.model: WhisperModel = self._initialize_model()
     
-    def _get_model(self):
+    def _initialize_model(self):
         """ Get the appropriate model based on the language """
+        
         model_name = "distil-medium.en" if self.language == "en" else "large-v3"
         
+        # If the language is set to "multilingual", do not specify a language.
+        if self.language.upper() == "MULTILINGUAL":
+            self.language = None
+            
         return WhisperModel(model_name, device=self.device, compute_type="float16")
     
-    def transcribe_audio(self, audioclip) -> Optional[str]:
+    def transcribe_audio(self, audioclip) -> Optional[tuple[str, str]]:
         """ Transcribe the given audio clip using the Faster Whisper model """
         
         if not isinstance(audioclip, (List, ndarray)):
-            raise ValueError("Invalid audio format provided for transcription.")
+            logger.error("Invalid audio format provided for transcription.")
+            return None
         
         try:
             segments, info = self.model.transcribe(
@@ -44,14 +50,16 @@ class FWTranscriber:
             )
             
             transcription = "".join(segment.text for segment in segments)
-            if self.language != "en" and info.language_probability > 0.7:
-                transcription = f"{transcription} \n <SYSTEM>RESPOND IN {str(info.language).upper()}! </SYSTEM>" 
+            if self.language is None and info.language_probability > 0.8:
+                transcription_language = info.language
+            else:
+                transcription_language = self.language
                 
         except Exception as e:
             logger.error(f"Error: Failed to transcribe audio: {str(e)}")
             return None
         
-        return transcription 
+        return transcription, transcription_language
 
     def __del__(self):
         """ clean up the transcriber """

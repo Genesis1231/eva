@@ -4,14 +4,19 @@ from typing_extensions import Dict, List, Optional
 
 from utils.tts import Speaker, AudioPlayer
 from utils.vision import Watcher
-from utils.stt import Listener
+from utils.stt import PCListener
 from utils.extension import Window
 from client.html import load_html
 
 class WSLClient:
     """
     Class for eva to interact with the desktop client.
-    You will need to install chrome browser for the display.
+    Attributes:
+        speaker: The speaker object to speak the response to the client.
+        watcher: The watcher object to watch the client.
+        listener: The listener object to listen to the client.
+        player: The audio player object to stream the music to the client.
+        window: The window object to launch the html to the client.
     Methods:
         send: Send the data to the client.
         receive: Receive the data from the client.
@@ -24,42 +29,45 @@ class WSLClient:
     
     """
     def __init__(self, stt_model: str, vision_model: str, tts_model: str, base_url: str, language: str):
-        self.speaker = Speaker(
-            speaker_model=tts_model, 
-            language=language
-        )
+        self.speaker = Speaker(tts_model, language)
         self.watcher = Watcher(vision_model, base_url)
-        self.listener = Listener(stt_model)
+        self.listener = PCListener(stt_model, language)
         self.player = AudioPlayer()
         self.window = Window()
     
-    def send(self, data: Dict) -> None:
-        if not data:
-            logger.error("No data is sent to client.")
-            return
+    def send(self, data: Dict[str, str]) -> None:
+        """ Send the data to the client """
 
-        speech = data["speech"]
-        wait = data["wait"]
-        self.speaker.speak(speech, wait)
+        self.speaker.speak(
+            data.get("speech"), 
+            data.get("language"), 
+            data.get("wait")
+        )
         
     def receive(self) -> Dict:
+        """ Receive the data from the client """
+        
         observation = self.watcher.glance()
-        message = self.listener.listen()
+        message, language = self.listener.listen()
         
         return {
             "user_message": message,
-            "observation": observation
+            "observation": observation,
+            "language": language
         }
     
     def start(self) -> Dict:
-        observation = self.watcher.glance()
+        """ Start the client """
         
-        html = load_html("hello.html", message="Hello there!")
-        self.window.launch_html(html)
+        observation = self.watcher.glance()
+        # html = load_html("hello.html", message="Hello there!")
+        # self.window.launch_html(html)
         
         return {"observation": observation}
 
-    def speak(self, response: str, wait: bool=True) -> None:
+    def speak(self, response: str, wait: bool= True) -> None:
+        """ Speak a single response to the client """
+        
         self.speaker.speak(response, wait)
     
     def stream_music(self, url: str, cover_url: str, title: str) -> str:
@@ -72,7 +80,7 @@ class WSLClient:
             return f"The song '{title}' is playing."
         
         except Exception as e:
-            logger.error(f"Error: Failed to stream to client: {str(e)}")
+            logger.error(f"Failed to stream to client: {str(e)}")
             return "Client Error: Failed to launch the media player."
 
     def launch_youtube(self, id: str, title: str) -> str:
@@ -82,7 +90,7 @@ class WSLClient:
             self.window.launch_html(html)
         
         except Exception as e:
-            logger.error(f"Error: Failed to launch youtube video to client: {str(e)}")
+            logger.error(f"Failed to launch youtube video to client: {str(e)}")
             return "Client Error: The video player could not be launched properly."
     
     def launch_epad(self, html: str) -> Optional[str]:
@@ -93,7 +101,7 @@ class WSLClient:
             
             return None
         except Exception as e:
-            logger.error(f"Error: Failed to launch epad to client: {str(e)}")
+            logger.error(f"Failed to launch epad to client: {str(e)}")
             return "Client Error: The epad could not be launched properly." 
     
     def launch_gallery(self, image_urls: List) -> Optional[str]:

@@ -46,11 +46,11 @@
 
 eva_configuration = {
     "DEVICE": "desktop", 
-    "LANGUAGE": "en",
+    "LANGUAGE": "multilingual",
     "BASE_URL": "http://localhost:11434",
     "CHAT_MODEL": "anthropic",
     "IMAGE_MODEL": "llava-phi3",
-    "STT_MODEL": "faster-whisper",
+    "STT_MODEL": "groq",
     "TTS_MODEL": "elevenlabs",
     "SUMMARIZE_MODEL": "llama"
 }

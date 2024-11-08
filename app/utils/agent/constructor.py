@@ -1,5 +1,5 @@
 from config import logger
-from typing import List, Dict, Optional
+from typing import List, Dict
 from pydantic import BaseModel, Field
 from utils.prompt import load_prompt
 
@@ -13,7 +13,7 @@ class PromptConstructor:
         self.instructions: str = load_prompt("instructions")
         
     @staticmethod
-    def _format_history(history: Optional[List[Dict]]) -> str:
+    def _format_history(history: List[Dict] | None) -> str:
         """ format the the chat history into string for LLM """
         if not history:
             return ""
@@ -41,15 +41,15 @@ class PromptConstructor:
         return "\n".join(messages)
 
     @staticmethod
-    def _format_observation(observation: Optional[str]) -> str:
+    def _format_observation(observation: str | None) -> str:
         return "" if not observation else f"<observation>I see: {observation} </observation>"
 
     @staticmethod
-    def _format_message(user_message: Optional[str]) -> str:
+    def _format_message(user_message: str | None) -> str:
         return "" if not user_message else f"<human_reply>I hear: {user_message} </human_reply>"
 
     @staticmethod
-    def _format_action_results(results: Optional[List[Dict]]) -> str:
+    def _format_action_results(results: List[Dict] | None) -> str:
         """ Format the action results into string for LLM """
         if not results:
             return ""
@@ -84,15 +84,15 @@ class PromptConstructor:
         
         """
         
-        user_message: Optional[str] = sense.get("user_message")
-        observation: Optional[str] = sense.get("observation")
+        user_message = sense.get("user_message")
+        observation = sense.get("observation")
         system_prompt: str = load_prompt("persona")
         instructions: str = load_prompt("instructions")
         
-        action_results: Optional[str] = self._format_action_results(action_results)
-        user_message: Optional[str] = self._format_message(user_message)
-        observation: Optional[str] = self._format_observation(observation)
-        history_prompt: Optional[str] = self._format_history(history)
+        action_results = self._format_action_results(action_results)
+        user_message = self._format_message(user_message)
+        observation = self._format_observation(observation)
+        history_prompt = self._format_history(history)
         
         PROMPT_TEMPLATE = f"""  
             <PERSONA>

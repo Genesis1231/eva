@@ -20,14 +20,13 @@ class OpenAISpeaker:
         generate_audio: Generate audio files from text using OpenAI TTS.
     """
     
-    def __init__(self, voice: str = "nova", language: str = "en") -> None:
+    def __init__(self, voice: str = "nova") -> None:
         self.model: OpenAI = OpenAI()
         self.audio_player: AudioPlayer = AudioPlayer()
         self.voice: str = voice  # default OpenAI voice
-        self.language: str = language
         self.audio_thread: Optional[Thread] = None
             
-    def eva_speak(self, text: str, wait: bool = True) -> None:
+    def eva_speak(self, text: str, language: Optional[str] = None, wait: bool = True) -> None:
         """ Speak the given text using OpenAI """  
                                 
         try:

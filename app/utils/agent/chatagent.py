@@ -1,4 +1,4 @@
-from config import logger
+from config import logger, validate_language
 import json
 from functools import partial
 from typing import Callable, Dict, Any, List
@@ -38,7 +38,7 @@ class ChatAgent:
     def __init__(self, model_name: str = "llama", base_url: str = "http://localhost:11434", language: str = "english")-> None:
         self.model_selection: str = model_name.upper()
         self.base_url: str = base_url
-        self.language: str = language.upper()
+        self.language: str = language
         
         self.constructor = PromptConstructor()
         self.llm: BaseLanguageModel = self._initialize_model()
@@ -59,6 +59,8 @@ class ChatAgent:
         }
         
     def _initialize_model(self)-> BaseLanguageModel:
+        """ Initialize the ChatAgent LLM model """
+        
         model_factory = self._get_model_factory()
         model = model_factory.get(self.model_selection)
         if model is None:
@@ -66,9 +68,15 @@ class ChatAgent:
     
         return model() 
     
-    def _get_output_format(self) -> BaseModel:
+    def _get_output_format(self, language: str | None) -> BaseModel:
         """Pydantic output format for the response"""
-        verbal_language = f"(RESPOND ONLY IN NATIVE {self.language})" if self.language != "ENGLISH" and self.language != "MULTILINGUAL" else ""
+        
+        # Validate the language  
+        language = validate_language(language) 
+        if not language:
+            language = self.language
+        
+        verbal_language = f"(RESPOND ONLY IN NATIVE {language.upper()})" if language.upper() not in {"ENGLISH", "MULTILINGUAL"} else ""
         
         class AgentOutput(BaseModel):
             analysis: str = Field(description="My reflection and analysis")
@@ -96,7 +104,14 @@ class ChatAgent:
             
         return response
     
-    def respond(self, timestamp : str, sense: Dict, history: List[Dict], action_results: List[Dict]) -> Dict:
+    def respond(
+        self, 
+        timestamp : str, 
+        sense: Dict, 
+        history: List[Dict], 
+        action_results: List[Dict], 
+        language: str | None
+    ) -> Dict:
         """Main response function that build the prompt and get response from the language model"""
         
         prompt = self.constructor.build_prompt(
@@ -106,7 +121,7 @@ class ChatAgent:
             action_results=action_results
         )
         
-        parser = JsonOutputParser(pydantic_object=self._get_output_format())
+        parser = JsonOutputParser(pydantic_object=self._get_output_format(language))
         
         prompt_template = PromptTemplate(
             input_variables=["tools"],

@@ -3,7 +3,7 @@ from pathlib import Path
 from config import logger
 import sqlite3
 from queue import Queue
-from typing import List, Dict
+from typing import Dict
 
 import wespeaker as wp
 import scipy.io.wavfile as sf

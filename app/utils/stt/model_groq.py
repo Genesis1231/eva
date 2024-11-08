@@ -10,7 +10,7 @@ class GroqTranscriber:
     def __init__(self, language: str = "en"):
         self.language: str = language
         self.model: Groq = Groq()
-        self.sample_rate: int = 16000
+        self._sample_rate: int = 16000
      
     def transcribe_audio(self, audioclip) -> Optional[str]:
         """ Transcribe the given audio clip using the OpenAI Whisper model """
@@ -18,28 +18,29 @@ class GroqTranscriber:
         if not isinstance(audioclip, (List, ndarray)):
             raise ValueError("Invalid audio format provided for transcription.") 
         
-        model_name = "distil-whisper-large-v3-en" if self.language == "en" else "whisper-large-v3-turbo "
+        model_name = "distil-whisper-large-v3-en" if self.language == "en" else "whisper-large-v3-turbo"
         
         try:
             with tempfile.NamedTemporaryFile(suffix='.wav', delete=True) as temp_file:
-                sf.write(temp_file.name, self.sample_rate, audioclip)
-            
-                #transcribe the audio file  
+                sf.write(temp_file.name, self._sample_rate, audioclip)
                 with open(temp_file.name, 'rb') as audio_file:
                     api_params = {
                         "model": model_name,
                         "file": audio_file,
-                        "response_format": "text",
+                        "response_format": "verbose_json",
                         "prompt": "Specify punctuations.",
                     }
-                    if self.language == "en":
-                        response = self.model.audio.transcriptions.create(**api_params)
-                    else:
-                        response = self.model.audio.translations.create(**api_params)
+                    
+                    if self.language != "multilingual":
+                        api_params["language"] = self.language
+                    
+                    response = self.model.audio.transcriptions.create(**api_params)
+                    
+                # return the language of the audio if it is multilingual
+                language = response.language if self.language == "multilingual" else self.language
         
         except Exception as e:
             logger.error(f"Error: Failed to transcribe audio: {str(e)}")
             return None
 
-        
-        return response
+        return response.text, language

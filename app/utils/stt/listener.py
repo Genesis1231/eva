@@ -1,11 +1,11 @@
 from config import logger
 from typing_extensions import Optional
-
+from numpy import ndarray
 
 from utils.stt.transcriber import Transcriber
 from utils.stt.mic import Microphone
 
-class Listener:
+class PCListener:
     """
     The Listener class is for PC / Laptop use only.
     Utilizes the Microphone and Transcriber classes to listen to audio input and transcribe it.
@@ -15,21 +15,22 @@ class Listener:
         transcriber: The transcriber instance.
     """
 
-    def __init__(self, model_name: str = "faster-whisper"):
+    def __init__(self, model_name: str, language: str):
         self.microphone: Microphone = Microphone()
-        self.transcriber: Transcriber = Transcriber(model_name)
+        self.transcriber: Transcriber = Transcriber(model_name, language)
 
-    def listen(self) -> Optional[str]:  
+    def listen(self) -> Optional[tuple[str, str]]:  
         """ listening to microphone and transcribing it. / for PC use only """
         
         while True:
-            audiodata = self.microphone.listen()
-            if audiodata is None:
-                return None
-        
-            content = self.transcriber.transcribe(audiodata)
-            if not content:
-                logger.warning("Listener: No content is detected. Back to listening.")
+            audio_data = self.microphone.listen()
+            if audio_data is None:
+                logger.warning("Listener: Speech audio data is not valid. Back to listening.")
                 continue
         
-            return content
+            content, language = self.transcriber.transcribe(audio_data)
+            if not content:
+                logger.warning("Listener: No speech is detected in the audio. Back to listening.")
+                continue
+        
+            return content, language

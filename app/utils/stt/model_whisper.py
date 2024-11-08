@@ -46,13 +46,11 @@ class WhisperTranscriber:
                         
                     response = self.model.audio.transcriptions.create(**api_params)
                 
-                if self.language == "multilingual":
-                    language = response.language
-                else:
-                    language = self.language
+                # return the language of the audio if it is multilingual
+                language = response.language if self.language == "multilingual" else self.language
                 
         except Exception as e:
             logger.error(f"Error: Failed to transcribe audio with OpenAI Whisper: {str(e)}")
             return None
         
-        return response.text
+        return response.text, language

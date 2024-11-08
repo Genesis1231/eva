@@ -69,17 +69,17 @@ class CoquiSpeaker:
             except Empty:
                 continue  # If queue is empty, continue the loop
     
-    def _generate_speech(self, text: str) -> List[np.ndarray]:
+    def _generate_speech(self, text: str, language: Optional[str]) -> List[np.ndarray]:
         """ Generate speech from text using Coqui TTS """
         
-        language = "zh-cn" if self.language == "zh" else self.language # correct the language code for TTS model
+        language = "zh-cn" if language == "zh" else language # correct the language code for TTS model
         
         if self.language == "en":
             return self.model.tts(text=text, speaker=self.speakerID)
         else:
             return self.model.tts(text=text, speaker=self.speakerID, language=language)
     
-    def eva_speak(self,  text: str, wait: bool = True) -> None:
+    def eva_speak(self, text: str, language: Optional[str] = "en", wait: bool = True) -> None:
         """ Speak the given text using Coqui TTS """
         
         sentences = nltk.sent_tokenize(text)
@@ -88,7 +88,7 @@ class CoquiSpeaker:
             self.play_thread.start()
                     
         for sentence in sentences:
-            wav = self._generate_speech(sentence)
+            wav = self._generate_speech(sentence, language)
             self.audio_queue.put(wav)
         
         if wait:

@@ -29,8 +29,8 @@ def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
     first build the prompt for the agent, then save the conversation to memory, finally send the response to the user.
     
     """
-    
     sense = state["sense"]
+    language = sense.get("language")
     memory = state["memory"]
     agent = state["agent"]
     action_results = state["action_results"]
@@ -43,22 +43,23 @@ def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
         timestamp=timestamp,
         sense=sense,
         history=history,
-        action_results=action_results, 
+        action_results=action_results,
+        language=language
     )
     
     memory.create_memory(timestamp=timestamp, user_response=sense, response=response)
-    speech = response.get("response")
     action = response.get("action")
+    speech = response.get("response")
     
     # send the response to the client device
-    client = state["client"]
     eva_response = {
         "speech": speech,
+        "language": language,
         "wait": True if not action else False # determine if waiting for user, only for desktop client
     }
-    client.send(eva_response)
+    state["client"].send(eva_response)
     
-    return {"status": "active", "action": action, "last_conv": timestamp}
+    return {"status": "active", "action": action}
 
 def eva_action(state: Dict[str, Any]) -> Dict[str, Any]:
     """ Execute the actions and return some intermediate output"""

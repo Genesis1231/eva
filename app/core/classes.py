@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import TypedDict, Optional, Union, Dict, List
 
 from client import WSLClient, MobileClient
@@ -16,4 +15,3 @@ class EvaState(TypedDict):
     action : List[Optional[Dict]]
     action_results: List[Optional[Dict]]
     num_conv: int
-    last_conv: datetime
