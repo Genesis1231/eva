@@ -23,7 +23,7 @@ class WhisperTranscriber:
         self.sample_rate: int = 16000
         self.language: str = language
     
-    def transcribe_audio(self, audioclip) -> Optional[str]:
+    def transcribe_audio(self, audioclip) -> tuple[Optional[str], Optional[str]]:
         """ Transcribe the given audio clip using the OpenAI Whisper model """
 
         if not isinstance(audioclip, (List, ndarray)):
@@ -51,6 +51,6 @@ class WhisperTranscriber:
                 
         except Exception as e:
             logger.error(f"Error: Failed to transcribe audio with OpenAI Whisper: {str(e)}")
-            return None
+            return None, None
         
         return response.text, language

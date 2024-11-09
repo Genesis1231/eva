@@ -45,7 +45,7 @@ class SmallAgent:
     def _get_model_factory(self) -> Dict[str, Callable[[], BaseLanguageModel]]:
         return {
             "GROQ" : partial(create_groq_model, model_name="llama-3.1-8b-instant", temperature=self.model_temperature),
-            "ANTHROPIC": partial(create_anthropic_model, temperature=self.model_temperature),
+            "ANTHROPIC": partial(create_anthropic_model, model_name="claude-3-5-haiku-latest", temperature=self.model_temperature),
             "OPENAI": partial(create_openai_model, model_name="gpt-4o-mini", temperature=self.model_temperature),
             "LLAMA" : partial(create_ollama_model, 
                               base_url=self._base_url, 

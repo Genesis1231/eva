@@ -12,6 +12,24 @@ class MidjourneyServer():
     """
     A class for sending prompts to discord midjourney and getting the image url.
     simple implementation to retrieve images from midjourney.
+    
+    Attributes:
+        *These IDs need to be extracted from the discord midjourney channel*
+        application_id: The application id of the midjourney server.
+        guild_id: The guild id of the midjourney server.
+        channel_id: The channel id of the midjourney server.
+        version: The version of the midjourney server.
+        id: The id of the midjourney server.
+        authorization: The authorization of the midjourney server.
+        _image_dir: The directory to save the images.
+        _prev_message_id: The previous message id.
+        
+    Methods:
+        send_message: Send a prompt to discord and get the image url.
+        _get_data: Get the data for the discord request.
+        _load_previous: Load the previous message id.
+        _get_temp_dir: Get or create the EVA temp directory.
+        _process_image: Process the image data and save it.
     """
     def __init__(self):
         self.application_id = os.environ.get("MJ_Application_ID")
@@ -21,7 +39,6 @@ class MidjourneyServer():
         self.id = os.environ.get("MJ_ID")
         self.authorization = os.environ.get("MJ_Authorization")
         
-        self._image_directory = Path(__file__).resolve().parents[2] / 'data' / 'images'
         self._url = "https://discord.com/api/v9/interactions"
         self._msg_url = f'https://discord.com/api/v9/channels/{self.channel_id}/messages'
         self._headers = {
@@ -29,8 +46,18 @@ class MidjourneyServer():
             'Content-Type': 'application/json',
         }
         
+        # get the image directory and the message id
+        self._image_dir = self._get_temp_dir()        
         self.prev_message_id = self._load_previous()
+    
+    def _get_temp_dir(self) -> str:
+        """Get or create the EVA temp directory"""
         
+        temp_dir = Path.home() / '.eva' / 'images'
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        return str(temp_dir)
+    
     def _load_previous(self) -> Optional[str]:
         """Load the previous message id"""
         try:
@@ -125,6 +152,7 @@ class MidjourneyServer():
         self.prev_message_id = messages[0]['id']
         return self._process_image(image_data, self.prev_message_id)
 
+
     def _process_image(self, image_data: bytes, image_id: str) -> List[str]:
         """Process the image data and save it"""
         
@@ -135,19 +163,21 @@ class MidjourneyServer():
             height, width = img.shape[:2]
             mid_h, mid_w = height // 2, width // 2
         
-            # Split the image into 4 parts
+            # Split the image into 4 parts without enlarging the image
+            # we can enlarge the image with additional functions
             parts = [img[:mid_h, :mid_w], img[:mid_h, mid_w:], 
                      img[mid_h:, :mid_w], img[mid_h:, mid_w:]]
             
             
-            base_filename = os.path.join(self._image_directory, image_id)
+            base_filename = os.path.join(self._image_dir, image_id)
             image_paths = [f"{base_filename}_{i+1}.jpg" for i in range(4)]
             
             for i, part in enumerate(parts):
                 cv2.imwrite(image_paths[i], part)
    
             return image_paths
+        
         except Exception as e:
-            logger.error(f"Error processing image: {e}")
+            logger.error(f"Error processing image after generation: {e}")
             return None
     

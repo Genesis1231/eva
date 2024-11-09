@@ -34,22 +34,24 @@ class FWTranscriber:
             
         return WhisperModel(model_name, device=self.device, compute_type="float16")
     
-    def transcribe_audio(self, audioclip) -> Optional[tuple[str, str]]:
+    def transcribe_audio(self, audioclip) -> tuple[Optional[str], Optional[str]]:
         """ Transcribe the given audio clip using the Faster Whisper model """
         
         if not isinstance(audioclip, (List, ndarray)):
-            logger.error("Invalid audio format provided for transcription.")
-            return None
+            raise ValueError("Invalid audio format provided for transcription.")
         
         try:
             segments, info = self.model.transcribe(
                 audioclip,
-                vad_filter=True,
                 language=self.language,
-                vad_parameters=dict(min_silence_duration_ms=100)
+                vad_filter=True,
+                vad_parameters=dict(
+                    min_silence_duration_ms=300,
+                )
             )
             
             transcription = "".join(segment.text for segment in segments)
+            
             if self.language is None and info.language_probability > 0.8:
                 transcription_language = info.language
             else:
@@ -57,7 +59,7 @@ class FWTranscriber:
                 
         except Exception as e:
             logger.error(f"Error: Failed to transcribe audio: {str(e)}")
-            return None
+            return None, None
         
         return transcription, transcription_language
 

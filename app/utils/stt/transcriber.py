@@ -79,7 +79,7 @@ class Transcriber:
         return model()
     
 
-    def transcribe(self, audioclip) -> Optional[tuple[str, str]]:  
+    def transcribe(self, audioclip) -> tuple[Optional[str], Optional[str]]:  
         """ Transcribe the given audio clip and identify the speaker """
         
         while not self.name_queue.empty(): # Clear queue 
@@ -91,7 +91,7 @@ class Transcriber:
         transcription, language = self.model.transcribe_audio(audioclip)
         if not transcription:
             thread.join()
-            return None
+            return None, None
         
         # Get the speaker identification result
         name = self.name_queue.get()   

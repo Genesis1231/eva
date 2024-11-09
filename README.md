@@ -152,14 +152,37 @@ configure EVA setting in app/config/config.py
 
 ```python
 eva_configuration = {
-    "DEVICE": "desktop", # Currently "desktop" or "mobile" (testing)
-    "LANGUAGE": "en", # suports all major languages. suffix such "en" (English), "es" (Spanish), "zh" (Chinese), or you can use "multilingual"(slower)
-    "BASE_URL": "http://localhost:11434", # URL for local Ollama server, you can leave it if you dont plan to use local models
-    "CHAT_MODEL": "anthropic", # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Google Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
-    "IMAGE_MODEL": "openai", # Supports Chatgpt-4o-mini, Groq-llama-3.2-11b-vision (free) and Ollama llava-phi3/llava13b(local), recommend: 4omini, but llava-phi3 is very small and free. 
-    "STT_MODEL": "faster-whisper", # supports OpenAI Whisper, Groq(free) and Faster-whisper(local).  
-    "TTS_MODEL": "elevenlabs", # Supports elevenlabs, openAI and coqui TTS (local).
-    "SUMMARIZE_MODEL": "llama" # Supports groq-llama3.1-8b, Anthropic-claude-sonnet3.5 and Ollama-llama3.1(local).
+  # Client device setting: 
+  # Currently "desktop" or "mobile" (testing)
+    "DEVICE": "desktop", 
+  
+  # Language setting:
+  # suports all major languages. suffix such "en" (English), "es" (Spanish), "zh" (Chinese), or you can use "multilingual"(slower)
+    "LANGUAGE": "en", 
+  
+  # Base URL setting:
+  # URL for local Ollama server, you can leave it if you dont plan to use local models
+    "BASE_URL": "http://localhost:11434", 
+  
+  # Main agent model setting:
+  # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
+    "CHAT_MODEL": "anthropic", 
+  
+  # vision model setting:
+  # Supports Chatgpt-4o-mini, Groq-llama-3.2-11b-vision (free) and Ollama llava-phi3/llava13b(local), recommend: 4omini, but llava-phi3 is very small and free. 
+    "IMAGE_MODEL": "openai", 
+  
+  # Speech-to-text model setting:
+  # supports OpenAI Whisper, Groq(free) and Faster-whisper(local).  
+    "STT_MODEL": "faster-whisper", 
+  
+  # Text-to-speech model setting:
+  # Supports elevenlabs, openAI and coqui TTS (local). the speaker ID can be modified in files.
+    "TTS_MODEL": "elevenlabs", 
+  
+  # Summarization model setting:
+  # Supports groq-llama3.1-8b, Anthropic-claude-haiku3.5 and Ollama-llama3.1(local).
+    "SUMMARIZE_MODEL": "llama" 
 }
 ```
 

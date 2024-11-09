@@ -12,7 +12,7 @@ class GroqTranscriber:
         self.model: Groq = Groq()
         self._sample_rate: int = 16000
      
-    def transcribe_audio(self, audioclip) -> Optional[str]:
+    def transcribe_audio(self, audioclip) -> tuple[Optional[str], Optional[str]]:
         """ Transcribe the given audio clip using the OpenAI Whisper model """
         
         if not isinstance(audioclip, (List, ndarray)):
@@ -41,6 +41,6 @@ class GroqTranscriber:
         
         except Exception as e:
             logger.error(f"Error: Failed to transcribe audio: {str(e)}")
-            return None
+            return None, None
 
         return response.text, language
