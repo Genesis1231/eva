@@ -46,7 +46,7 @@ class FWTranscriber:
                 language=self.language,
                 vad_filter=True,
                 vad_parameters=dict(
-                    min_silence_duration_ms=300,
+                    threshold=0.3,
                 )
             )
             
@@ -58,7 +58,7 @@ class FWTranscriber:
                 transcription_language = self.language
                 
         except Exception as e:
-            logger.error(f"Error: Failed to transcribe audio: {str(e)}")
+            logger.error(f"Failed to transcribe audio: {str(e)}")
             return None, None
         
         return transcription, transcription_language

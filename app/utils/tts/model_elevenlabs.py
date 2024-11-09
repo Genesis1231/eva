@@ -5,7 +5,7 @@ import secrets
 from typing import Optional
 
 from elevenlabs.client import ElevenLabs
-from elevenlabs import stream
+from elevenlabs import stream, VoiceSettings
     
 class ElevenLabsSpeaker:
     def __init__(self, voice: str = "Ana") -> None:
@@ -26,6 +26,12 @@ class ElevenLabsSpeaker:
                 voice=self.voice,
                 stream=True,
                 optimize_streaming_latency = 1,
+                voice_settings=VoiceSettings(
+                    stability=0.5,
+                    style=0.2,
+                    similarity_boost=0.7,
+                    use_speaker_boost=True
+                )
             )
             
             if self.audio_thread and self.audio_thread.is_alive():

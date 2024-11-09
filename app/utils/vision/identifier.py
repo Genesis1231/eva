@@ -18,8 +18,8 @@ class Identifier:
         _ids (dict): A dictionary containing the photo IDs and corresponding face encodings.
 
     Methods:
-        __init__(): Initializes the Identifier object.
         initialize_ids(): Initializes the photo IDs and face encodings.
+        _base64_to_numpy(base64_str): Converts a base64 string to a numpy array.
         identify(frames): Identifies individuals from the given frames.
     """
     def __init__(self):
@@ -28,7 +28,11 @@ class Identifier:
         
     def _initialize_ids(self)-> List[Dict]:
         """ Load the photo IDs and corresponding face encodings. """
+        
         pid_directory = Path(__file__).resolve().parents[2] / 'data' / 'pids'
+        if not pid_directory.exists():
+            pid_directory.mkdir(parents=True)
+            
         photo_ids = {}
         
         for filename in os.listdir(pid_directory):
@@ -74,7 +78,7 @@ class Identifier:
                 for name, face_id in self._ids.values():
                     matches = fr.compare_faces([face_id], face_encoding)
                     if True in matches:
-                        names.append(f"{name},")
+                        names.append(name)
                         break
                     
         except Exception as e:

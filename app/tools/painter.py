@@ -9,7 +9,7 @@ from utils.extension import MidjourneyServer
 
 class PainterInput(BaseModel):
     """Input for painter tool."""
-    query: str = Field(description="Input for painter tool, should be the description of painting.")
+    query: str = Field(description="Input for painter tool, should be the prompt to create the painting.")
 
 class Painter(BaseTool):
     """
@@ -29,27 +29,29 @@ class Painter(BaseTool):
     generator : MidjourneyServer = MidjourneyServer()
     args_schema: Type[BaseModel] = PainterInput
 
-    def _run(
-        self,
-        query: str,
-    ) -> Dict:
-
-        midjourney_prompt = f"{self.filter_prompt(query)} --c 20 --ar 3:4 --s 300"
-        if image_urls := self.generator.send_message(midjourney_prompt):
-            content = f"I have created 4 images with the query: {query}"
-            return {"action": content, "image_urls": image_urls}
-        
-        return {"error": "Failed to create images."}
-
-    def filter_prompt(self, prompt: str) -> str:
+    @staticmethod
+    def filter_prompt(prompt: str) -> str:
         """ Filter the query to remove banned words"""
         banned_words = ("corpse", "naked", "nude", "patriotic", "organ", "lingerie", "sex", "lolita", 
                         "blood", "erotic", "porn", "suicide", "rape", "nazi")
         
         for word in banned_words:
             prompt = prompt.replace(word, '*')
-        
         return prompt
+    
+    def _run(
+        self,
+        query: str,
+    ) -> Dict:
+        """ Main method for running the tool."""
+        
+        midjourney_prompt = f"{self.filter_prompt(query)} --c 20 --ar 3:4 --s 300"
+        
+        if image_urls := self.generator.send_message(midjourney_prompt):
+            content = f"I have created 4 images with the query: {query}"
+            return {"action": content, "image_urls": image_urls}
+        
+        return {"error": "Failed to create images."}
         
     def run_client(self, client, **kwargs) -> Optional[Dict]:
         return client.launch_gallery(image_urls=kwargs.get("image_urls"))

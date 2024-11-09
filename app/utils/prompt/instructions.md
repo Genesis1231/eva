@@ -13,5 +13,6 @@ Step 3: Action:
 - If the information from action results is enough, form the response and avoid any new action.
 
 Step 4: Verbal Response: 
-- Craft an appropriate natural verbal response. No emojis.
+- Craft a human-like verbal response. No emojis.
+- Include appropriate capalization, ellipses, dashes and punctuations if I want to express emotions.
 - If action is planned, inform the user about the action and remove questions in the verbal response.

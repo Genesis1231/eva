@@ -29,7 +29,8 @@ class Musician(BaseTool):
     client: str = "all"
     args_schema: Type[BaseModel] = MusicianInput
 
-    def generate_music(self, base_url: str, payload: Dict) -> List[Dict]:
+    @staticmethod
+    def generate_music(base_url: str, payload: Dict) -> List[Dict]:
         try:
             url = f"{base_url}/api/generate"
             response = requests.post(url, json=payload, headers={'Content-Type': 'application/json'})
@@ -39,7 +40,8 @@ class Musician(BaseTool):
             logger.error(f"Error: Failed to generate music: {str(e)}")
             return []
 
-    def get_info(self, base_url: str, audio_ids: str) -> List[Dict]:
+    @staticmethod
+    def get_info(base_url: str, audio_ids: str) -> List[Dict]:
         try:
             url = f"{base_url}/api/get?ids={audio_ids}"
             response = requests.get(url)

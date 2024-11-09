@@ -133,7 +133,7 @@ class ChatAgent:
         
         try: 
             response = chain.invoke({"tools": json.dumps(self.tool_info)})
-            logger.info(json.dumps(response, indent=2))
+            logger.debug(json.dumps(response, indent=2))
             response = self._format_response(response)
             
         except Exception as e:

@@ -25,10 +25,10 @@ class Microphone:
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone()
         
-        self.recognizer.pause_threshold = 1.2 # for longer sentence
+        self.recognizer.pause_threshold = 1.3 # for longer sentence
         self.recognizer.dynamic_energy_threshold = True    
-        self.max_listen_time = 300   
-        self.speech_limit = 60   
+        self.max_listen_time = 300 # Listen for 5 minutes maximum
+        self.speech_limit = 60  # Speak for 1 minute maximum
 
     def detect(self)->bool:
         """ Detect if there is any speech """

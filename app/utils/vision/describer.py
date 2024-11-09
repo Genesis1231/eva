@@ -34,6 +34,8 @@ class Describer:
         self.identifier = Identifier()
         self.model = self._initialize_model()
 
+        logger.info(f"Describer: {self._model_selection} is ready.")
+        
     def _get_model_factory(self) -> Dict[str, Callable]:
         return {
             "LLAVA-PHI3" : partial(self._create_ollama_model, "llava-phi3"),

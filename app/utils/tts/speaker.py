@@ -31,7 +31,7 @@ class Speaker:
             "ELEVENLABS" : self._create_elevenlab_model,
             "OPENAI" : self._create_openai_model,
         }
-
+    
     def _create_coqui_model(self):
         from utils.tts.model_coqui import CoquiSpeaker
         
@@ -71,6 +71,7 @@ class Speaker:
     def speak(self, answer: str, language: Optional[str] = "en", wait: bool = True) -> None:
         """ Speak the given text using the selected speaker model """
         try:
+            print(f"\nEVA: {answer}")
             self.model.eva_speak(answer, language, wait)
             
         except Exception as e:

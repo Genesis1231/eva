@@ -48,9 +48,10 @@ class MidjourneyServer():
         
         # get the image directory and the message id
         self._image_dir = self._get_temp_dir()        
-        self.prev_message_id = self._load_previous()
+        self.prev_message_id = self._load_previous(self._msg_url, self._headers)
     
-    def _get_temp_dir(self) -> str:
+    @staticmethod
+    def _get_temp_dir() -> str:
         """Get or create the EVA temp directory"""
         
         temp_dir = Path.home() / '.eva' / 'images'
@@ -58,10 +59,11 @@ class MidjourneyServer():
         
         return str(temp_dir)
     
-    def _load_previous(self) -> Optional[str]:
+    @staticmethod
+    def _load_previous(msg_url: str, headers: Dict) -> Optional[str]:
         """Load the previous message id"""
         try:
-            with requests.get(self._msg_url, headers=self._headers) as response:
+            with requests.get(msg_url, headers=headers) as response:
                 response.raise_for_status()
                 messages = response.json()
                 if messages:
@@ -123,10 +125,11 @@ class MidjourneyServer():
         except requests.RequestException as e:
             return None
 
-        logger.info(f"Sent midjourney prompt: {prompt}")
+        logger.debug(f"Sent midjourney prompt: {prompt}")
+        
         for i in range(60):
             time.sleep(1)
-            print(f"waiting for midjourney to complete ... {i}s", end="\r")
+            print(f"EVA: waiting for midjourney to complete ... {i}s", end="\r")
             
             try:
                 with requests.get(self._msg_url, headers=self._headers) as response:

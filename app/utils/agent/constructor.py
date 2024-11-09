@@ -10,7 +10,7 @@ class PromptConstructor:
     
     def __init__(self):
         self.system_prompt: str = load_prompt("persona")
-        self.instructions: str = load_prompt("instructions")
+        self.instruction_prompt: str = load_prompt("instructions")
         
     @staticmethod
     def _format_history(history: List[Dict] | None) -> str:
@@ -19,7 +19,6 @@ class PromptConstructor:
             return ""
     
         messages = []
-        print("memory: ", history)
         messages.append("<CONVERSATION_HISTORY>")
         
         for chat in history:
@@ -42,11 +41,11 @@ class PromptConstructor:
 
     @staticmethod
     def _format_observation(observation: str | None) -> str:
-        return "" if not observation else f"<observation>I see: {observation} </observation>"
+        return "" if not observation else f"<observation>I see {observation} </observation>"
 
     @staticmethod
     def _format_message(user_message: str | None) -> str:
-        return "" if not user_message else f"<human_reply>I hear: {user_message} </human_reply>"
+        return "" if not user_message else f"<human_reply>I hear {user_message} </human_reply>"
 
     @staticmethod
     def _format_action_results(results: List[Dict] | None) -> str:
@@ -86,8 +85,8 @@ class PromptConstructor:
         
         user_message = sense.get("user_message")
         observation = sense.get("observation")
-        system_prompt: str = load_prompt("persona")
-        instructions: str = load_prompt("instructions")
+        system_prompt: str = self.system_prompt
+        instructions: str = self.instruction_prompt
         
         action_results = self._format_action_results(action_results)
         user_message = self._format_message(user_message)

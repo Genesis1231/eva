@@ -79,7 +79,7 @@ class Transcriber:
         return model()
     
 
-    def transcribe(self, audioclip) -> tuple[Optional[str], Optional[str]]:  
+    def transcribe(self, audioclip) -> Optional[tuple[str, str]]:  
         """ Transcribe the given audio clip and identify the speaker """
         
         while not self.name_queue.empty(): # Clear queue 
@@ -94,20 +94,23 @@ class Transcriber:
             return None, None
         
         # Get the speaker identification result
-        name = self.name_queue.get()   
+        identification = self.name_queue.get()   
         thread.join()
         
         # if the name is unknown, return content with a new line, there is a new person speaking, save it into a database
-        if name == "unknown":
+        if identification == "unknown":
             content = f"{transcription.strip()} (I couldn't ID the voice.)"
+            display = f"\nUnknown voice: {transcription}"
         else:
-            content = f"{name}:: {transcription.strip()}"
+            name = self.identifier.get_name(identification)
+            content = f"{name} ({identification}):: {transcription.strip()}"
+            display = f"\n{name}: {transcription}"
         # if name == "unknown person":
         #     speaker_id = secrets.token_hex(4)
         #     filepath = os.path.join(os.getcwd(), "data", "voids", f"{speaker_id}.wav")
         #     self.identifier.save_audio_file(audioclip, filepath)
         #     content += f" (<speaker_id>{speaker_id}</speaker_id>)"
 
-        logger.info(f"{content} \n")
+        print(display)
         
         return content, language

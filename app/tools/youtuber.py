@@ -23,6 +23,14 @@ class Youtuber(BaseTool):
     type: str = "conversational"
     client: str = "all"
     args_schema: Type[BaseModel] = YoutubeInput
+
+    @staticmethod
+    def _get_video_id(video_data: Dict) -> str:
+        """ Get the video id from the url """
+        
+        url = video_data.get("url_suffix")
+        video_id = url.split("shorts/")[1] if "shorts" in url else url.split('?v=')[1].split('&')[0]
+        return video_id
     
     def _run(
         self,
@@ -43,16 +51,10 @@ class Youtuber(BaseTool):
             return {"error": f"No search results with query: {query}, please revise and try again."}
         
         video_data = choice(json.loads(results)["videos"])
-        url = video_data.get("url_suffix")
-        
-        if "shorts" in url:
-            video_id = url.split("shorts/")[1]
-        else:
-            video_id = url.split('?v=')[1].split('&')[0]
-    
+        video_id = self._get_video_id(video_data)
         video_title = video_data.get("title")
+        
         content = f"I have found a video on YouTube by {video_data.get('channel')} and published {video_data.get('publish_time')}."
-
         return  {"action": content, "url" : video_id, "title": video_title}
 
     def run_client(self, client, **kwargs: Dict) -> Optional[Dict]:

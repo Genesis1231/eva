@@ -10,16 +10,22 @@ class SQLiteLogger:
     """
     def __init__(self):
         self._dblink: str = self._get_database_path()
-        self._create_memory_table()
+        self._create_memory_table(self._dblink)
 
-    def _get_database_path(self) -> str:
+    @staticmethod
+    def _get_database_path() -> str:
         """Return the path to the memory log database."""
-        return Path(__file__).resolve().parents[2] / 'data' / 'database' / 'eva.db'
-    
-    def _create_memory_table(self) -> None:
+        db_dir = Path(__file__).resolve().parents[2] / 'data' / 'database'
+        if not db_dir.exists():
+            db_dir.mkdir(parents=True)
+            
+        return db_dir / 'eva.db'
+
+    @staticmethod
+    def _create_memory_table(dblink: str) -> None:
         """ Create the memory table if it doesn't exist. """
         try:
-            with sqlite3.connect(self._dblink) as conn:
+            with sqlite3.connect(dblink) as conn:
                 cursor = conn.cursor()
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS memorylog (
@@ -42,6 +48,7 @@ class SQLiteLogger:
         finally:
             conn.close()
         
+
     def save_memory_to_db(self, memory: Dict) -> None:
         """Save a single memory entry to the SQLite database."""
         try:

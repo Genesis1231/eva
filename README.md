@@ -137,7 +137,8 @@ RUN apt-get update && apt-get install -y \
     chromium \
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install git+https://github.com/wenet-e2e/wespeaker.git
 
 # Copy the rest of the application
 COPY . .
@@ -210,12 +211,12 @@ Groq is free too but it has a limit for token usage per minute. So you might run
 - Image generation tool requires a midjourney account and a private discord server.
   Need include the discord channel information in .env file.
 
-If you want to disable some tools, just change the client setting in related .py file.
+If you want to disable some tools that are not needed, just change the client setting in related .py file.
 
 ```python
     client: str = "none"
 ```
-But I like to leave them all on since it is very interesting to observe how AI select tools.
+
 
 ### 🧰 Exit & Shutdown
 

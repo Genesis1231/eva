@@ -6,8 +6,8 @@ from queue import Queue
 from typing import Dict
 
 import wespeaker as wp
-import scipy.io.wavfile as sf
-from numpy import ndarray
+import torch
+import numpy as np
 
 class VoiceIdentifier:
     """ 
@@ -22,10 +22,12 @@ class VoiceIdentifier:
     def _initialize_recognizer(self):
         try:
             vmodel = wp.load_model('english') # or chinese
-            vmodel.set_gpu(0)
             num = 0
             
-            vid_directory =Path(__file__).resolve().parents[2] / 'data' / 'voids'
+            vid_directory = Path(__file__).resolve().parents[2] / 'data' / 'voids'
+            if not vid_directory.exists():
+                vid_directory.mkdir(parents=True)
+                
             for filename in os.listdir(vid_directory):
                 if filename.lower().endswith('.wav'):
                     name = os.path.splitext(filename)[0]
@@ -57,8 +59,9 @@ class VoiceIdentifier:
                 # If table doesn't exist, create it and return an empty list
                 self._create_table(conn)
                 return {}
-            
-    def _create_table(self, conn)-> None:    
+
+    @staticmethod
+    def _create_table(conn)-> None:    
         """ Create a new voiceid table """
         cursor = conn.cursor()
         cursor.execute('''
@@ -76,44 +79,73 @@ class VoiceIdentifier:
         #     INSERT INTO ids (void, user_name) VALUES (?, ?);
         # ''', ('V000001', 'Initial User'))
         # conn.commit()
-        
-    def get_name(self, void: str) -> str:
-        """ Get the name from the List """
-        try:
-            return self._void_list[void]
-        except KeyError:
-            logger.error(f"Error: Database error, failed to get name from void list: {void}")
-            return "unknown person"
-    
-    def save_audio_file(self, audioclip: ndarray, filepath: str) -> None:
-        try:
-            sf.write(filepath, 16000, audioclip)
-        except Exception as e:
-            logger.error(f"Error: Failed to save audio: {str(e)}")
-    
-    def _get_database_path(self) -> str:
+
+    @staticmethod
+    def _get_database_path() -> str:
         """Return the path to the memory log database."""
         return Path(__file__).resolve().parents[2] / 'data' / 'database' / 'eva.db'
+        
+    @staticmethod
+    def _convert_numpy_to_torch(audio_array: np.ndarray) -> torch.Tensor:
+        """ Convert numpy audio array to torch tensor with proper formatting. """
+        
+        # Convert to float32 and normalize if needed
+        if audio_array.dtype in [np.int16, np.int32]:
+            audio_array = audio_array.astype(np.float32) / 32768.0
+        
+        # Ensure the array is 2D (channels, samples)
+        if audio_array.ndim == 1:
+            audio_array = audio_array[np.newaxis, :]
+        
+        # Convert to torch tensor
+        audio_tensor = torch.tensor(audio_array, dtype=torch.float32)
+        
+        return audio_tensor
+
+
+    def _recognize_audio(self, audio: torch.Tensor, sample_rate: int = 16000):
+        """ Recognize the audio and return the name and confidence """
+        
+        q = self.voice_recognizer.extract_embedding_from_pcm(audio, sample_rate)
+        
+        best_score = 0.0
+        best_name = ''
+        
+        for name, e in self.voice_recognizer.table.items():
+            score = self.voice_recognizer.cosine_similarity(q, e)
+            if best_score < score:
+                best_score = score
+                best_name = name
+        
+        if best_score > 0.6:
+            return best_name
+        else:
+            return "unknown"
     
-    def identify(self, audioclip: ndarray, name_queue: Queue) -> None:
+    def identify(self, audioclip: np.ndarray, name_queue: Queue) -> None:
         """
         Voice identification using wespeaker cli. 
         this could be improved by importing a whole voice dict from the directory
         and comparing the cosine similarity of the voice embeddings one by one
         """
-        
-        filepath = os.path.join(os.path.dirname(__file__), "temp", "recog.wav")
-        self.save_audio_file(audioclip, filepath)
-        
+
         try:
-            recog = self.voice_recognizer.recognize(filepath)
+            torch_audio = self._convert_numpy_to_torch(audioclip)
+            recognition = self._recognize_audio(torch_audio)
               
         except Exception as e:
-            logger.error(f"Error: Failed to recognize process: {str(e)}")
+            logger.error(f"Failed to recognize audio: {str(e)}")
             name_queue.put("unknown")
             return
         
-        name = f"{self.get_name(recog['name'])} (ID:{recog['name']})"  if recog["confidence"] > 0.6 else "unknown"
-        
         if name_queue:
-            name_queue.put(name)
+            name_queue.put(recognition)
+
+    def get_name(self, void: str) -> str:
+        """ Get the name from the List """
+        try:
+            return self._void_list[void]
+        except KeyError:
+            logger.error(f"Database mismatch, failed to get name from void list: {void}")
+            return "unknown"
+    

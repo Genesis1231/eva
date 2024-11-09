@@ -23,7 +23,8 @@ class Window:
         self._temp_dir = self._get_temp_dir()
         atexit.register(self._cleanup_temp_files)
     
-    def _get_temp_dir(self) -> str:
+    @staticmethod   
+    def _get_temp_dir() -> str:
         """Get or create the EVA temp directory"""
         
         temp_dir = Path.home() / '.eva' / 'html'
