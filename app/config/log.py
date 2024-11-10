@@ -2,7 +2,9 @@ import logging
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
 
-# Create a logger
+# Create a simple logger
+# you can change the level to logging.DEBUG to see more information
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG) # or logging.ERROR
 logger.propagate = False

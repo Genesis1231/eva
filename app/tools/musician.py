@@ -1,5 +1,6 @@
 import time
 import requests
+from datetime import datetime
 from config import logger
 from typing import Type, Dict, List, Optional, Any
 
@@ -74,7 +75,7 @@ class Musician(BaseTool):
                     cover_url = data[0]["image_url"]
                     break
                 time.sleep(1)
-                print(f"waiting for Suno to complete ... {i}s", end="\r")
+                print(f"({datetime.now().strftime('%H:%M:%S')}) Waiting for Suno to generate music ... {i}s", end="\r")
             else:
                 return {"error": f"Error: Failed to create music: Request timeout, try one more time."}
                 

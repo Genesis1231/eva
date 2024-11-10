@@ -1,5 +1,6 @@
 from config import logger
-from typing_extensions import Optional, List
+from datetime import datetime
+from typing_extensions import Optional
 
 import numpy as np
 import speech_recognition as sr
@@ -55,10 +56,11 @@ class Microphone:
         """
     
         with self.microphone as source:
-            logger.info("Listener: Listening for audio now...")
+            print(f"\n({datetime.now().strftime('%H:%M:%S')}) EVA is listening audio now...", end="\r")
             self.recognizer.adjust_for_ambient_noise(source)  # Adjust for ambient noise
             self.recognizer.energy_threshold = 1000
             audio_buffer = self.recognizer.listen(source, timeout=self.max_listen_time, phrase_time_limit=self.speech_limit)
+            print("                                                                          ") # clear the line
             
             try:
                 raw_data = np.frombuffer(audio_buffer.get_raw_data(convert_rate=16000), dtype=np.int16)

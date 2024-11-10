@@ -1,4 +1,4 @@
-import os
+from datetime import datetime
 from config import logger
 from typing import Dict, Callable, Optional
 
@@ -71,7 +71,7 @@ class Speaker:
     def speak(self, answer: str, language: Optional[str] = "en", wait: bool = True) -> None:
         """ Speak the given text using the selected speaker model """
         try:
-            print(f"\nEVA: {answer}")
+            print(f"\n({datetime.now().strftime('%H:%M:%S')}) EVA: {answer}")
             self.model.eva_speak(answer, language, wait)
             
         except Exception as e:

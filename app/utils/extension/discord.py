@@ -1,6 +1,7 @@
 import requests
 import os
 import time
+from datetime import datetime
 from pathlib import Path
 from config import logger
 from typing import List, Dict, Optional
@@ -129,7 +130,7 @@ class MidjourneyServer():
         
         for i in range(60):
             time.sleep(1)
-            print(f"EVA: waiting for midjourney to complete ... {i}s", end="\r")
+            print(f"({datetime.now().strftime('%H:%M:%S')}) Waiting for midjourney to generate image ... {i}s", end="\r")
             
             try:
                 with requests.get(self._msg_url, headers=self._headers) as response:

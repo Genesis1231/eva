@@ -125,5 +125,5 @@ class PromptConstructor:
             <ASSISTANT>
         """
     
-        logger.info(PROMPT_TEMPLATE) 
+        logger.debug(PROMPT_TEMPLATE) 
         return PROMPT_TEMPLATE
