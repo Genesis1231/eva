@@ -27,12 +27,12 @@ def initialize_modules(config : dict):
     base_url = config.get("BASE_URL")
     language = config.get("LANGUAGE")
     
-    if not (language := validate_language(language)):
-        language = "multilingual"
+    if not (full_lang := validate_language(language)):
+        language = full_lang = "multilingual"
     
     # Initialize the modules
     module_list = {
-        "agent": partial(ChatAgent, config.get("CHAT_MODEL"), base_url, language),
+        "agent": partial(ChatAgent, config.get("CHAT_MODEL"), base_url, full_lang),
         "memory" : partial(Memory, config.get("SUMMARIZE_MODEL"), base_url),
         "toolbox" : partial(ToolManager, config.get("DEVICE"))
     } 
@@ -40,7 +40,7 @@ def initialize_modules(config : dict):
     # Pre-configure client parameters
     client_params = {
         'stt_model': config.get("STT_MODEL"),
-        'vision_model': config.get("IMAGE_MODEL"),
+        'vision_model': config.get("VISION_MODEL"),
         'tts_model': config.get("TTS_MODEL"),
         'base_url': base_url,
         'language': language

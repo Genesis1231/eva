@@ -50,26 +50,24 @@ class Memory:
         analysis = response.get("analysis")
         strategy = response.get("strategy")
         premeditation = response.get("premeditation")    
-                
+        
+        # join the memory thread if it is still running
         if self._memory_thread and self._memory_thread.is_alive():
             self._memory_thread.join()
         
-        try:
-            self._memory_thread = Thread(target=self._save_memory, daemon=True, kwargs={
-                "timestamp": timestamp, 
-                "user_name": user_name,
-                "user_message": user_message,
-                "eva_message": eva_message,
-                "observation": observation,
-                "analysis": analysis,
-                "strategy": strategy,
-                "premeditation": premeditation,
-                "action": action 
-                })
-        
-            self._memory_thread.start()
-        except Exception as e:
-            logger.error(f"Error creating memory: {e}")
+        self._memory_thread = Thread(target=self._save_memory, daemon=True, kwargs={
+            "timestamp": timestamp, 
+            "user_name": user_name,
+            "user_message": user_message,
+            "eva_message": eva_message,
+            "observation": observation,
+            "analysis": analysis,
+            "strategy": strategy,
+            "premeditation": premeditation,
+            "action": action 
+            })
+    
+        self._memory_thread.start()
     
     def _save_memory(self, 
                      timestamp: str, 

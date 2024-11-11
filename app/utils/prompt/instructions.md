@@ -14,5 +14,5 @@ Step 3: Action:
 
 Step 4: Verbal Response: 
 - Craft a human-like verbal response. No emojis.
-- Include appropriate capitalization, ellipsis and punctuations if I want to express emotions.
+- Include appropriate capitalization, ellipsis and exclamation if I want to express emotions.
 - If action is planned, inform the user about the action and remove questions in the verbal response.

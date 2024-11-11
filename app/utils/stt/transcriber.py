@@ -112,6 +112,6 @@ class Transcriber:
         #     self.identifier.save_audio_file(audioclip, filepath)
         #     content += f" (<speaker_id>{speaker_id}</speaker_id>)"
 
-        print(f"\n({datetime.now().strftime('%H:%M:%S')}) {display}")
+        print(f"({datetime.now().strftime('%H:%M:%S')}) {display}\n")
         
         return content, language

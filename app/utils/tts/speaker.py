@@ -71,7 +71,7 @@ class Speaker:
     def speak(self, answer: str, language: Optional[str] = "en", wait: bool = True) -> None:
         """ Speak the given text using the selected speaker model """
         try:
-            print(f"\n({datetime.now().strftime('%H:%M:%S')}) EVA: {answer}")
+            print(f"({datetime.now().strftime('%H:%M:%S')}) EVA: {answer}\n")
             self.model.eva_speak(answer, language, wait)
             
         except Exception as e:
@@ -80,3 +80,6 @@ class Speaker:
     def get_audio(self, text: str) -> str:
         """ Generate audio from text and save it to the media folder """
         return self.model.generate_audio(text, self._media_folder)
+    
+        
+        

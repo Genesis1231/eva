@@ -88,7 +88,7 @@ def eva_end(state: Dict[str, Any]) -> Dict[str, Any]:
     client = state["client"]
     num = state["num_conv"]
     
-    client.speak("Now exiting E.V.A. / See you next time!")
+    client.speak("Now exiting E.V.A.")
     logger.info(f"EVA is shutting down after {num} conversations.")
     client.deactivate()
     

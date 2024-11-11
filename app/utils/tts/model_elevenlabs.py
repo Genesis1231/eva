@@ -27,8 +27,7 @@ class ElevenLabsSpeaker:
                 stream=True,
                 optimize_streaming_latency = 1,
                 voice_settings=VoiceSettings(
-                    stability=0.5,
-                    style=0.2,
+                    stability=0.4,
                     similarity_boost=0.7,
                     use_speaker_boost=True
                 )

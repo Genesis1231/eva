@@ -39,7 +39,7 @@ class Describer:
     def _get_model_factory(self) -> Dict[str, Callable]:
         return {
             "LLAVA-PHI3" : partial(self._create_ollama_model, "llava-phi3"),
-            "LLAVA:13B" : partial(self._create_ollama_model, "llava:13b"),
+            "LLAMA" : partial(self._create_ollama_model, "llama3.2-vision"),
             "OPENAI" : self._create_openai_model,
             "GROQ" : self._create_groq_model
         }

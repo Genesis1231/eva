@@ -49,7 +49,7 @@ class SmallAgent:
             "OPENAI": partial(create_openai_model, model_name="gpt-4o-mini", temperature=self.model_temperature),
             "LLAMA" : partial(create_ollama_model, 
                               base_url=self._base_url, 
-                              model_name="llama3.1", 
+                              model_name="llama3.2-vision", 
                               temperature=self.model_temperature),
         }
 
