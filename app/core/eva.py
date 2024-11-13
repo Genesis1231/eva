@@ -11,6 +11,7 @@ from core.nodes import (
     router_sense, 
     router_action, 
     router_action_results,
+    router_initialize,
 )
 
 load_dotenv()
@@ -33,21 +34,21 @@ class EVA:
 
 
     def _initialize_graph(self)-> StateGraph:
+        """ Initialize the graph """
         workflow = StateGraph(EvaState)
         workflow.add_node("node_initialize", eva_initialize)
         workflow.add_node("node_sense", eva_sense)
         workflow.add_node("node_conversate", eva_conversate)
         workflow.add_node("node_action", eva_action)
         workflow.add_node("node_end", eva_end)
-
-
+        
         workflow.add_edge(START, "node_initialize")
-        workflow.add_edge("node_initialize", "node_conversate")
+        workflow.add_conditional_edges("node_initialize", router_initialize)
         workflow.add_conditional_edges("node_conversate", router_action)
         workflow.add_conditional_edges("node_action", router_action_results)
         workflow.add_conditional_edges("node_sense", router_sense)
-
         workflow.add_edge("node_end", END)
+        
         
         return workflow
 

@@ -1,3 +1,4 @@
+import os
 from config import logger
 from langchain_core.language_models import BaseLanguageModel
 
@@ -84,7 +85,31 @@ def create_anthropic_model(
     from langchain_anthropic import ChatAnthropic
     
     try:
-        return ChatAnthropic(model_name=model_name, temperature=temperature)
+        return ChatAnthropic(
+            model_name=model_name, 
+            temperature=temperature,
+            max_retries=3
+        )
     except Exception as e:
         raise Exception(f"Error: Failed to initialize Anthropic model: {str(e)}")
+
+def create_grok_model(
+        model_name: str = "grok-beta",
+        base_url: str = "https://api.x.ai/v1",
+        temperature: float = 1
+    ) -> BaseLanguageModel:
+    
+    from langchain_openai import ChatOpenAI
+    
+    try:
+        grok_api_key = os.getenv("GROK_API_KEY")
+        return ChatOpenAI(
+            api_key=grok_api_key, 
+            base_url=base_url, 
+            model_name=model_name, 
+            temperature=temperature,
+            max_retries=3
+        )
         
+    except Exception as e:
+        raise Exception(f"Error: Failed to initialize Grok model: {str(e)}")

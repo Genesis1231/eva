@@ -2,17 +2,23 @@ from config import logger
 from datetime import datetime
 from typing import Dict, Any
 
+from core.classes import EvaStatus 
 from config import eva_configuration
 from core.functions import initialize_modules
+from core.setup import id_manager
 
 
 def eva_initialize(state: Dict[str, Any]) -> Dict[str, Any]:
-    """Initialize Eva, load all the modules"""
+    """
+    Initialize Eva, load all the modules.
+    if no user is registered, set the next status to INIT, otherwise set it to ACTIVE.
+    """
 
     modules = initialize_modules(eva_configuration) 
+    next = EvaStatus.SETUP if id_manager.is_empty() else EvaStatus.THINKING
     
     return {
-        "status": "active", 
+        "status": next, 
         "agent": modules["agent"],
         "client": modules["client"],
         "memory": modules["memory"],
@@ -48,7 +54,7 @@ def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
     )
     
     memory.create_memory(timestamp=timestamp, user_response=sense, response=response)
-    action = response.get("action")
+    action = response.get("action", [])
     speech = response.get("response")
     
     # send the response to the client device
@@ -59,7 +65,10 @@ def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
     }
     state["client"].send(eva_response)
     
-    return {"status": "active", "action": action}
+    if any(action):
+        return {"status": EvaStatus.ACTION, "action": action}
+    else:
+        return {"status": EvaStatus.WAITING}
 
 def eva_action(state: Dict[str, Any]) -> Dict[str, Any]:
     """ Execute the actions and return some intermediate output"""
@@ -67,9 +76,11 @@ def eva_action(state: Dict[str, Any]) -> Dict[str, Any]:
     toolbox = state["toolbox"]
     client = state["client"]
     
-    results = toolbox.execute(client, actions)
-    
-    return {"status": "active", "action_results": results, "action": [], "sense": {}}
+    action_results = toolbox.execute(client, actions)
+    if any(action_results):
+        return {"status": EvaStatus.THINKING, "action_results": action_results, "action": [], "sense": {}}
+    else:
+        return {"status": EvaStatus.WAITING, "action": [], "sense": {}}
     
 def eva_sense(state: Dict[str, Any]) -> Dict[str, Any]:
     """ receive input from the client """
@@ -79,7 +90,12 @@ def eva_sense(state: Dict[str, Any]) -> Dict[str, Any]:
     client.send_over()
     client_feedback = client.receive()
 
-    return {"status": "responding",  "num_conv": num + 1, "sense": client_feedback, "action_results": [] }
+    user_message = client_feedback.get("user_message")
+
+    if user_message and any(word in user_message.lower() for word in ['bye.', 'exit.']):
+        return {"status": EvaStatus.END}
+    else:
+        return {"status": EvaStatus.THINKING, "num_conv": num + 1, "sense": client_feedback, "action_results": [] }
 
 
 def eva_end(state: Dict[str, Any]) -> Dict[str, Any]:
@@ -92,28 +108,30 @@ def eva_end(state: Dict[str, Any]) -> Dict[str, Any]:
     logger.info(f"EVA is shutting down after {num} conversations.")
     client.deactivate()
     
-    return {"status": "end"}
+    return {"status": EvaStatus.END}
 
-#### Router functions ####
+def eva_setup(state: Dict[str, Any]) -> Dict[str, Any]:
+    """ Initialize the setup for the first time user """
+    
+    agent = state["agent"]
+    
+    
+    return {"status": EvaStatus.SETUP}
+
+##### Router nodes #####
+
+def router_initialize(state: Dict[str, Any]) -> str:
+    """ Initialize the setup if no user is registered """  
+    return "node_setup" if state["status"] == EvaStatus.SETUP else "node_conversate"
 
 def router_sense(state: Dict[str, Any]) -> str:
     """ Determine the next node based on the user input """
-
-    message = state["sense"].get("user_message")
-    
-    if message is None:
-        return "node_conversate"
-
-    if "bye" in message.lower() or "exit" in message.lower():
-        return "node_end"
-    else:
-        return "node_conversate"
-
+    return "node_end" if state["status"] == EvaStatus.END else "node_conversate"
 
 def router_action(state: Dict[str, Any]) -> str:
     """ Determine the next node based on if there is any action to execute """
-    return "node_action" if state["action"] else "node_sense"
+    return "node_action" if state["status"] == EvaStatus.ACTION else "node_sense"
 
 def router_action_results(state: Dict[str, Any]) -> str:
     """ Determine the next node based on if there are any action results """
-    return "node_conversate" if any(state["action_results"]) else "node_sense"
+    return "node_conversate" if state["status"] == EvaStatus.THINKING else "node_sense"

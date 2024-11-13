@@ -54,7 +54,7 @@ class PromptConstructor:
             return ""
     
         action_results = []
-        action_results.append("<action_results>I received the following results from my previous actions:")
+        action_results.append("<action_results>I found the following information from my previous actions:")
         
         # simple way to format the results
         for result_item in results:

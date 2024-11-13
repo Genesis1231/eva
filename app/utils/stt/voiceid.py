@@ -1,13 +1,13 @@
 import os
 from pathlib import Path
 from config import logger
-import sqlite3
 from queue import Queue
 from typing import Dict
 
 import wespeaker as wp
 import torch
 import numpy as np
+from core.setup import id_manager
 
 class VoiceIdentifier:
     """ 
@@ -15,8 +15,7 @@ class VoiceIdentifier:
     It uses the wespeaker library to identify the speaker from the audio clip.
     """
     def __init__(self):
-        self._dblink: str = self._get_database_path()
-        self._void_list: Dict = self._initialize_database()
+        self._void_list: Dict = id_manager.get_void_list()
         self.voice_recognizer = self._initialize_recognizer()
     
     def _initialize_recognizer(self):
@@ -43,47 +42,7 @@ class VoiceIdentifier:
         
         return vmodel    
    
-    def _initialize_database(self)-> Dict:
-        """ Initialize the database and create the voice id table """
-        
-        with sqlite3.connect(self._dblink) as conn:
-            conn.row_factory = sqlite3.Row  # Enable dictionary-like row access
-            cursor = conn.cursor()
 
-            try:
-                cursor.execute(f'SELECT void, user_name FROM ids;')
-                rows = cursor.fetchall()
-                return {row[0]: row[1] for row in rows}
-
-            except sqlite3.Error as e:
-                # If table doesn't exist, create it and return an empty list
-                self._create_table(conn)
-                return {}
-
-    @staticmethod
-    def _create_table(conn)-> None:    
-        """ Create a new voiceid table """
-        cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS ids (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                void TEXT,
-                pid TEXT,
-                user_name TEXT NOT NULL
-            )
-        ''')
-        conn.commit()
-        
-        # cursor = conn.cursor()
-        # cursor.execute(f'''
-        #     INSERT INTO ids (void, user_name) VALUES (?, ?);
-        # ''', ('V000001', 'Initial User'))
-        # conn.commit()
-
-    @staticmethod
-    def _get_database_path() -> str:
-        """Return the path to the memory log database."""
-        return Path(__file__).resolve().parents[2] / 'data' / 'database' / 'eva.db'
         
     @staticmethod
     def _convert_numpy_to_torch(audio_array: np.ndarray) -> torch.Tensor:

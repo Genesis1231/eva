@@ -16,26 +16,38 @@ from utils.agent.models import (
     create_mistral_model,
     create_google_model,
     create_anthropic_model,
+    create_grok_model,
 )
 
 class ChatAgent:
     """
-    A class representing a chat agent that interacts with different language models.
+    A chat agent that manages interactions with various language models.
+    
+    This class handles the initialization, configuration, and interaction with different
+    language models (LLMs) such as GPT, LLAMA, Mistral, etc. It manages prompt construction,
+    response formatting, and tool integration.
     
     Attributes:
-        model_selection (str): The name of the selected language model.
-        model_temperature (float): The temperature parameter for generating responses.
-        model_factory (dict): A dictionary mapping model names to their corresponding creation methods.
-        llm: The initialized language model.
-        chat_history (list): A list of chat messages exchanged between the agent and the user.
+        model_selection (str): The identifier for the selected language model (e.g., "LLAMA", "GPT").
+        base_url (str): The base URL for API connections, defaults to localhost for local models.
+        language (str): The primary language for agent responses.
+        constructor (PromptConstructor): Handles the construction of prompts for the LLM.
+        llm (BaseLanguageModel): The initialized language model instance.
+        tool_info (List[Dict[str, Any]]): Available tools and their configurations.
     
-    Functions:
-        switch_model: Switch to a different language model.
-        respond: Get a response from the language model.
-        clear_chat_history: Clear the chat history.
+    Example:
+        >>> agent = ChatAgent(model_name="llama", base_url="http://localhost:11434", language="english")
+        >>> response = agent.respond(information_dict)
+        
     """
     
-    def __init__(self, model_name: str = "llama", base_url: str = "http://localhost:11434", language: str = "english")-> None:
+    def __init__(
+        self, 
+        model_name: str = "llama", 
+        base_url: str = "http://localhost:11434", 
+        language: str = "english"
+    )-> None:
+        
         self.model_selection: str = model_name.upper()
         self.base_url: str = base_url
         self.language: str = language
@@ -46,22 +58,24 @@ class ChatAgent:
         
         logger.info(f"Agent: {self.model_selection} is ready.")
 
-    def _get_model_factory(self) -> Dict[str, Callable[[], BaseLanguageModel]]:
+    @staticmethod
+    def _get_model_factory(base_url: str) -> Dict[str, Callable[[], BaseLanguageModel]]:
         """ Get the model factory for creating LLM models. """
         return {
             "GROQ" : partial(create_groq_model, model_name="llama-3.1-70b-versatile"),
+            "GROK": create_grok_model,
             "ANTHROPIC": create_anthropic_model,
             "MISTRAL":  create_mistral_model,
             "GOOGLE": create_google_model,
             "OPENAI" : create_openai_model,
-            "LLAMA" : partial(create_ollama_model, base_url=self.base_url, model_name="llama3.1:70b"),
-            "QWEN": partial(create_ollama_model, base_url=self.base_url, model_name="qwen2.5:72b"),
+            "LLAMA" : partial(create_ollama_model, base_url=base_url, model_name="llama3.1:70b"),
+            "QWEN": partial(create_ollama_model, base_url=base_url, model_name="qwen2.5:72b"),
         }
         
     def _initialize_model(self)-> BaseLanguageModel:
         """ Initialize the ChatAgent LLM model """
         
-        model_factory = self._get_model_factory()
+        model_factory = self._get_model_factory(self.base_url)
         model = model_factory.get(self.model_selection)
         if model is None:
             raise ValueError(f"Error: Model {self.model_selection} is not supported")
@@ -76,7 +90,7 @@ class ChatAgent:
         if not language:
             language = self.language
         
-        verbal_language = f"(RESPOND ONLY IN NATIVE {language.upper()})" if language.upper() not in {"ENGLISH", "MULTILINGUAL"} else ""
+        verbal_language = f"(RESPOND ONLY IN NATIVE {language.upper()})" if language.upper() not in ("ENGLISH", "MULTILINGUAL") else ""
         
         class AgentOutput(BaseModel):
             analysis: str = Field(description="My reflection and analysis")
@@ -88,6 +102,8 @@ class ChatAgent:
         return AgentOutput
     
     def set_tools(self, tool_info: List[Dict])-> None:
+        """ Set the tool information for the agent """
+        
         self.tool_info = tool_info
     
     def _format_response(self, response: Dict[str, Any]) -> Dict[str, Any]:

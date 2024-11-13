@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![EVA Logo](logo.png)
+![EVA Logo](docs/logo.png)
 
 *Multimodal, Multilingual, Cross Platform, Modular Architecture*
 
@@ -70,7 +70,7 @@ EVA/
 │       ├── stt/         # Speech-to-text models and classes
 │       ├── tts/         # Text-to-Speech models and classes
 │       └── vision/      # Vision models and functions
-├── tests/               # Test cases (😢)
+├── test/               # Test cases (😢)
 └── docs/                # Documentation (😩)
 
 ```
@@ -228,7 +228,7 @@ There are many ways to personalize EVA for more interesting and enjoyable experi
 
 ### 👧 Persona
 You can customize EVA's persona by editing the prompt in app/utils/prompt/persona.md.
-EVA utilize all first-person perspective in prompts to enhance self-awareness.
+EVA utilize all first-person perspective in prompts to enhance self-awareness. Reference: [First Person Prompting](docs/FirstPersonPrompting.md)
 
 ```python
 I am EVA, the most advanced AI assistant designed to accompany human.

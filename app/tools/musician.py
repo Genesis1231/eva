@@ -82,8 +82,8 @@ class Musician(BaseTool):
             content = f"I have created a song called '{title}'. The style is {desc}."
 
         except Exception as e:
-            logger.error(f"Error: Failed to create music: {str(e)}")
-            return {"error": f"Failed to create music. DO NOT try again."}
+            logger.error(f"Failed to create music: {str(e)}")
+            return {"error": f"Error: Failed to create music due to {str(e)}. DO NOT try again."}
 
         return {"action": content, "url": url, "cover_url": cover_url, "title": title}
  

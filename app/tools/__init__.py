@@ -41,7 +41,7 @@ class ToolManager:
                 "name" : tool.name,
                 "description": tool.description,
                 # "args_schema": { "title": "query", "type": "string" } # simplify it for now
-                "args_schema": tool.args_schema.schema() if hasattr(tool, 'args_schema') else None
+                "args_schema": tool.args_schema.schema() if hasattr(tool, 'args_schema') else { "title": "query", "type": "string" }
                 }
             tool_info.append(tool_schema)
         
@@ -96,12 +96,17 @@ class ToolManager:
             args: Dict = action.get("args", {})
             tool = self.tool_map.get(tool_name)
             
-            result = tool.run(args)
+            try:
+                result = tool.run(args)                      
+            except Exception as e:
+                logger.error(f"Failed to execute tool {tool_name}: {str(e)}")
+                return {"error": f"Error executing {tool_name}: {str(e)}"}
+            
             if hasattr(tool, 'run_client') and not result.get("error"): # run the client function if available and no error
                 client_results = tool.run_client(client, **result)
                 if client_results:
                     result["additional"] = client_results
-                
+                        
             return {"result": result}
         
         with ThreadPoolExecutor() as executor:

@@ -47,11 +47,14 @@ class Painter(BaseTool):
         
         midjourney_prompt = f"{self.filter_prompt(query)} --c 20 --ar 3:4 --s 300"
         
-        if image_urls := self.generator.send_message(midjourney_prompt):
-            content = f"I have created 4 images with the query: {query}"
-            return {"action": content, "image_urls": image_urls}
+        try:
+            if image_urls := self.generator.send_message(midjourney_prompt):
+                content = f"I have successfully created 4 images with the theme: {query}"
+        except Exception as e:
+            logger.error(f"Failed to create images: {str(e)}")
+            return {"error": f"Error: Failed to create images due to {str(e)}"}
         
-        return {"error": "Failed to create images."}
+        return {"action": content, "image_urls": image_urls}
         
     def run_client(self, client, **kwargs) -> Optional[Dict]:
         return client.launch_gallery(image_urls=kwargs.get("image_urls"))

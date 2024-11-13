@@ -4,7 +4,7 @@ from typing import List, Dict, Optional
 import json
 
 from utils.agent import SmallAgent
-from utils.memory.sqliteDB import SQLiteLogger
+from utils.memory.memlog import MemoryLogger
 
 class Memory:
     """
@@ -32,7 +32,7 @@ class Memory:
         self._memory_thread: Optional[Thread] = None
         
         self._summarizer = SmallAgent(model_name=model_name, base_url=base_url, model_temperature=0)
-        self._memory_logger = SQLiteLogger()
+        self._memory_logger = MemoryLogger()
 
     def create_memory(self, timestamp: str, user_response: Dict, response: Dict) -> None:
         """ thread the memory creation to save time """

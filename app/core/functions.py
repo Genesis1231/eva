@@ -1,7 +1,8 @@
 from functools import partial
+from config import logger
 from tqdm import tqdm
 from config import validate_language
-from typing import Dict
+from typing import Dict, Any
 
 from client import WSLClient, MobileClient
 from utils.agent import ChatAgent 
@@ -21,13 +22,14 @@ def load_classes(class_dict)-> Dict:
             
     return instances
 
-def initialize_modules(config : dict):
+def initialize_modules(config : Dict[str, str]) -> Dict[str, Any]:
     """ Initialize the modules for EVA """
     
     base_url = config.get("BASE_URL")
     language = config.get("LANGUAGE")
     
     if not (full_lang := validate_language(language)):
+        logger.error(f"Language {language} not supported, defaulting to multilingual")
         language = full_lang = "multilingual"
     
     # Initialize the modules

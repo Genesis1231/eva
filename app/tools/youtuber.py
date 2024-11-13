@@ -44,8 +44,8 @@ class Youtuber(BaseTool):
         try:
             results = YoutubeSearch(query).to_json()
         except Exception as e:
-            logger.error(f"Error: Failed to find video: {str(e)}.")
-            return {"error": f"Failed to get Youtube video, please try again."}
+            logger.error(f"Failed to find video: {str(e)}.")
+            return {"error": f"Error: Failed to get Youtube video due to {str(e)}."}
     
         if not results:
             return {"error": f"No search results with query: {query}, please revise and try again."}

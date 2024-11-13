@@ -4,9 +4,9 @@ from config import logger
 from typing import Dict
 import json
 
-class SQLiteLogger:
+class MemoryLogger:
     """
-    SQLiteLogger class to save the conversation and memory to the database.
+    MemoryLogger class to save the conversation and memory to the database.
     """
     def __init__(self):
         self._dblink: str = self._get_database_path()
