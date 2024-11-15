@@ -1,13 +1,13 @@
-from config import logger
+from config import logger, validate_language
 import json
 from functools import partial
 from typing import Callable, Dict, Any, List
 
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
+from pydantic import BaseModel, Field
 from langchain_core.language_models import BaseLanguageModel
 
-from utils.agent.classes import AgentOutput
 from utils.agent.constructor import PromptConstructor
 from utils.agent.models import (
     create_groq_model,
@@ -19,25 +19,10 @@ from utils.agent.models import (
     create_grok_model,
 )
 
-class ChatAgent:
+class SetupAgent:
     """
-    A chat agent that manages interactions with various language models.
+    A setup agent that manages interactions with various language models.
     
-    This class handles the initialization, configuration, and interaction with different
-    language models (LLMs) such as GPT, LLAMA, Mistral, etc. It manages prompt construction,
-    response formatting, and tool integration.
-    
-    Attributes:
-        model_selection (str): The identifier for the selected language model (e.g., "LLAMA", "GPT").
-        base_url (str): The base URL for API connections, defaults to localhost for local models.
-        language (str): The primary language for agent responses.
-        constructor (PromptConstructor): Handles the construction of prompts for the LLM.
-        llm (BaseLanguageModel): The initialized language model instance.
-        tool_info (List[Dict[str, Any]]): Available tools and their configurations.
-    
-    Example:
-        >>> agent = ChatAgent(model_name="llama", base_url="http://localhost:11434", language="english")
-        >>> response = agent.respond(information_dict)
         
     """
     
@@ -82,6 +67,25 @@ class ChatAgent:
     
         return model() 
     
+    def _get_output_format(self, language: str | None) -> BaseModel:
+        """Pydantic output format for the response"""
+        
+        # Validate the language  
+        language = validate_language(language) 
+        if not language:
+            language = self.language
+        
+        verbal_language = f"(RESPOND ONLY IN NATIVE {language.upper()})" if language.upper() not in ("ENGLISH", "MULTILINGUAL") else ""
+        
+        class AgentOutput(BaseModel):
+            analysis: str = Field(description="My reflection and analysis")
+            strategy: str = Field(description="My response strategy")
+            response: str = Field(description=f"My verbal response {verbal_language}")
+            premeditation: str = Field(description="My predetermined information")
+            action: List[Dict[str, Any]] = Field(description="The name of the tools I choose to use and the args for input.")
+        
+        return AgentOutput
+    
     def set_tools(self, tool_info: List[Dict[str, Any]])-> str:
         """ Set the tool information for the agent """
   
@@ -119,7 +123,7 @@ class ChatAgent:
             action_results=action_results
         )
         
-        parser = JsonOutputParser(pydantic_object=AgentOutput.with_language(self.language, language))
+        parser = JsonOutputParser(pydantic_object=self._get_output_format(language))
         
         prompt_template = PromptTemplate(
             input_variables=["tools"],

@@ -116,7 +116,7 @@ class PromptConstructor:
             {instructions}
             </INSTRUCTIONS>
             
-            Based on the above context and instructions, craft appropriate response with the following Json format.
+            Based on the above context and instructions, craft appropriate output with the following Json format.
             
             <FORMATTING>
             {{format_instructions}}

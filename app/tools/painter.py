@@ -51,8 +51,8 @@ class Painter(BaseTool):
             if image_urls := self.generator.send_message(midjourney_prompt):
                 content = f"I have successfully created 4 images with the theme: {query}"
         except Exception as e:
-            logger.error(f"Failed to create images: {str(e)}")
-            return {"error": f"Error: Failed to create images due to {str(e)}"}
+            logger.error(f"Error: Failed to create images: {str(e)}")
+            return {"error": f"Could not create images due to {str(e)}"}
         
         return {"action": content, "image_urls": image_urls}
         

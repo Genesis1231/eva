@@ -22,8 +22,7 @@ class SmallAgent:
         model_temperature (float): The temperature parameter for generating responses.
         model_factory (dict): A dictionary mapping model names to their corresponding creation methods.
         llm: The initialized language model.
-    Methods:
-        compress_history: Compress a list of messages into a single message.
+
     """
     
     def __init__(self, model_name: str = "llama", base_url: str = "http://localhost:11434", model_temperature: float = 0.5) -> None:
@@ -45,8 +44,8 @@ class SmallAgent:
     def _get_model_factory(self) -> Dict[str, Callable[[], BaseLanguageModel]]:
         return {
             "GROQ" : partial(create_groq_model, model_name="llama-3.1-8b-instant", temperature=self.model_temperature),
-            "ANTHROPIC": partial(create_anthropic_model, model_name="claude-3-5-haiku-latest", temperature=self.model_temperature),
-            "OPENAI": partial(create_openai_model, model_name="gpt-4o-mini", temperature=self.model_temperature),
+            "CLAUDE": partial(create_anthropic_model, model_name="claude-3-5-haiku-latest", temperature=self.model_temperature),
+            "CHATGPT": partial(create_openai_model, model_name="gpt-4o-mini", temperature=self.model_temperature),
             "LLAMA" : partial(create_ollama_model, 
                               base_url=self._base_url, 
                               model_name="llama3.2-vision", 

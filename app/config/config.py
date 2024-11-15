@@ -1,18 +1,21 @@
 ################################################################################################ 
-# EVA CONFIGURATION v0.1
+# EVA CONFIGURATION v0.2
 # This file contains the configuration for EVA's models and services.
 # (this might be moved to a database in the future)
 # 
 # DEVICE:
 #   The client device that EVA is running with.
 #   Options: "desktop", "mobile"
-#   Default: desktop
 #   Mobile will work with a local API server. (Testing)
+#
+# LANGUAGE:
+#   The language that EVA will use for conversation.
+#   Options: "en", "zh", "fr", "de", "it", "ja", "ko", "ru", "es", "pt", "nl", "multilingual"
 #
 # CHAT_MODEL:
 #   Main model for reasoning and conversation.
-#   Options: "Anthropic", "Groq", "OpenAI", "Mistral", "Google", "llama"
-#   Recommended: Anthropic-claude
+#   Options: "Claude", "Groq", "Chatgpt", "Mistral", "Gemini", "llama"
+#   Recommended: Claude
 #   Factory: Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Google Gemini 1.5 Pro, Anthropic-claude-sonnet-3.5
 #   Ollama all models (as long as they are pulled, you can edit the options in utils/agent/chatagent.py)
 # 
@@ -36,7 +39,7 @@
 #
 # SUMMARIZE_MODEL:
 #   Model for text summarization during conversation.
-#   Options: "Groq", "llama", "OpenAI", Anthropic-claude-3-haiku
+#   Options: "Groq", "llama", "Chatgpt", "Claude"
 #   Factory: Groq-llama3.1-8b, OpenAI-ChatGPT-4o-mini, Anthropic-claude-3-haiku, ollama-llama3.1-8b
 #
 #
@@ -46,9 +49,9 @@ eva_configuration = {
     "DEVICE": "desktop", 
     "LANGUAGE": "en",
     "BASE_URL": "http://localhost:11434",
-    "CHAT_MODEL": "grok",
+    "CHAT_MODEL": "claude",
     "VISION_MODEL": "groq",
     "STT_MODEL": "faster-whisper",
-    "TTS_MODEL": "elevenlabs",
+    "TTS_MODEL": "coqui",
     "SUMMARIZE_MODEL": "llama"
 }

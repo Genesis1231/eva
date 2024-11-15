@@ -7,7 +7,8 @@ from typing import Dict
 import wespeaker as wp
 import torch
 import numpy as np
-from core.setup import id_manager
+
+from core.ids import id_manager
 
 class VoiceIdentifier:
     """ 

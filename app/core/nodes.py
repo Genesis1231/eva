@@ -1,11 +1,10 @@
-from config import logger
+from config import logger, eva_configuration
 from datetime import datetime
 from typing import Dict, Any
 
 from core.classes import EvaStatus 
-from config import eva_configuration
 from core.functions import initialize_modules
-from core.setup import id_manager
+from core.ids import id_manager
 
 
 def eva_initialize(state: Dict[str, Any]) -> Dict[str, Any]:
@@ -92,7 +91,7 @@ def eva_sense(state: Dict[str, Any]) -> Dict[str, Any]:
 
     user_message = client_feedback.get("user_message")
 
-    if user_message and any(word in user_message.lower() for word in ['bye.', 'exit.']):
+    if user_message and any(word in user_message.lower() for word in ['bye', 'exit']):
         return {"status": EvaStatus.END}
     else:
         return {"status": EvaStatus.THINKING, "num_conv": num + 1, "sense": client_feedback, "action_results": [] }
@@ -109,14 +108,6 @@ def eva_end(state: Dict[str, Any]) -> Dict[str, Any]:
     client.deactivate()
     
     return {"status": EvaStatus.END}
-
-def eva_setup(state: Dict[str, Any]) -> Dict[str, Any]:
-    """ Initialize the setup for the first time user """
-    
-    agent = state["agent"]
-    
-    
-    return {"status": EvaStatus.SETUP}
 
 ##### Router nodes #####
 

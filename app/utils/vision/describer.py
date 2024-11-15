@@ -76,7 +76,7 @@ class Describer:
         
         return image_data
     
-    def describe_screenshot(self, image_data: Union[np.ndarray, str], query: str) -> Optional[str]:
+    def analyze_screenshot(self, image_data: Union[np.ndarray, str], query: str) -> Optional[str]:
         """ Describe a screenshot using the vision model. """
         
         image_base64 = self._convert_base64(image_data)

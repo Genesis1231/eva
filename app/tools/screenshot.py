@@ -38,16 +38,15 @@ class Screenshot(BaseTool):
                 screenshot.save(full_path)
                 
             image = cv2.imread(full_path)
-            logger.info(f"Screenshot taken, query: {query}")
             describer = Describer("chatgpt") # Chatgpt 4o-mini is the best model for the describer
-            analysis = describer.describe_screenshot(image_data=image, query=query)
-            content = f"I took a screenshot and analyzed it."
+            analysis = describer.analyze_screenshot(image_data=image, query=query)
+            content = f"I took a screenshot and found the following information: {analysis}"
             
         except Exception as e:
-            logger.error(f"Error: Failed to analyze screenshot {str(e)}.")
+            logger.error(f"Failed to analyze screenshot {str(e)}.")
             return {"error": f"Failed to analyze screenshot {str(e)}."}
             
-        return  {"action": content, "analysis" : analysis }
+        return  {"action": content }
     
     def wsl_screenshot(self, file_path: str) -> str:
         windows_path = subprocess.check_output(["wslpath", "-w", file_path]).decode().strip()

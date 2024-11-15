@@ -63,7 +63,7 @@ class ToolManager:
                     if inspect.isclass(class_obj):
                         # Only load the tools that are available for the client, built in tools do not have client attribute
                         tool = class_obj()
-                        if not hasattr(tool, 'client') or tool.client == "all" or tool.client == self.client: 
+                        if not hasattr(tool, 'client') or tool.client.upper() == "ALL" or tool.client.upper() == self.client: 
                             imported_tools.append(tool)
                             
                 except Exception as e:

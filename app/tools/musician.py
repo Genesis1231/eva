@@ -27,7 +27,7 @@ class Musician(BaseTool):
     name: str = "music_maker"
     description: str = "Tool for creating music. Input should include the genre, theme, vibe and lyric direction of a song."
     type: str = "chat" # can be used in chatbot
-    client: str = "all"
+    client: str = "all" # can be used in all clients
     args_schema: Type[BaseModel] = MusicianInput
 
     @staticmethod
@@ -77,13 +77,14 @@ class Musician(BaseTool):
                 time.sleep(1)
                 print(f"({datetime.now().strftime('%H:%M:%S')}) Waiting for Suno to generate music ... {i}s", end="\r")
             else:
-                return {"error": f"Error: Failed to create music: Request timeout, try one more time."}
+                logger.error(f"Error: Failed to create music: Request timeout")
+                return {"error": f"Could not create music after waiting for a while."}
                 
             content = f"I have created a song called '{title}'. The style is {desc}."
 
         except Exception as e:
-            logger.error(f"Failed to create music: {str(e)}")
-            return {"error": f"Error: Failed to create music due to {str(e)}. DO NOT try again."}
+            logger.error(f"Error: Failed to create music: {str(e)}")
+            return {"error": f"Could not create music due to {str(e)}. DO NOT try again."}
 
         return {"action": content, "url": url, "cover_url": cover_url, "title": title}
  

@@ -6,7 +6,7 @@ from utils.tts import Speaker, AudioPlayer
 from utils.vision import Watcher
 from utils.stt import PCListener
 from utils.extension import Window
-from client.html import load_html
+from utils.extension.html import load_html
 
 class WSLClient:
     """
@@ -17,23 +17,21 @@ class WSLClient:
         listener: The listener object to listen to the client.
         player: The audio player object to stream the music to the client.
         window: The window object to launch the html to the client.
-    Methods:
-        send: Send the data to the client.
-        receive: Receive the data from the client.
-        speak: Speak the response to the client.
-        stream_music: Stream the music to the client.
-        launch_youtube: Launch the youtube video to the client.
-        launch_epad: Launch the epad with HTML to the client.
-        launch_gallery: Display the image to the client.
-        deactivate: Deactivate the client.
-    
+
     """
-    def __init__(self, stt_model: str, vision_model: str, tts_model: str, base_url: str, language: str):
-        self.speaker = Speaker(tts_model, language)
-        self.watcher = Watcher(vision_model, base_url)
-        self.listener = PCListener(stt_model, language)
+    def __init__(self):
         self.player = AudioPlayer()
         self.window = Window()
+        
+        self.speaker: Optional[Speaker] = None
+        self.watcher: Optional[Watcher] = None
+        self.listener: Optional[PCListener] = None
+                
+    def initialize_modules(self, stt_model: PCListener, vision_model: Watcher, tts_model: Speaker) -> None:
+        """ Initialize the modules for the client """
+        self.speaker = tts_model
+        self.watcher = vision_model
+        self.listener = stt_model
     
     def send(self, data: Dict[str, str]) -> None:
         """ Send the data to the client """
