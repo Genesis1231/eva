@@ -17,11 +17,6 @@ class Webcam:
         watching (bool): Flag indicating if the watcher is currently watching for movement.
         process (multiprocessing.Process): The process object for watching the camera feed.
 
-    Methods:
-        initialize_camera(): Initializes the camera object.
-        watch(): Starts watching the camera feed for movement.
-        stop_watch(): Stops the webcam.
-        capture(): Captures an image from the camera.
 
     """
     
@@ -35,13 +30,19 @@ class Webcam:
 
         
     def _initialize_camera(self) -> cv2.VideoCapture:
-        # currently this setup is for WSL2
-        cam = cv2.VideoCapture(self._camera_index, cv2.CAP_V4L2)
-        cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
-        cam.set(cv2.CAP_PROP_BUFFERSIZE, 1); 
+        """ Initialize the camera object. """
         
-        if not cam.isOpened():
-            raise ConnectionError(f"Error: Could not connect webcam {self._camera_index}!")
+        # currently this setup is for WSL2
+        try:
+            cam = cv2.VideoCapture(self._camera_index, cv2.CAP_V4L2)
+            cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+            cam.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+            
+            if not cam.isOpened():
+                raise ConnectionError(f"Error: Could not connect webcam {self._camera_index}!")
+        except Exception as e:
+            logger.error(f"Failed to initialize camera: {str(e)}")
+            raise
 
         return cam
     
@@ -128,11 +129,15 @@ class Webcam:
             self.camera.release()
     
     def capture(self) -> np.ndarray:
-        self.camera.grab()
-        ret, frame = self.camera.read()
-        if not ret:
-            raise RuntimeError("Watcher: Failed to capture image.")
+        """ Capture an image from the camera. """
         
+        # Grab latest frame to avoid buffering delay
+        if not self.camera.grab():
+            raise RuntimeError("Watcher: Failed to grab camera frame.")
+            
+        ret, frame = self.camera.retrieve()
+        if not ret:
+            raise RuntimeError("Watcher: Failed to retrieve camera frame.")
         return frame
     
     def stop_watch(self) -> None:

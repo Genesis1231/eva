@@ -10,7 +10,7 @@ class AgentOutput(BaseModel):
     response: str = Field(description="My verbal response")  # Base description
     premeditation: str = Field(description="My predetermined information")
     action: List[Dict[str, Any]] = Field(
-        description="The name of the tools I choose to use and the args for input."
+        description="The name of the tools I choose and the args for input."
     )
     
     @classmethod

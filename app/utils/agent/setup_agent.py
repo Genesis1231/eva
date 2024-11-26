@@ -67,7 +67,7 @@ class SetupAgent:
     
         return model() 
     
-    def _get_output_format(self, language: str | None) -> BaseModel:
+    def _get_output_setup(self, class_name: str, language: str | None) -> BaseModel:
         """Pydantic output format for the response"""
         
         # Validate the language  
@@ -86,11 +86,6 @@ class SetupAgent:
         
         return AgentOutput
     
-    def set_tools(self, tool_info: List[Dict[str, Any]])-> str:
-        """ Set the tool information for the agent """
-  
-        self.tool_info = json.dumps(tool_info)
-    
     @staticmethod
     def _format_response(response: Dict[str, Any]) -> Dict[str, Any]:
         """ Deals with the inconsistent response parsing format from various models"""
@@ -107,23 +102,23 @@ class SetupAgent:
         return response
     
     def respond(
-        self, 
+        self,
+        template: str | None,
         timestamp : str, 
         sense: Dict, 
         history: List[Dict], 
-        action_results: List[Dict], 
         language: str | None,
     ) -> Dict:
         """Main response function that build the prompt and get response from the language model"""
         
         prompt = self.constructor.build_prompt(
+            template=template,
             timestamp=timestamp, 
             sense=sense, 
             history=history, 
-            action_results=action_results
         )
         
-        parser = JsonOutputParser(pydantic_object=self._get_output_format(language))
+        parser = JsonOutputParser(pydantic_object=self._get_output_setup(template, language))
         
         prompt_template = PromptTemplate(
             input_variables=["tools"],
@@ -134,7 +129,7 @@ class SetupAgent:
         chain = prompt_template | self.llm | parser
         
         try: 
-            response = chain.invoke({"tools": self.tool_info})
+            response = chain.invoke({"tools": ""})
             logger.debug(json.dumps(response, indent=2))
             response = self._format_response(response)
             

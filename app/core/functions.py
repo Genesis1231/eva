@@ -17,7 +17,7 @@ def load_classes(class_dict)-> Dict:
     instances = {}
     with tqdm(total=len(class_dict), desc="Initializing EVA...") as pbar:
         for name, class_init in class_dict.items():
-            pbar.set_description(f"Loading module: {name}")
+            pbar.set_description(f"Loading {name} module")
             instances[name] = class_init()
             pbar.update(1)
             

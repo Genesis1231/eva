@@ -1,16 +1,33 @@
+from config import logger, eva_configuration, validate_language
 from typing import Dict, Any
 from datetime import datetime
-from core.nodes import EvaStatus
+from core.classes import EvaStatus
 
 def eva_setup(state: Dict[str, Any]) -> Dict[str, Any]:
     """ Initialize the setup for the first time user """
     from utils.agent.setup_agent import SetupAgent
 
+    # initialize the setup agent
+    model_name = eva_configuration.get("CHAT_MODEL")
+    base_url = eva_configuration.get("BASE_URL")
+    if not (full_lang := validate_language(language)):
+        language = full_lang = "multilingual"
+    
+    setup_agent = SetupAgent(
+        model_name=model_name, 
+        base_url=base_url, 
+        language=full_lang
+    )
+    
+    return {"agent": setup_agent}
+
+def eva_setup_name(state: Dict[str, Any]) -> Dict[str, Any]:
+    """ Setup the User Name """
+    
+    agent = state["agent"]
     sense = state["sense"]
     language = sense.get("language")
     memory = state["memory"]
-    agent = state["agent"]
-    action_results = state["action_results"]
 
     history = memory.recall_conversation()
     timestamp = datetime.now()
@@ -20,7 +37,6 @@ def eva_setup(state: Dict[str, Any]) -> Dict[str, Any]:
         timestamp=timestamp,
         sense=sense,
         history=history,
-        action_results=action_results,
         language=language
     )
     
@@ -41,5 +57,3 @@ def eva_setup(state: Dict[str, Any]) -> Dict[str, Any]:
     # else:
     #     return {"status": EvaStatus.WAITING}
 
-    
-    return {"status": EvaStatus.SETUP, "agent": agent}

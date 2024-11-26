@@ -1,4 +1,4 @@
-from typing import TypedDict, Union, Dict, List
+from typing import TypedDict, Dict, List, Any
 from enum import Enum
 
 from client import WSLClient, MobileClient
@@ -8,9 +8,8 @@ from tools import ToolManager
 
 class EvaStatus(Enum):
     """EVA operational status."""
-    ACTIVE = "active" # EVA is active
     THINKING = "thinking" # EVA is thinking
-    WAITING = "waiting" # EVA is waiting for user response
+    WAITING = "waiting" # EVA is waiting for client response
     ACTION = "action" # EVA is performing an action
     END = "end" # EVA is shutting down
     ERROR = "error" # EVA has encountered an error
@@ -21,10 +20,10 @@ class EvaState(TypedDict):
     status: EvaStatus
     agent: ChatAgent 
     toolbox: ToolManager 
-    client: Union[WSLClient, MobileClient] 
+    client: WSLClient | MobileClient
     memory : Memory
     sense : Dict | None
-    action : List[Dict]
-    action_results: List[Dict]
+    action : List[Dict[str, Any]]
+    action_results: List[Dict[str, Any]]
     num_conv: int
 

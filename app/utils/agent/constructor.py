@@ -1,15 +1,25 @@
 from config import logger
-from typing import List, Dict
+from typing import List, Dict, Any
 from pydantic import BaseModel, Field
 from utils.prompt import load_prompt
 
 class PromptConstructor:
     """
-    Class for constructing the prompt for the LLM.
+    A class that constructs and formats prompts for Large Language Models (LLMs).
+
+    Assembles various components into structured prompts by combining:
+    - Persona and instruction templates loaded from files
+    - Conversation history with user and assistant messages
+    - User observations and inputs
+    - Results from previous actions
+    
+    The prompt structure uses XML tags to clearly separate different input sections,
+    making it easier for LLMs to parse and understand the context. Each section is
+    formatted consistently to maintain a standardized prompt format.
     """
     
     def __init__(self):
-        self.system_prompt: str = load_prompt("persona")
+        self.persona_prompt: str = load_prompt("persona")
         self.instruction_prompt: str = load_prompt("instructions")
         
     @staticmethod
@@ -41,14 +51,16 @@ class PromptConstructor:
 
     @staticmethod
     def _format_observation(observation: str | None) -> str:
+        """ Format the observation into string for LLM """
         return "" if not observation else f"<observation>I see {observation} </observation>"
 
     @staticmethod
     def _format_message(user_message: str | None) -> str:
+        """ Format the user message into string for LLM """
         return "" if not user_message else f"<human_reply>I hear {user_message} </human_reply>"
 
     @staticmethod
-    def _format_action_results(results: List[Dict] | None) -> str:
+    def _format_action_results(results: List[Dict[str, Any]]) -> str:
         """ Format the action results into string for LLM """
         if not results:
             return ""
@@ -59,13 +71,21 @@ class PromptConstructor:
         # simple way to format the results
         for result_item in results:
             result = result_item.get("result")
+            if not result:
+                continue
+            
             if isinstance(result, List):
                 for item in result:
-                    action_results.append("\n".join([f"{k}: {v}" for k, v in item.items() if "url" not in k])) # dont show urls to avoid speaking them
+                    if isinstance(item, dict):
+                        formatted_items = [f"{k}: {v}" for k, v in item.items() if "url" not in k.lower()]
+                        action_results.append("\n".join(formatted_items))
+                    else:
+                        action_results.append(str(item))
             elif isinstance(result, Dict):
-                action_results.append("\n".join([f"{k}: {v}" for k, v in result.items() if "url" not in k]))
+                formatted_items = [f"{k}: {v}" for k, v in result.items() if "url" not in k.lower()]
+                action_results.append("\n".join(formatted_items))
             else:
-                action_results.append(result)
+                action_results.append(str(result))
             
             if additional_info:=result_item.get("additional"):
                 action_results.append(additional_info)
@@ -73,33 +93,41 @@ class PromptConstructor:
         action_results.append("</action_results>")
         return "\n".join(action_results)
 
-    def build_prompt(self, timestamp : str, sense: Dict, history: List[Dict], action_results: List[Dict]) -> str:
+    def build_prompt(
+        self,
+        template: str | None,
+        timestamp : str, 
+        sense: Dict, 
+        history: List[Dict[str, str]], 
+        action_results: List[Dict[str, Any]]
+    ) -> str:
         """
         Builds the prompt for LLM.
-        There are 3 main sections:
-        1. System prompt: the persona,  and goal of EVA
-        2. Context: the current context of the conversation
-        3. Instructions: the steps for the LLM to follow
-        
+        Args:
+            system_template (str | None): Name of the system prompt template file to load. If None, uses default system prompt.
+            instructions_template (str | None): Name of the instructions prompt template file to load. If None, uses default instructions.
+            timestamp (str): Current timestamp for context.
+            sense (Dict): Dictionary containing sensory information like user messages and observations.
+            history (List[Dict[str, str]]): List of conversation history entries.
+            action_results (List[Dict[str, Any]]): Results from previous actions taken by the agent.
+        Returns:
+            str: The fully constructed prompt string for the language model.
+    
         """
         
-        user_message = sense.get("user_message")
-        observation = sense.get("observation")
-        system_prompt: str = self.system_prompt
-        instructions: str = self.instruction_prompt
-        
+        instructions = self.instruction_prompt if template is None else load_prompt(template)
+        user_message = self._format_message(sense.get("user_message"))
+        observation = self._format_observation(sense.get("observation"))
         action_results = self._format_action_results(action_results)
-        user_message = self._format_message(user_message)
-        observation = self._format_observation(observation)
         history_prompt = self._format_history(history)
         
         PROMPT_TEMPLATE = f"""  
             <PERSONA>
-            {system_prompt}
+            {self.persona_prompt}
             </PERSONA>
             
             <TOOLS>
-            I have the access to the following tools for action:
+            I have the following tools available for action:
             {{tools}}
             </TOOLS>
             

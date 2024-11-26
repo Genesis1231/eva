@@ -54,7 +54,7 @@ class ChatAgent:
         
         self.constructor = PromptConstructor()
         self.llm: BaseLanguageModel = self._initialize_model()
-        self.tool_info: str = ""
+        self.tool_info: str | None = None
         
         logger.info(f"Agent: {self.model_selection} is ready.")
 
@@ -113,6 +113,7 @@ class ChatAgent:
         """Main response function that build the prompt and get response from the language model"""
         
         prompt = self.constructor.build_prompt(
+            template=None,
             timestamp=timestamp, 
             sense=sense, 
             history=history, 

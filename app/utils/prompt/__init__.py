@@ -1,7 +1,5 @@
 import os
 
-# temporary function for holding prompt building
-# might be moved to a separate module when there is more complex prompting
 def load_prompt(prompt_name: str) -> str:
     """ load the prompt from the prompts directory """
 

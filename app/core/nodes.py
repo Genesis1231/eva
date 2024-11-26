@@ -14,10 +14,10 @@ def eva_initialize(state: Dict[str, Any]) -> Dict[str, Any]:
     """
 
     modules = initialize_modules(eva_configuration) 
-    next = EvaStatus.SETUP if id_manager.is_empty() else EvaStatus.THINKING
+    status = EvaStatus.SETUP if id_manager.is_empty() else EvaStatus.THINKING
     
     return {
-        "status": next, 
+        "status": status, 
         "agent": modules["agent"],
         "client": modules["client"],
         "memory": modules["memory"],
