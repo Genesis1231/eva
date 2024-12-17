@@ -8,23 +8,32 @@ from utils.memory.memlog import MemoryLogger
 
 class Memory:
     """
-    Memory class to save the conversation and memory to the database.
+    A class for managing conversation memory and database storage.
     
+    This class handles saving conversation history, user interactions, and memory entries
+    to a database. It provides methods for creating new memories, retrieving past memories,
+    and recalling conversations between the user and EVA.
+
     Attributes:
-        model_name (str): The name of the model to use for summarization.
-        base_url (str): The base URL of the API to use for summarization.
-        _session_memory (List[Dict]): The memory of the current session.
-        _memory_thread (Optional[Thread]): The thread to save the memory.
-        _summarizer (SmallAgent): The summarizer to summarize the memory.
-        _memorylogger (SQLiteLogger): The logger to save the memory to the database.
-    Methods:
-        create_memory: 
-            Create a single entry of memory. timestamp, user_name, user_message, speech, sight, analysis, strategy, expectation
-            save it to the database and if the conversation is more than 10, summarize them.
-        remember:
-            Return a single entry of memory.
-        recall_conversation:
-            Return only the conversation between user and eva.
+        model_name (str): Name of the model used for memory summarization.
+        base_url (str): Base URL of the API endpoint for the summarization model.
+        _session_memory (List[Dict]): List of memory entries for the current session.
+        _memory_thread (Optional[Thread]): Background thread for asynchronous memory operations.
+        _summarizer (SmallAgent): Agent instance used for summarizing conversation history.
+        _memory_logger (MemoryLogger): Logger instance for persisting memories to database.
+
+    Args:
+        model_name (str): The name of the model to use for memory summarization.
+        base_url (str): The base URL for the API endpoint.
+
+    Examples:
+        >>> memory = Memory(model_name="chatgpt", base_url="http://api.example.com")
+        >>> memory.create_memory(timestamp="2024-03-20", 
+        ...                     user_response={"user_message": "Hello"}, 
+        ...                     response={"response": "Hi there"})
+
+    Raises:
+        ConnectionError: If unable to connect to the database or API endpoint.
     """
     
     def __init__(self, model_name: str, base_url: str):

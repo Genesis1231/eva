@@ -4,7 +4,7 @@ import base64
 import sqlite3
 from pathlib import Path
 from queue import Queue
-from typing import Dict, List, Union
+from typing import Dict, List
 
 import face_recognition as fr
 import numpy as np
@@ -60,7 +60,12 @@ class Identifier:
         img_array = np.frombuffer(base64.b64decode(base64_str), dtype=np.uint8)
         return cv2.imdecode(img_array, cv2.IMREAD_COLOR)
     
-    def identify(self, frames: Union[np.ndarray, str], name_queue: Queue) -> None:
+    def identify(
+        self, 
+        frames: np.ndarray | str, 
+        name_queue: Queue
+    ) -> None:
+        
         """ Identify individuals from the given frames. """
         
         if isinstance(frames, str):

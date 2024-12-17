@@ -19,12 +19,9 @@ class Transcriber:
         model: The initialized transcription model instance.
         identifier: The initialized voice identifier instance.
         name_queue: A queue to store the speaker identification results.
-    Methods:
-        _initialize_model: Initialize the selected transcription model.
-        _get_model_factory: Get the model factory.
-        transcribe: Combine the transcription and identification of the speaker.
-        transcribe_audio: Transcribe the given audio clip using the selected model.
-        
+    Examples:
+        >>> transcriber = Transcriber(model_name="faster-whisper")
+        >>> transcription, language = transcriber.transcribe(audioclip)
     """
     
     def __init__(self, model_name: str = "faster-whisper", language: str = "en"):

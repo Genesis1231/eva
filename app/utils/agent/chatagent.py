@@ -2,6 +2,7 @@ from config import logger
 import json
 from functools import partial
 from typing import Callable, Dict, Any, List
+from pydantic import BaseModel
 
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -37,7 +38,7 @@ class ChatAgent:
     
     Example:
         >>> agent = ChatAgent(model_name="llama", base_url="http://localhost:11434", language="english")
-        >>> response = agent.respond(information_dict)
+        >>> response = agent.respond(timestamp, sense, history, action_results, language)
         
     """
     
@@ -103,24 +104,30 @@ class ChatAgent:
         return response
     
     def respond(
-        self, 
+        self,
+        template: str | None,
         timestamp : str, 
         sense: Dict, 
         history: List[Dict], 
         action_results: List[Dict], 
         language: str | None,
+        ouput_format: BaseModel | None = None
     ) -> Dict:
         """Main response function that build the prompt and get response from the language model"""
         
         prompt = self.constructor.build_prompt(
-            template=None,
+            template=template,
             timestamp=timestamp, 
             sense=sense, 
             history=history, 
             action_results=action_results
         )
         
-        parser = JsonOutputParser(pydantic_object=AgentOutput.with_language(self.language, language))
+        parser = (
+            JsonOutputParser(pydantic_object=ouput_format)
+            if ouput_format is not None
+            else JsonOutputParser(pydantic_object=AgentOutput.with_language(self.language, language))
+        )
         
         prompt_template = PromptTemplate(
             input_variables=["tools"],

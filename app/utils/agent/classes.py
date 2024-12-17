@@ -35,3 +35,8 @@ class AgentOutput(BaseModel):
             response=(str, Field(description=f"My verbal response {verbal_language}"))
         )
 
+class SetupNameOutput(BaseModel):
+    """Output format for the name retrieval"""
+    name: str = Field(description="The user's name or alias")
+    confidence: str = Field(description="My confidence level in the retrieved name, from 1 to 10")
+    response: str = Field(description="My verbal response")

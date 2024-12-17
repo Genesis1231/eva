@@ -9,8 +9,12 @@ from core.ids import id_manager
 
 def eva_initialize(state: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Initialize Eva, load all the modules.
-    if no user is registered, set the next status to INIT, otherwise set it to ACTIVE.
+    Initialize Eva's core modules and determine initial status.
+    
+    This function loads all required modules from the configuration and sets the initial
+    status based on whether any users are registered. The modules include the agent,
+    client interface, memory system, and toolbox.
+    
     """
 
     modules = initialize_modules(eva_configuration) 
@@ -30,8 +34,15 @@ def eva_initialize(state: Dict[str, Any]) -> Dict[str, Any]:
 
 def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
     """
-    The main execution node of eva.
-    first build the prompt for the agent, then save the conversation to memory, finally send the response to the user.
+    Main conversation processing node for Eva's interaction pipeline.
+    
+    This function orchestrates the core conversation flow by:
+    1. Building and sending prompts to the agent
+    2. Storing conversation history in memory
+    3. Delivering responses to the user interface
+    
+    The function handles language preferences, maintains conversation history,
+    and manages the action/response cycle between Eva and the user.
     
     """
     sense = state["sense"]
@@ -45,6 +56,7 @@ def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
     
     # get response from the LLM agent
     response = agent.respond(
+        template=None, # use default template
         timestamp=timestamp,
         sense=sense,
         history=history,
@@ -60,7 +72,7 @@ def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
     eva_response = {
         "speech": speech,
         "language": language,
-        "wait": True if not action else False # determine if waiting for user, only for desktop client
+        "wait": False if any(action) else True # determine if waiting for user, only for desktop client
     }
     state["client"].send(eva_response)
     
@@ -70,7 +82,14 @@ def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
         return {"status": EvaStatus.WAITING}
 
 def eva_action(state: Dict[str, Any]) -> Dict[str, Any]:
-    """ Execute the actions and return some intermediate output"""
+    """
+    Execute actions from the toolbox and return intermediate results.
+    
+    This function processes the queued actions by:
+    1. Executing each action using the toolbox
+    2. Collecting the results of the actions
+    
+    """
     actions = state["action"]
     toolbox = state["toolbox"]
     client = state["client"]
@@ -82,15 +101,22 @@ def eva_action(state: Dict[str, Any]) -> Dict[str, Any]:
         return {"status": EvaStatus.WAITING, "action": [], "sense": {}}
     
 def eva_sense(state: Dict[str, Any]) -> Dict[str, Any]:
-    """ receive input from the client """
+    """
+    Receive and process input from the client device.
+    
+    This function handles incoming client communication by:
+    1. Notifying the client that previous communication is complete
+    2. Waiting for and receiving new client input
+
+    """
     
     num = state["num_conv"]
     client = state["client"]
     client.send_over()
     client_feedback = client.receive()
 
+    # check if the user wants to exit
     user_message = client_feedback.get("user_message")
-
     if user_message and any(word in user_message.lower() for word in ['bye', 'exit']):
         return {"status": EvaStatus.END}
     else:
@@ -98,7 +124,7 @@ def eva_sense(state: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def eva_end(state: Dict[str, Any]) -> Dict[str, Any]:
-    """End the conversation."""
+    """ Gracefully terminate the conversation and cleanup resources. """
     
     client = state["client"]
     num = state["num_conv"]

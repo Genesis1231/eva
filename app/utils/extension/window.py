@@ -32,7 +32,11 @@ class Window:
         
         return str(temp_dir)
         
-    def launch_html(self, html_content, new: bool = False)-> None:
+    def launch_html(
+        self, 
+        html_content, 
+        new: bool = False
+    )-> None:
         """ Launch a new window with HTML content """
         
         # Generate unique filename in ~/.eva/temp
@@ -51,7 +55,13 @@ class Window:
             self.browser = webbrowser.get()
         self.browser.open(f'file://{temp_path}', new=1 if new else 0)
 
-    def launch_url(self, url: str, new: bool = False)-> None:
+    def launch_url(
+        self, 
+        url: str, 
+        new: bool = False
+    )-> None:
+        """ Launch a new window with a URL """
+        
         window_index = 1 if new else 0
         
         if not self.browser:

@@ -22,6 +22,7 @@ class VoiceIdentifier:
     def _initialize_recognizer(self):
         try:
             vmodel = wp.load_model('english') # or chinese
+            print("sucess)
             num = 0
             
             vid_directory = Path(__file__).resolve().parents[2] / 'data' / 'voids'

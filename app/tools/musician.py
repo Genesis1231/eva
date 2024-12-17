@@ -27,7 +27,7 @@ class Musician(BaseTool):
     name: str = "music_maker"
     description: str = "Tool for creating music. Input should include the genre, theme, vibe and lyric direction of a song."
     type: str = "chat" # can be used in chatbot
-    client: str = "all" # can be used in all clients
+    client: str = "none" # can be used in all clients
     args_schema: Type[BaseModel] = MusicianInput
 
     @staticmethod

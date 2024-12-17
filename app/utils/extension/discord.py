@@ -25,12 +25,6 @@ class MidjourneyServer():
         _image_dir: The directory to save the images.
         _prev_message_id: The previous message id.
         
-    Methods:
-        send_message: Send a prompt to discord and get the image url.
-        _get_data: Get the data for the discord request.
-        _load_previous: Load the previous message id.
-        _get_temp_dir: Get or create the EVA temp directory.
-        _process_image: Process the image data and save it.
     """
     def __init__(self):
         self.application_id = os.environ.get("MJ_Application_ID")

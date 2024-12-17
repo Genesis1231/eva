@@ -5,7 +5,7 @@ from utils.prompt import load_prompt
 
 class PromptConstructor:
     """
-    A class that constructs and formats prompts for Large Language Models (LLMs).
+    A class that constructs and formats prompts for the chat agent.
 
     Assembles various components into structured prompts by combining:
     - Persona and instruction templates loaded from files
@@ -19,8 +19,8 @@ class PromptConstructor:
     """
     
     def __init__(self):
-        self.persona_prompt: str = load_prompt("persona")
-        self.instruction_prompt: str = load_prompt("instructions")
+        self.persona_prompt: str = load_prompt("persona") # default persona prompt
+        self.instruction_prompt: str = load_prompt("instructions") # default instructions prompt
         
     @staticmethod
     def _format_history(history: List[Dict] | None) -> str:
@@ -104,8 +104,7 @@ class PromptConstructor:
         """
         Builds the prompt for LLM.
         Args:
-            system_template (str | None): Name of the system prompt template file to load. If None, uses default system prompt.
-            instructions_template (str | None): Name of the instructions prompt template file to load. If None, uses default instructions.
+            template (str | None): Name of the system prompt template file to load. If None, uses default system prompt.
             timestamp (str): Current timestamp for context.
             sense (Dict): Dictionary containing sensory information like user messages and observations.
             history (List[Dict[str, str]]): List of conversation history entries.

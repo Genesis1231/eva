@@ -169,7 +169,7 @@ eva_configuration = {
   
   # Main agent model setting:
   # Supports Anthropic-Claude3.5, Groq-llama3.1-70b, OpenAI-ChatGPT-4o, Mistral Large, Gemini 1.5 Pro, and Ollama models, Recommend: Claude or Chatgpt 
-    "CHAT_MODEL": "anthropic", 
+    "CHAT_MODEL": "claude", 
   
   # vision model setting:
   # Supports Chatgpt-4o-mini, Groq-llama-3.2-11b-vision (free) and Ollama llava-phi3(local), recommend: 4omini, but llava-phi3 is very small and free. 

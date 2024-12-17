@@ -4,7 +4,7 @@ import base64
 import threading
 from functools import partial
 from queue import Queue
-from typing import Dict, Callable, Union, Optional
+from typing import Dict, Callable
 
 import cv2
 from utils.vision.identifier import Identifier
@@ -12,18 +12,27 @@ from utils.vision.identifier import Identifier
 
 class Describer:
     """
-    A module that describes an image.
+    A class that processes and describes images using various vision models.
+
+    This class provides a unified interface for different vision models (Ollama, OpenAI, Groq)
+    and handles image processing, person identification, and natural language descriptions.
 
     Attributes:
-        model: The vision model used to describe the image.
-        host: The base URL for the vision model.
-        identifier: The Identifier object used to identify individuals in the image.
-        
-    Methods:
-        describe(image): Describes the image using the Ollama. this model should be small and local.
-        create_ollama_model(model_name): Creates an Ollama model instance for vision.
-        create_openai_model(): Creates an OpenAI model instance for vision.
+        model: The initialized vision model instance for image description.
+        identifier (Identifier): Component for identifying individuals in images.
+        name_queue (Queue): Thread-safe queue for passing identification results.
 
+    Args:
+        model_name (str, optional): The name of the vision model to use. Defaults to "llava-phi3".
+        base_url (str, optional): The base URL for the model API. Defaults to 'http://localhost:11434/'.
+
+    Raises:
+        ValueError: If an unsupported model is specified.
+
+    Examples:
+        >>> describer = Describer(model_name="llava-phi3")
+        >>> description = describer.describe("general", image_data)
+        >>> analysis = describer.analyze_screenshot(image_data, "What's in this image?")
     """
     
     def __init__(self, model_name: str = "llava-phi3", base_url: str = 'http://localhost:11434/'):
@@ -67,7 +76,7 @@ class Describer:
 
         return model()
     
-    def _convert_base64(self, image_data: Union[np.ndarray, str]) -> str:
+    def _convert_base64(self, image_data: np.ndarray | str) -> str:
         """ Convert image data to base64. """
         
         if isinstance(image_data, np.ndarray):
@@ -76,7 +85,12 @@ class Describer:
         
         return image_data
     
-    def analyze_screenshot(self, image_data: Union[np.ndarray, str], query: str) -> Optional[str]:
+    def analyze_screenshot(
+        self, 
+        image_data: np.ndarray | str, 
+        query: str
+    ) -> str | None:
+        
         """ Describe a screenshot using the vision model. """
         
         image_base64 = self._convert_base64(image_data)
@@ -91,16 +105,26 @@ class Describer:
         
         return result
         
-    def describe(self, template_name: str, image_data: Union[np.ndarray, str]) -> Optional[str]:
+    def describe(
+        self, 
+        template_name: str, 
+        image_data: np.ndarray | str
+    ) -> str | None:
+        
         """ 
-        Describe an image using the vision model.
-        Image data could be a numpy array or a base64 encoded string.
-        Attributes:
-            template_name: The name of the template to use for generating the description.
-            image_data: The image data to describe.
-            identity: A boolean flag to identify individuals in the image.
-            **kwarg: Additional keyword arguments to replace strings in the template.
+        Describe an image using the configured vision model.
+
+        Args:
+            template_name (str): The template to use for generating the description.
+            image_data (Union[np.ndarray, str]): The image to describe, either as a numpy array
+                or base64 encoded string.
+
+        Returns:
+            Optional[str]: A natural language description of the image, or None if processing fails.
+                If a known person is identified, their name is appended to the description.
+
         """
+        
         try:    
             thread = threading.Thread(target=self.identifier.identify, args=(image_data, self.name_queue))
             thread.start()

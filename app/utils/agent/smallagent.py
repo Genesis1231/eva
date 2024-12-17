@@ -25,7 +25,14 @@ class SmallAgent:
 
     """
     
-    def __init__(self, model_name: str = "llama", base_url: str = "http://localhost:11434", model_temperature: float = 0.5) -> None:
+    def __init__(
+        self, 
+        model_name: str = "llama", 
+        base_url: str = "http://localhost:11434", 
+        model_temperature: float = 0.5
+    ) -> None:
+        """ Initialize the SmallAgent """
+        
         self._model_selection: str = model_name.upper() 
         self._base_url: str = base_url
         self.model_temperature: float = model_temperature
