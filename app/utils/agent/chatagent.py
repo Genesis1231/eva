@@ -3,6 +3,7 @@ import json
 from functools import partial
 from typing import Callable, Dict, Any, List
 from pydantic import BaseModel
+from datetime import datetime
 
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -22,7 +23,7 @@ from utils.agent.models import (
 
 class ChatAgent:
     """
-    A chat agent that manages interactions with various language models.
+    A chat agent that manages interactions with the user.
     
     This class handles the initialization, configuration, and interaction with different
     language models (LLMs) such as GPT, LLAMA, Mistral, etc. It manages prompt construction,
@@ -95,23 +96,24 @@ class ChatAgent:
         if response.get("properties"):
             response = response.get("properties")
         
-        if isinstance(response['action'], str):
-            try:
-                response['action'] = json.loads(response['action'])
-            except json.JSONDecodeError:
-                response['action'] = [] # if the action was not properly formatted, ignore 
+        if action := response.get('action'):
+            if isinstance(action, str):
+                try:
+                    response['action'] = json.loads(action)
+                except json.JSONDecodeError:
+                    response['action'] = [] # if the action was not properly formatted, ignore 
             
         return response
     
     def respond(
         self,
-        template: str | None,
-        timestamp : str, 
-        sense: Dict, 
-        history: List[Dict], 
-        action_results: List[Dict], 
-        language: str | None,
-        ouput_format: BaseModel | None = None
+        template: str | None = None,
+        timestamp : str = datetime.now(), 
+        sense: Dict = {}, 
+        history: List[Dict] = [], 
+        action_results: List[Dict] = [], 
+        language: str | None = "english",
+        output_format: BaseModel | None = None
     ) -> Dict:
         """Main response function that build the prompt and get response from the language model"""
         
@@ -124,8 +126,8 @@ class ChatAgent:
         )
         
         parser = (
-            JsonOutputParser(pydantic_object=ouput_format)
-            if ouput_format is not None
+            JsonOutputParser(pydantic_object=output_format)
+            if output_format is not None
             else JsonOutputParser(pydantic_object=AgentOutput.with_language(self.language, language))
         )
         

@@ -42,11 +42,11 @@ class WSLClient:
             data.get("wait")
         )
         
-    def receive(self) -> Dict:
+    def receive(self, save_file: str=None) -> Dict:
         """ Receive the data from the client """
         
         observation = self.watcher.glance()
-        message, language = self.listener.listen()
+        message, language = self.listener.listen(save_file)
         
         return {
             "user_message": message,

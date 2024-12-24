@@ -20,7 +20,7 @@ class Screenshot(BaseTool):
     name: str = "screenshot_tool"
     description: str = "Tool for capturing and analyzing the computer screenshot."
     type: str = "conversational"
-    client: str = "none"
+    client: str = "desktop"
     args_schema: Type[BaseModel] = ScreenshotInput
     
     def _run(
@@ -49,6 +49,7 @@ class Screenshot(BaseTool):
         return  {"action": content }
     
     def wsl_screenshot(self, file_path: str) -> str:
+        """ Take a screenshot using WSL and save it as JPG """
         windows_path = subprocess.check_output(["wslpath", "-w", file_path]).decode().strip()
     
         # PowerShell command to take a full screenshot using PrintScreen and save it as JPG

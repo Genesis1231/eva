@@ -18,7 +18,8 @@ def eva_initialize(state: Dict[str, Any]) -> Dict[str, Any]:
     """
 
     modules = initialize_modules(eva_configuration) 
-    status = EvaStatus.SETUP if id_manager.is_empty() else EvaStatus.THINKING
+    # status = EvaStatus.SETUP if id_manager.is_empty() else EvaStatus.THINKING
+    status = EvaStatus.SETUP
     
     return {
         "status": status, 
@@ -32,7 +33,7 @@ def eva_initialize(state: Dict[str, Any]) -> Dict[str, Any]:
         "num_conv": 0
     }
 
-def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
+def eva_converse(state: Dict[str, Any]) -> Dict[str, Any]:
     """
     Main conversation processing node for Eva's interaction pipeline.
     
@@ -54,16 +55,15 @@ def eva_conversate(state: Dict[str, Any]) -> Dict[str, Any]:
     history = memory.recall_conversation()
     timestamp = datetime.now()
     
-    # get response from the LLM agent
-    response = agent.respond(
-        template=None, # use default template
+    # get response from the LLM agent, use default template.
+    response = agent.respond( 
         timestamp=timestamp,
         sense=sense,
         history=history,
         action_results=action_results,
         language=language
     )
-    
+     
     memory.create_memory(timestamp=timestamp, user_response=sense, response=response)
     action = response.get("action", [])
     speech = response.get("response")
@@ -139,11 +139,11 @@ def eva_end(state: Dict[str, Any]) -> Dict[str, Any]:
 
 def router_initialize(state: Dict[str, Any]) -> str:
     """ Initialize the setup if no user is registered """  
-    return "node_setup" if state["status"] == EvaStatus.SETUP else "node_conversate"
+    return "node_setup" if state["status"] == EvaStatus.SETUP else "node_converse"
 
 def router_sense(state: Dict[str, Any]) -> str:
     """ Determine the next node based on the user input """
-    return "node_end" if state["status"] == EvaStatus.END else "node_conversate"
+    return "node_end" if state["status"] == EvaStatus.END else "node_converse"
 
 def router_action(state: Dict[str, Any]) -> str:
     """ Determine the next node based on if there is any action to execute """
@@ -151,4 +151,4 @@ def router_action(state: Dict[str, Any]) -> str:
 
 def router_action_results(state: Dict[str, Any]) -> str:
     """ Determine the next node based on if there are any action results """
-    return "node_conversate" if state["status"] == EvaStatus.THINKING else "node_sense"
+    return "node_converse" if state["status"] == EvaStatus.THINKING else "node_sense"

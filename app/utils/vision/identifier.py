@@ -1,11 +1,11 @@
 from config import logger
 import os
 import base64
-import sqlite3
 from pathlib import Path
 from queue import Queue
 from typing import Dict, List
 
+from core.ids import id_manager
 import face_recognition as fr
 import numpy as np
 import cv2
@@ -23,12 +23,14 @@ class Identifier:
         identify(frames): Identifies individuals from the given frames.
     """
     def __init__(self):
-        self._ids: List[Dict] = self._initialize_ids()
+        self._pid_list = None
+        self._ids: List[Dict] = self.initialize_ids()
         logger.info(f"Identifier: Personal Identifier is Ready. {len(self._ids)} IDs loaded.")
         
-    def _initialize_ids(self)-> List[Dict]:
+    def initialize_ids(self)-> List[Dict]:
         """ Load the photo IDs and corresponding face encodings. """
         
+        self._pid_list = id_manager.get_pid_list()
         pid_directory = Path(__file__).resolve().parents[2] / 'data' / 'pids'
         if not pid_directory.exists():
             pid_directory.mkdir(parents=True)
@@ -82,8 +84,8 @@ class Identifier:
             for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
                 for name, face_id in self._ids.values():
                     matches = fr.compare_faces([face_id], face_encoding)
-                    if True in matches:
-                        names.append(name)
+                    if True in matches and name in self._pid_list:
+                        names.append(self._pid_list[name])
                         break
                     
         except Exception as e:

@@ -16,15 +16,15 @@ class VoiceIdentifier:
     It uses the wespeaker library to identify the speaker from the audio clip.
     """
     def __init__(self):
-        self._void_list: Dict = id_manager.get_void_list()
-        self.voice_recognizer = self._initialize_recognizer()
+        self._void_list = None
+        self.voice_recognizer = self.initialize_recognizer()
     
-    def _initialize_recognizer(self):
+    def initialize_recognizer(self):
         try:
             vmodel = wp.load_model('english') # or chinese
-            print("sucess)
             num = 0
             
+            self._void_list = id_manager.get_void_list()
             vid_directory = Path(__file__).resolve().parents[2] / 'data' / 'voids'
             if not vid_directory.exists():
                 vid_directory.mkdir(parents=True)
@@ -42,10 +42,8 @@ class VoiceIdentifier:
         
         logger.info(f"Voice Identifier: {num} Voice ID loaded.")
         
-        return vmodel    
+        return vmodel
    
-
-        
     @staticmethod
     def _convert_numpy_to_torch(audio_array: np.ndarray) -> torch.Tensor:
         """ Convert numpy audio array to torch tensor with proper formatting. """
@@ -78,7 +76,7 @@ class VoiceIdentifier:
                 best_score = score
                 best_name = name
         
-        if best_score > 0.6:
+        if best_score > 0.7:
             return best_name
         else:
             return "unknown"

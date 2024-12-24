@@ -1,1 +1,1 @@
-Describe as narrative about my detailed observation within fifty words
+Describe as narrative about the detailed observation within fifty words.

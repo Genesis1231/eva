@@ -97,11 +97,11 @@ class Transcriber:
         
         # if the name is unknown, return content with a new line, there is a new person speaking, save it into a database
         if identification == "unknown":
-            content = f"{transcription.strip()} (I couldn't ID the voice.)"
-            display = f"Unknown voice: {transcription}"
+            content = f": <human_reply>{transcription.strip()}</human_reply> (I couldn't identify the voice.)"
+            display = f"Unknown user: {transcription}"
         else:
             name = self.identifier.get_name(identification)
-            content = f"{name} ({identification}):: {transcription.strip()}"
+            content = f"{name} ({identification}):: <human_reply>{transcription.strip()}</human_reply>"
             display = f"{name}: {transcription}"
         # if name == "unknown person":
         #     speaker_id = secrets.token_hex(4)

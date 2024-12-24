@@ -1,5 +1,6 @@
 from config import logger
 import numpy as np
+from pathlib import Path
 
 import cv2
 from utils.vision.describer import Describer
@@ -65,6 +66,22 @@ class Watcher:
             logger.error(f"Error capturing/analyzing frame: {str(e)}")
         
         return None
+    
+    def capture(self, save_file: str) -> None:
+        """ Capture a frame and save it to the pid database """
+        try:
+            frame = self.device.capture()
+            if frame is not None:
+                data_path = self._get_data_path() / f"{save_file}.jpg"
+                cv2.imwrite(data_path, frame)
+                logger.info(f"Watcher: Frame saved to {data_path}")
+
+        except Exception as e:
+            logger.error(f"Error capturing/analyzing frame: {str(e)}")
+
+    def _get_data_path(self) -> Path:
+        """Return the path to the memory log database."""
+        return Path(__file__).resolve().parents[2] / 'data' / 'pids'
     
     def deactivate(self) -> None:
         """ Deactivate the watching device. """

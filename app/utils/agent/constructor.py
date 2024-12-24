@@ -52,12 +52,12 @@ class PromptConstructor:
     @staticmethod
     def _format_observation(observation: str | None) -> str:
         """ Format the observation into string for LLM """
-        return "" if not observation else f"<observation>I see {observation} </observation>"
+        return "" if not observation else f"I see <observation> {observation} </observation>"
 
     @staticmethod
     def _format_message(user_message: str | None) -> str:
         """ Format the user message into string for LLM """
-        return "" if not user_message else f"<human_reply>I hear {user_message} </human_reply>"
+        return "" if not user_message else f"I hear {user_message}"
 
     @staticmethod
     def _format_action_results(results: List[Dict[str, Any]]) -> str:

@@ -37,6 +37,18 @@ class AgentOutput(BaseModel):
 
 class SetupNameOutput(BaseModel):
     """Output format for the name retrieval"""
-    name: str = Field(description="The user's name or alias")
-    confidence: str = Field(description="My confidence level in the retrieved name, from 1 to 10")
+    
+    analysis: str = Field(description="My reflection and analysis")
+    strategy: str = Field(description="My response strategy")
     response: str = Field(description="My verbal response")
+    name: str = Field(description="The user's name or alias")
+    confidence: float = Field(description="My confidence level in the retrieved name, from 0 to 1")
+    
+class SetupDesireOutput(BaseModel):
+    """Output format for the name retrieval"""
+    
+    analysis: str = Field(description="My reflection and analysis")
+    strategy: str = Field(description="My response strategy")
+    response: str = Field(description="My verbal response")
+    desire: str = Field(description="The most important thing the user desire in life within two words.")
+    confidence: float = Field(description="My confidence level in the retrieved desire, from 0 to 1")
