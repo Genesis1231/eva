@@ -42,12 +42,20 @@ class IDManager:
             except sqlite3.Error as e:
                 # If table doesn't exist, create it and return an empty list
                 logger.error(f"Failed to initialize ID manager: {str(e)}")
-                self._create_table(conn)
                 return {}, {}, {}
     
     def _get_database_path(self) -> Path:
-        """Return the path to the memory log database."""
-        return Path(__file__).resolve().parents[1] / 'data' / 'database' / 'eva.db'
+        """Return the path to the memory log database and create it if it doesn't exist."""
+        path = Path(__file__).resolve().parents[1] / 'data' / 'database' / 'eva.db'
+        
+        # Check if the database file exists, if not, create an empty database
+        if not path.exists():
+            path.parent.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+            with sqlite3.connect(path) as conn:
+                self._create_table(conn)
+            logger.info("Created new empty eva.db database")
+        
+        return path
     
     def _create_table(self, conn)-> None:    
         """ Create a new id table """
@@ -62,12 +70,6 @@ class IDManager:
         ''')
         conn.commit()
         logger.info("ID table created successfully")
-        
-        # cursor = conn.cursor()
-        # cursor.execute(f'''
-        #     INSERT INTO ids (void, user_name) VALUES (?, ?);
-        # ''', ('V000001', 'Initial User'))
-        # conn.commit()
 
     def add_user(self, user_name: str, void: str = None, pid: str = None) -> bool:
         """ Add a new user with optional void and pid"""

@@ -27,6 +27,11 @@ Hope you have some interesting experience with EVA!
   <img src="path/to/demo.gif" alt="EVA Demo" width="600px"/>
 </div>
 
+## 📜 Updates
+
+- 2024-Chrimas: Initialization process improved.
+  Eva now guides the user to complete the initialization process. Record the Voice ID and Photo ID for personalized interaction. if you want to update the ID, you can go to app/data/pid/ or app/data/void/ to replace the files.
+  
 
 ## ✨ Key Features
 
