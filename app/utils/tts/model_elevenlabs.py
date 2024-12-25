@@ -16,7 +16,7 @@ class ElevenLabsSpeaker:
     def eva_speak(self, text: str, language: Optional[str] = None, wait: bool = True) -> None:
         """ Speak the given text using ElevenLabs """
         
-        model_name = "eleven_monolingual_v1" if language == "en" else "eleven_turbo_v2_5"
+        model_name = "eleven_flash_v2" if language == "en" else "eleven_flash_v2_5"
         
         try:
             audio_stream = self.model.generate(
