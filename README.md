@@ -23,13 +23,7 @@ EVA is an experimental voice assistant that reimagines human-AI interaction thro
 
 Hope you have some interesting experience with EVA!
 
-<div align="center">
-
 https://github.com/user-attachments/assets/1029cf35-afea-450f-8e1f-9f4ae7b4a74f
-
-
-
-</div>
 
 ## 📜 Updates
 
