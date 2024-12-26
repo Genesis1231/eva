@@ -46,11 +46,11 @@ EVA got a bit carried away and collected 6 youtube videos about Persian cats. ðŸ
 
 ## ðŸ“œ Updates
 
-- 2024-Christmas update: Initialization process improved.
+- 2024-Christmas update: Initialization process improved.<br/>
   Eva now guides the user to complete the initialization process. Record the Voice ID and Photo ID for personalized interaction.
   You can update the voice or photo ID by replacing the files in app/data/pid/ and app/data/void/.
 
-- 2024-November update: Multilingual mode.
+- 2024-November update: Multilingual mode.<br/>
   Eva now replies with the same language the user speaks in "Multilingual" language mode.
   Make sure your language is supported by selected text-to-speech model.
 
