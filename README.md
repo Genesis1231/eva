@@ -25,7 +25,7 @@ Hope you have some interesting experience with EVA!
 
 <div align="center">
   <video width="640" controls>
-    <source src="docs/video1.mp4" type="video/mp4">
+    <source src="./docs/video1.mp4" type="video/mp4">
     Your browser does not support the videos.
   </video>
 </div>
