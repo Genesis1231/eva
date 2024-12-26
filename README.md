@@ -24,7 +24,10 @@ EVA is an experimental voice assistant that reimagines human-AI interaction thro
 Hope you have some interesting experience with EVA!
 
 <div align="center">
-  <img src="path/to/demo.gif" alt="EVA Demo" width="600px"/>
+  <video width="640" controls>
+    <source src="docs/video1.mp4" type="video/mp4">
+    Your browser does not support the videos.
+  </video>
 </div>
 
 ## 📜 Updates

@@ -6,8 +6,9 @@ import json
 from typing_extensions import List, Dict, Any
 from concurrent.futures import ThreadPoolExecutor
 
-from langchain_community.tools import DuckDuckGoSearchRun
+# from langchain_community.tools import DuckDuckGoSearchRun
 # from langchain_community.tools import WikipediaQueryRun
+from langchain_community.tools import TavilySearchResults 
 
 class ToolManager:
     """
@@ -76,7 +77,9 @@ class ToolManager:
         all_tools = self.import_tools_from_folder()
         
         # Add built-in tools
-        search_tool = DuckDuckGoSearchRun()
+        search_tool = TavilySearchResults(
+            max_results=3,
+        )
         # wikipedia_tool = WikipediaQueryRun()
         
         built_in_tools = [

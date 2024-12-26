@@ -96,7 +96,7 @@ def create_anthropic_model(
 def create_grok_model(
         model_name: str = "grok-beta",
         base_url: str = "https://api.x.ai/v1",
-        temperature: float = 1
+        temperature: float = 0.8
     ) -> BaseLanguageModel:
     
     from langchain_openai import ChatOpenAI
@@ -105,6 +105,27 @@ def create_grok_model(
         grok_api_key = os.getenv("GROK_API_KEY")
         return ChatOpenAI(
             api_key=grok_api_key, 
+            base_url=base_url, 
+            model_name=model_name, 
+            temperature=temperature,
+            max_retries=3
+        )
+        
+    except Exception as e:
+        raise Exception(f"Error: Failed to initialize Grok model: {str(e)}")
+
+def create_deepseek_model(
+        model_name: str = "deepseek-chat",
+        base_url: str = "https://api.deepseek.com",
+        temperature: float = 1
+    ) -> BaseLanguageModel:
+    
+    from langchain_openai import ChatOpenAI
+    
+    try:
+        deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
+        return ChatOpenAI(
+            api_key=deepseek_api_key, 
             base_url=base_url, 
             model_name=model_name, 
             temperature=temperature,

@@ -19,6 +19,7 @@ from utils.agent.models import (
     create_google_model,
     create_anthropic_model,
     create_grok_model,
+    create_deepseek_model,
 )
 
 class ChatAgent:
@@ -69,6 +70,7 @@ class ChatAgent:
             "CLAUDE": create_anthropic_model,
             "MISTRAL":  create_mistral_model,
             "GEMINI": create_google_model,
+            "DEEPSEEK": create_deepseek_model,
             "CHATGPT" : create_openai_model,
             "LLAMA" : partial(create_ollama_model, base_url=base_url, model_name="llama3.1:70b"),
             "QWEN": partial(create_ollama_model, base_url=base_url, model_name="qwen2.5:72b"),

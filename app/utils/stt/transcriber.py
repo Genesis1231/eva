@@ -98,17 +98,17 @@ class Transcriber:
         # if the name is unknown, return content with a new line, there is a new person speaking, save it into a database
         if identification == "unknown":
             content = f": <human_reply>{transcription.strip()}</human_reply> (I couldn't identify the voice.)"
-            display = f"User: {transcription}"
+            display = f"User:{transcription}"
         else:
             name = self.identifier.get_name(identification)
             content = f"{name} ({identification}):: <human_reply>{transcription.strip()}</human_reply>"
-            display = f"{name}: {transcription}"
+            display = f"{name}:{transcription}"
         # if name == "unknown person":
         #     speaker_id = secrets.token_hex(4)
         #     filepath = os.path.join(os.getcwd(), "data", "voids", f"{speaker_id}.wav")
         #     self.identifier.save_audio_file(audioclip, filepath)
         #     content += f" (<speaker_id>{speaker_id}</speaker_id>)"
 
-        print(f"({datetime.now().strftime('%H:%M:%S')}) {display}\n")
+        print(f"({datetime.now().strftime('%H:%M:%S')}) {display}")
         
         return content, language

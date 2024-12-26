@@ -50,7 +50,7 @@ eva_configuration = {
     "LANGUAGE": "en",
     "BASE_URL": "http://localhost:11434",
     "CHAT_MODEL": "claude",
-    "VISION_MODEL": "openai",
+    "VISION_MODEL": "groq",
     "STT_MODEL": "faster-whisper",
     "TTS_MODEL": "elevenlabs",
     "SUMMARIZE_MODEL": "llama"
