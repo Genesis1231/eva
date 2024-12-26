@@ -29,6 +29,9 @@ Hope you have some interesting experience with EVA!
 https://github.com/user-attachments/assets/1029cf35-afea-450f-8e1f-9f4ae7b4a74f
 
 </div>
+<div>
+EVA simultaneously researches about Persian cats online (thru Tavily), and creates 2 sets of painting: adult and baby cats (thru Midjourney)  
+</div>
 
 ## 📜 Updates
 - 2024-Chrimas: Initialization process improved.
