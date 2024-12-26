@@ -46,9 +46,13 @@ EVA got a bit carried away and collected 6 youtube videos about Persian cats. �
 
 ## 📜 Updates
 
-- 2024-Chrimas: Initialization process improved.
-  Eva now guides the user to complete the initialization process. Record the Voice ID and Photo ID for personalized interaction. if you want to update the ID, you can go to app/data/pid/ or app/data/void/ to replace the files.
-  
+- 2024-Christmas update: Initialization process improved.
+  Eva now guides the user to complete the initialization process. Record the Voice ID and Photo ID for personalized interaction.
+  You can update the voice or photo ID by replacing the files in app/data/pid/ and app/data/void/.
+
+- 2024-November update: Multilingual mode.
+  Eva now replies with the same language the user speaks in "Multilingual" language mode.
+  Make sure your language is supported by selected text-to-speech model.
 
 ## ✨ Key Features
 
@@ -183,7 +187,7 @@ eva_configuration = {
   
   # Language setting:
   # suports all major languages. suffix such "en" (English), "es" (Spanish), "zh" (Chinese), or you can use "multilingual"(slower)
-    "LANGUAGE": "en", 
+    "LANGUAGE": "multilingual", 
   
   # Base URL setting:
   # URL for local Ollama server, you can leave it if you dont plan to use local models
