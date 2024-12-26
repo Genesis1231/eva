@@ -30,7 +30,8 @@ https://github.com/user-attachments/assets/1029cf35-afea-450f-8e1f-9f4ae7b4a74f
 
 </div>
 <div align="center">
-EVA simultaneously researches about Persian cats online, and creates 2 sets of painting: adult and baby cats.
+EVA simultaneously researches about Persian cats online, and creates 2 sets of painting: adult and baby cats. 😸😹
+  
 </div>
 
 <div align="center">
@@ -39,10 +40,11 @@ https://github.com/user-attachments/assets/01d7bc58-c180-4d66-ad33-96aad0476e0c
 
 </div>
 <div align="center">
-EVA went on a rampage and collected a list of youtube videos about Persian cats. 
+EVA got a bit carried out and collected 6 youtube videos about Persian cats. 😮😮😾
 </div>
 
 ## 📜 Updates
+
 - 2024-Chrimas: Initialization process improved.
   Eva now guides the user to complete the initialization process. Record the Voice ID and Photo ID for personalized interaction. if you want to update the ID, you can go to app/data/pid/ or app/data/void/ to replace the files.
   
