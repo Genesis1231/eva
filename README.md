@@ -211,7 +211,7 @@ eva_configuration = {
   
   # Summarization model setting:
   # Supports groq-llama3.1-8b, Anthropic-claude-haiku3.5 and Ollama-llama3.2(local).
-    "SUMMARIZE_MODEL": "llama" 
+    "SUMMARIZE_MODEL": "chatgpt" 
 }
 ```
 
@@ -220,12 +220,14 @@ The best combination(my preference):
 - Chatgpt-4o-mini as the image model, because of accuracy and low cost.
 - Faster-whisper as the STT model. since this local approach is actually 2x faster than all online models.
 - Elevenlabs as the TTS model, for the best quality.
+- Chatgpt-4o-mini as the summarization model, for the low cost
 
 EVA also works with a completely free combination:
 - Groq-llama-3.2 as the chat model. (if you have a good GPU, you can also use Ollama-llama3.1-70b)
 - Ollama-llava-phi3 as the image model.
 - Faster-whisper as the speech recognition model.
 - Coqui TTS as the TTS model.
+- llama3.1-8b as the summarization model
 
 The performance is also good if you have a decent GPU. 
 Groq is free too but it has a limit for token usage per minute. So you might run out of tokens quickly.
