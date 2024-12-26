@@ -29,8 +29,17 @@ Hope you have some interesting experience with EVA!
 https://github.com/user-attachments/assets/1029cf35-afea-450f-8e1f-9f4ae7b4a74f
 
 </div>
-<div>
-EVA simultaneously researches about Persian cats online (thru Tavily), and creates 2 sets of painting: adult and baby cats (thru Midjourney)  
+<div align="center">
+EVA simultaneously researches about Persian cats online, and creates 2 sets of painting: adult and baby cats.
+</div>
+
+<div align="center">
+
+https://github.com/user-attachments/assets/01d7bc58-c180-4d66-ad33-96aad0476e0c
+
+</div>
+<div align="center">
+EVA went on a rampage and collected a list of youtube videos about Persian cats. 
 </div>
 
 ## 📜 Updates
@@ -251,6 +260,7 @@ My most important goal is to make Adam happy.
 EVA can recognize faces and voices of different people.
 - Setup photo IDs by adding clear frontal photos in app/data/pid/, name the file with your name.
 - Setup voice IDs by adding recorded speech audio(more than 10s) in app/data/void/ and modify the database.
+- Update the 'ids' table in app/data/database/eva.db
 
 ### 🎤 Speech Voice
 You can customize EVA's voice by changing the TTS class in app/utils/tts/ folder. model_elevenlabs.py, model_openai.py or model_coqui.py. 
@@ -269,7 +279,7 @@ This project is licensed under the MIT License.
 
 ## 📊 Credits & Acknowledgments
 
-This project wouldn't be possible without these amazing open-source projects:
+This project would not be possible without these amazing open-source projects:
 
 ### Core & Language Models
 - [LangChain](https://github.com/langchain-ai/) - Amazing AI Dev Framework 
@@ -277,7 +287,6 @@ This project wouldn't be possible without these amazing open-source projects:
 - [Ollama](https://github.com/ollama/) - Best local model deployment
 - [Numpy](https://github.com/numpy/) - The Numpy
 - [FastAPI](https://github.com/fastapi/) - Excellent API framework
-- [Tqdm](https://github.com/tqdm/) - Great progress bar
 
 ### Utility modules
 - [OpenCV](https://github.com/opencv/) - Legendary Vision Library
@@ -288,6 +297,7 @@ This project wouldn't be possible without these amazing open-source projects:
 - [PyAudio](https://github.com/jleb/pyaudio) - Powerful Audio I/O 
 - [Wespeaker](https://github.com/wenet-e2e/wespeaker) - Speaker verification
 - [NLTK](https://github.com/nltk/) - Natural Language Toolkit
+- [Tqdm](https://github.com/tqdm/) - Great progress bar
 
 ### Tools development
 - [Chromium](https://github.com/chromium/) - Best open-source web browser
