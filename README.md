@@ -23,10 +23,15 @@ EVA is an experimental voice assistant that reimagines human-AI interaction thro
 
 Hope you have some interesting experience with EVA!
 
+## 🤖 DEMO
+<div align="center">
 https://github.com/user-attachments/assets/1029cf35-afea-450f-8e1f-9f4ae7b4a74f
+EVA simultaneously researches about Persian cats online (thru Tavily), and creates 2 sets of painting: adult and baby cats (thru Midjourney)
+
+
+</div>
 
 ## 📜 Updates
-
 - 2024-Chrimas: Initialization process improved.
   Eva now guides the user to complete the initialization process. Record the Voice ID and Photo ID for personalized interaction. if you want to update the ID, you can go to app/data/pid/ or app/data/void/ to replace the files.
   
