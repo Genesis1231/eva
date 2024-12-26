@@ -30,12 +30,10 @@ https://github.com/user-attachments/assets/1029cf35-afea-450f-8e1f-9f4ae7b4a74f
 
 </div>
 <div align="center">
-EVA was simultaneously researching about Persian cats online, 
+EVA was simultaneously researching about Persian cats online, <br/>
   and creating 2 sets of painting: adult and baby cats. 😸😹
 </div>
-<div>
-  
-</div>
+<br/><br/>
 
 <div align="center">
 
