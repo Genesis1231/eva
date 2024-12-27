@@ -25,7 +25,7 @@ class Painter(BaseTool):
     name: str = "image_maker"
     description: str = "Tool for creating pictures. This process might take a while."
     type: str = "chat" # can be used in chatbot
-    client: str = "all" # can be used in all clients
+    client: str = "None" # can be used in all clients
     generator : MidjourneyServer = MidjourneyServer()
     args_schema: Type[BaseModel] = PainterInput
 
