@@ -51,7 +51,7 @@ EVA got a bit carried away and collected 6 youtube videos about Persian cats. �
   You can update the voice or photo ID by replacing the files in app/data/pid/ and app/data/void/.
 
 - 2024-November update: Multilingual mode.<br/>
-  Eva now replies with the same language the user speaks in "Multilingual" language mode.
+  Eva now replies with the same language the user speaks with "Multilingual" language mode.
   Make sure your language is supported by selected text-to-speech model.
 
 ## ✨ Key Features
@@ -199,7 +199,7 @@ eva_configuration = {
   
   # vision model setting:
   # Supports Chatgpt-4o-mini, Groq-llama-3.2-11b-vision (free) and Ollama llava-phi3(local), recommend: 4omini, but llava-phi3 is very small and free. 
-    "VISION_MODEL": "openai", 
+    "VISION_MODEL": "chatgpt", 
   
   # Speech-to-text model setting:
   # supports OpenAI Whisper, Groq(free) and Faster-whisper(local).  
@@ -241,11 +241,16 @@ Groq is free too but it has a limit for token usage per minute. So you might run
 - Image generation tool requires a midjourney account and a private discord server.
   Need include the discord channel information in .env file.
 
-If you want to disable some tools that are not needed, just change the client setting in related .py file.
+- Add tools: for all langchain supported tools, you can modify app/tools/__init__.py built_in_tools list,
+  If you want to write your own tools, you can just follow the langchain tool template, then place the file in app/tools/ folder.  
+
+- Disable tools: If you want to disable some tools that are not needed, just change the client setting in related .py file.
 
 ```python
     client: str = "none"
 ```
+
+
 ### 🧰 Exit & Shutdown
 
 EVA will shutdown if you say "exit" or "bye"
@@ -267,12 +272,12 @@ My most important goal is to make Adam happy.
 ```
 ### 📷 Setup Photo ID and Voice ID
 EVA can recognize faces and voices of different people.
-- Setup photo IDs by adding clear frontal photos in app/data/pid/, name the file with your name.
-- Setup voice IDs by adding recorded speech audio(more than 10s) in app/data/void/ and modify the database.
-- Update the 'ids' table in app/data/database/eva.db
+- Setup photo IDs by adding a photo with clear face in app/data/pid/.
+- Setup voice IDs by adding recorded speech audio(more than 10s) in app/data/void/.
+- You have to update the 'ids' table in app/data/database/eva.db to link your name to the filename.
 
 ### 🎤 Speech Voice
-You can customize EVA's voice by changing the TTS class in app/utils/tts/ folder. model_elevenlabs.py, model_openai.py or model_coqui.py. 
+You can customize EVA's voice by changing voice IDs in the TTS class in app/utils/tts/ folder. model_elevenlabs.py, model_openai.py or model_coqui.py. 
 Please refer to the official document of these models for the voice ID options.
 
 
