@@ -53,5 +53,5 @@ eva_configuration = {
     "VISION_MODEL": "groq",
     "STT_MODEL": "faster-whisper",
     "TTS_MODEL": "elevenlabs",
-    "SUMMARIZE_MODEL": "llama"
+    "SUMMARIZE_MODEL": "chatgpt"
 }
