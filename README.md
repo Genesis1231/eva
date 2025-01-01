@@ -30,9 +30,9 @@ https://github.com/user-attachments/assets/1029cf35-afea-450f-8e1f-9f4ae7b4a74f
 
 </div>
 <div align="center">
-EVA greets me with care after seeing I'm a bit tired.
-EVA was simultaneously researching about Persian cats online, <br/>
-  and creating 2 sets of painting: adult and baby cats. 😸😹
+EVA greets me with care after seeing I'm a bit tired. ❤️ <br/>
+She simultaneously researched about Persian cats online, <br/>
+  and created 2 sets of pictures: adult and baby cats. 😸😹
 </div>
 <br/><br/>
 
