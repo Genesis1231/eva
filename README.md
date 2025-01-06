@@ -19,9 +19,15 @@ Hi there! Welcome to the EVA project 👋
 
 So, here's the story - I used to sling code back in the days (like, when Perl was still cool), but then a year ago AI came along and i became fascinated by the potential of AI to transform how we interact with technology. I noticed many projects most focused on specific use cases rather than providing a flexible foundation for exploration. So I spent a few months to code EVA myself.
 
-EVA is an experimental voice assistant that reimagines human-AI interaction through intelligent, proactive engagement and autonomous capabilities. EVA actively participates in conversations while executing complex tasks seamlessly in the background. Its flexible, modular architecture allows it to leverage AI models for speech, vision, and thinking like human beings, while an extensive framework of tools enables EVA to perform a wide range of tasks.
+EVA is an experimental voice assistant that reimagines human-AI interaction through intelligent, proactive engagement and autonomous capabilities: 
+- EVA is aware of the environment, actively seek contexutual information and detect changes around her. (sensitivity adjustable)
+- EVA actively participates in conversations, not only employing contextual strategies but also setting groundings for future interaction. (e.g. you might find it hard to play guessing game with ChatGPT since they dont remember the unspoken thoughts.)
+- Eva can multitasks seamlessly in the background during the conversation. (Now Chatgpt realtime can do it too 😞 )
+- With a customizable toolkit, Eva automatically creates a varity of new experiences like making images and music, or searching for videos based on the context. (e.g. she often creates soothing music when it's late hour and I am home alone)  
 
-Hope you have some interesting experience with EVA!
+Overall, EVA's flexible, modular architecture allows it to leverage AI models for speech, vision, and thinking like human beings.
+
+Hope you have some interesting experiences with EVA!
 
 ## 🤖 DEMO
 <div align="center">
@@ -63,12 +69,13 @@ EVA is built on LangGraph framework, with some customized modules and tools. Imp
 - Configurable model selection for LLM, TTS, STT, and vision etc.
 - Integrated with OpenAI, Anthropic, Groq, Google, and Ollama.
 - Easy modification of prompts and tools.
-- Supports both desktop and mobile app
+- Supports both desktop and mobile app (cross-platform in testing phase)
 
 ### 🖼️ Interactive experience
 - Voice ID and vision ID for personalized interaction.
 - Proactive style communication (varies between models)
 - Multi-modal outputs with asynchronous action.
+- Memory log and semantic memory scan (testing)
 
 ### 🔌 Dynamic Tool system
 - Web search through DuckDuckGo/Tavily
