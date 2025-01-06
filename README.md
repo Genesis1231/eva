@@ -20,14 +20,15 @@ Hi there! Welcome to the EVA project 👋
 So, here's the story - I used to sling code back in the days (like, when Perl was still cool), but then a year ago AI came along and i became fascinated by the potential of AI to transform how we interact with technology. I noticed many projects most focused on specific use cases rather than providing a flexible foundation for exploration. So I spent a few months to code EVA myself.
 
 EVA is an experimental voice assistant that reimagines human-AI interaction through intelligent, proactive engagement and autonomous capabilities: 
-- EVA is aware of the environment, actively seek contexutual information and detect changes around her. (sensitivity adjustable)
+- EVA is aware of the environment, actively seek information and detect changes around her. (sensitivity adjustable)
 - EVA actively participates in conversations, not only employing contextual strategies but also setting groundings for future interaction. (e.g. you might find it hard to play guessing game with ChatGPT because it doesnt remember unspoken thoughts.)
+- EVA can recognize users by their voices or faces, creating a more personalized and engaging interactive experience. (e.g., facilitate a party game where everyone keeps their eyes closed.)
 - EVA can multitasks seamlessly in the background during the conversation. (Now ChatGPT realtime model can do it too 😞 )
 - With a customizable toolkit, EVA automatically creates a varity of new experiences like making images and music, or searching for videos based on the context. (e.g. she often creates soothing music when it's late hour and I am home alone)  
 
-Overall, EVA's flexible, modular architecture allows it to leverage AI models for speech, vision, and thinking like human beings.
+Overall, EVA's flexible, modular architecture allows it to leverage AI models for speech, vision, and thinking like human beings. Hope you have some interesting experiences with EVA!
 
-Hope you have some interesting experiences with EVA!
+If you like EVA, please give us ⭐⭐, it keeps me motivated. thank you!
 
 ## 🤖 DEMO
 <div align="center">
