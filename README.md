@@ -105,7 +105,6 @@ EVA/
 │       ├── stt/         # Speech-to-text models and classes
 │       ├── tts/         # Text-to-Speech models and classes
 │       └── vision/      # Vision models and functions
-├── test/               # Test cases (😢)
 └── docs/                # Documentation (😩)
 
 ```
